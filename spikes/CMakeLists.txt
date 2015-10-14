@@ -3,3 +3,4 @@ project(Spikes)
 
 add_subdirectory(1-gtkmm-helloworld)
 add_subdirectory(2-gtkmm-glade)
+add_subdirectory(3-cppunit-helloworld)
