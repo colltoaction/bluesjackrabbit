@@ -1,4 +1,11 @@
 sudo: false
+
 language: cpp
+compiler: gcc
+os: linux
+addons:
+  apt:
+    packages:
+      - libgtkmm-3.0-dev
 
 script: cmake .
