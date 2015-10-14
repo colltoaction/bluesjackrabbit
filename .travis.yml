@@ -6,7 +6,6 @@ os: linux
 addons:
   apt:
     packages:
-      - libgtkmm-3.0-dev
-      - gtkmm-3.0-dev
+      - gtkmm-3.0
 
 script: cmake .
