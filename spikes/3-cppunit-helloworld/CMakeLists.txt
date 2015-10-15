@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project(3-cppunit-helloworld)
-set(CMAKE_CXX_STANDARD 98)
 
 add_executable(${PROJECT_NAME}
     main_test.cpp HelloWorldTest.cpp HelloWorldTest.h HelloWorld.cpp HelloWorld.h)
