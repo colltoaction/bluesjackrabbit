@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project(2-gtkmm-glade)
-set(CMAKE_CXX_STANDARD 11)
 
 # Use the package PkgConfig to detect GTK+ headers/library files
 find_package(PkgConfig REQUIRED)
