@@ -8,7 +8,7 @@ pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
 # Setup CMake to use GTK+, tell the compiler where to look for headers
 # and to the linker where to look for libraries
 link_directories(${GTKMM3_LIBRARY_DIRS})
-include_directories(${GTKMM3_INCLUDE_DIRS})
+include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}
     main.cpp)
