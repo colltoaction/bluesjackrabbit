@@ -66,25 +66,33 @@ set(STYLE_FILTER ${STYLE_FILTER}+whitespace/semicolon,)
 # - SOURCES_LIST a complete list of source and include files to check
 function(add_style_check_target TARGET_NAME SOURCES_LIST)
 
-    if(NOT PYTHONINTERP_FOUND)
+    if (NOT PYTHONINTERP_FOUND)
         return()
-    endif()
+    endif ()
 
     list(REMOVE_DUPLICATES SOURCES_LIST)
     list(SORT SOURCES_LIST)
+
+    # add directory prefix
+    SET(SOURCES_LIST_TMP)
+    foreach (l ${SOURCES_LIST})
+        list(APPEND SOURCES_LIST_TMP ${CMAKE_CURRENT_SOURCE_DIR}/${l})
+    endforeach ()
+    SET(SOURCES_LIST ${SOURCES_LIST_TMP})
+    UNSET(SOURCES_LIST_TMP)
 
     add_custom_target(${TARGET_NAME}
             COMMAND "${CMAKE_COMMAND}"
             -E chdir "${CMAKE_CURRENT_SOURCE_DIR}"
             "${PYTHON_EXECUTABLE}"
-            "${CMAKE_SOURCE_DIR}/misc/cpplint.py"
+            "${CMAKE_MODULE_PATH}/cpplint.py"
             "--filter=${STYLE_FILTER}"
             "--counting=detailed"
             "--extensions=cpp,h"
             "--linelength=120"
             ${SOURCES_LIST}
             DEPENDS ${SOURCES_LIST}
-            COMMENT "Linting ${TARGET_NAME}"
+            COMMENT "Checking ${TARGET_NAME} code style."
             VERBATIM)
 
-endfunction()
+endfunction(add_style_check_target)
