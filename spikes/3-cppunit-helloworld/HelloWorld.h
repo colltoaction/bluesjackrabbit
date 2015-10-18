@@ -4,9 +4,9 @@
 #include <string>
 
 class HelloWorld {
-public:
+ public:
     std::string getHW();
 };
 
 
-#endif //BLUESJACKRABBIT_HELLOWORLD_H
+#endif  // BLUESJACKRABBIT_HELLOWORLD_H

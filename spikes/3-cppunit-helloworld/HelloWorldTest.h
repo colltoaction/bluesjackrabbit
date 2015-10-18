@@ -8,7 +8,7 @@ class HelloWorldTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testReturnsHelloWorld);
     CPPUNIT_TEST_SUITE_END();
 
-public:
+ public:
     void setUp();
 
     void tearDown();
@@ -16,4 +16,4 @@ public:
     void testReturnsHelloWorld();
 };
 
-#endif //BLUESJACKRABBIT_HELLOWORLDTEST_H
+#endif  // BLUESJACKRABBIT_HELLOWORLDTEST_H
