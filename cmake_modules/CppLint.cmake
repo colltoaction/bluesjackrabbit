@@ -26,8 +26,9 @@ find_package(PythonInterp)
 set(STYLE_FILTER)
 
 # Remove filters
-set(STYLE_FILTER ${STYLE_FILTER}-legal/copyright,)
 set(STYLE_FILTER ${STYLE_FILTER}-build/header_guard,)
+set(STYLE_FILTER ${STYLE_FILTER}-build/include,)
+set(STYLE_FILTER ${STYLE_FILTER}-legal/copyright,)
 
 # Select filters
 #set(STYLE_FILTER ${STYLE_FILTER}-,)
