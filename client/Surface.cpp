@@ -42,17 +42,17 @@ void Surface::MoverArriba(Event const &event) {
     queue_draw();
 }
 
-void Surface::moverAbajo() {
-    centro_y += 0.01;
+void Surface::MoverAbajo(Event const &event) {
+    centro_y += 0.01 * event.TimeDelta();
     queue_draw();
 }
 
-void Surface::moverIzq() {
-    centro_x -= 0.01;
+void Surface::MoverIzquierda(Event const &event) {
+    centro_x -= 0.01 * event.TimeDelta();
     queue_draw();
 }
 
-void Surface::moverDer() {
-    centro_x += 0.01;
+void Surface::MoverDerecha(Event const &event) {
+    centro_x += 0.01 * event.TimeDelta();
     queue_draw();
 }

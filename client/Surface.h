@@ -12,11 +12,11 @@ class Surface : public Gtk::DrawingArea {
 
     void MoverArriba(Event const &event);
 
-    void moverAbajo();
+    void MoverAbajo(Event const &event);
 
-    void moverIzq();
+    void MoverIzquierda(Event const &event);
 
-    void moverDer();
+    void MoverDerecha(Event const &event);
 
  protected:
     virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);

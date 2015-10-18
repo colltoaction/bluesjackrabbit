@@ -7,9 +7,9 @@ MainWindow::MainWindow(EventBus *eventBus) {
     maximize();
     add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
     signal_key_press_event().connect(
-            sigc::mem_fun(*eventBus, &EventBus::KeyPressEvent));
+            sigc::mem_fun(*eventBus, &EventBus::KeyPressEvent), false);  // Why before the default event??
     signal_key_release_event().connect(
-            sigc::mem_fun(*eventBus, &EventBus::KeyReleaseEvent));
+            sigc::mem_fun(*eventBus, &EventBus::KeyReleaseEvent), false);
     Glib::signal_timeout().connect(
             sigc::mem_fun(*eventBus, &EventBus::TimeoutEvent),
             timeout_value);
