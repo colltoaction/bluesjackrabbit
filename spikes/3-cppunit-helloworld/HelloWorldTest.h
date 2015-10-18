@@ -4,14 +4,16 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 class HelloWorldTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE( HelloWorldTest );
+    CPPUNIT_TEST_SUITE(HelloWorldTest);
     CPPUNIT_TEST(testReturnsHelloWorld);
     CPPUNIT_TEST_SUITE_END();
 
-public:
+ public:
     void setUp();
+
     void tearDown();
+
     void testReturnsHelloWorld();
 };
 
-#endif //BLUESJACKRABBIT_HELLOWORLDTEST_H
+#endif  // BLUESJACKRABBIT_HELLOWORLDTEST_H

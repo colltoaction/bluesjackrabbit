@@ -8,12 +8,12 @@ HelloWorld::~HelloWorld() {
 
 bool HelloWorld::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     cr->set_source_rgb(0.86, 0.85, 0.47);
-    cr->paint(); // fill image with the color
-    cr->restore(); // color is back to black now
+    cr->paint();  // fill image with the color
+    cr->restore();  // color is back to black now
 
     cr->save();
     // draw a border around the image
-    cr->set_line_width(20.0); // make the line wider
+    cr->set_line_width(20.0);  // make the line wider
     cr->rectangle(0.0, 0.0, get_width(), get_height());
     cr->stroke();
 
