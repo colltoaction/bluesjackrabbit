@@ -1,12 +1,8 @@
 #ifndef GTKMM_EVENT_PROPAGATION_H
 #define GTKMM_EVENT_PROPAGATION_H
 
-#include "Surface.h"
-#include <gtkmm/entry.h>
-#include <gtkmm/checkbutton.h>
-#include <gtkmm/grid.h>
-#include <gtkmm/label.h>
 #include <gtkmm/window.h>
+#include "Surface.h"
 
 class ExampleWindow : public Gtk::Window {
  public:

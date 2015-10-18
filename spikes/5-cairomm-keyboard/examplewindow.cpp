@@ -13,7 +13,7 @@ ExampleWindow::~ExampleWindow() {
 }
 
 bool ExampleWindow::on_key_press_event(GdkEventKey *event) {
-    std::cout << "Se apreto una tecla" << std::endl;
+    std::cout << "Se apreto una tecla en t = " << event->time << std::endl;
     switch (event->keyval) {
         case GDK_KEY_Left:
             surface->moverIzq();
@@ -30,13 +30,12 @@ bool ExampleWindow::on_key_press_event(GdkEventKey *event) {
         default:
             break;
     }
-    return event->type == GDK_KEY_PRESS &&
-           event->keyval == GDK_KEY_1 &&
-           (event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK)) == GDK_MOD1_MASK;
+
+    return true;
 }
 
 bool ExampleWindow::on_key_release_event(GdkEventKey *event) {
-    std::cout << "Window overridden" << std::endl;
+    std::cout << "Se solto una tecla" << std::endl;
 
     // call base class function (to get the normal behaviour)
     return Gtk::Window::on_key_release_event(event);
