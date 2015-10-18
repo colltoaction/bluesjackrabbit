@@ -38,21 +38,21 @@ bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 }
 
 void Surface::moverArriba() {
-    centro_y -= 0.05;
+    centro_y -= 0.01;
     queue_draw();
 }
 
 void Surface::moverAbajo() {
-    centro_y += 0.05;
+    centro_y += 0.01;
     queue_draw();
 }
 
 void Surface::moverIzq() {
-    centro_x -= 0.05;
+    centro_x -= 0.01;
     queue_draw();
 }
 
 void Surface::moverDer() {
-    centro_x += 0.05;
+    centro_x += 0.01;
     queue_draw();
 }
