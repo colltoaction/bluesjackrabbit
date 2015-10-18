@@ -12,19 +12,19 @@ Surface::~Surface() {
 }
 
 bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
-    if (primero){
+    if (primero) {
         centro_x = get_width() / 2;
         centro_y = get_height() / 2;
-        radio = get_height() / 4;       
+        radio = get_height() / 4;
         primero = false;
     }
     cr->set_source_rgb(0.86, 0.85, 0.47);
-    cr->paint(); // fill image with the color
-    cr->restore(); // color is back to black now
+    cr->paint();  // fill image with the color
+    cr->restore();  // color is back to black now
 
     cr->save();
     // draw a border around the image
-    cr->set_line_width(20.0); // make the line wider
+    cr->set_line_width(20.0);  // make the line wider
     cr->rectangle(0.0, 0.0, get_width(), get_height());
     cr->stroke();
 
@@ -45,20 +45,22 @@ bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     return true;
 }
 
-void Surface::moverArriba(){
+void Surface::moverArriba() {
     centro_y -= 5;
     queue_draw();
 }
-    
-void Surface::moverAbajo(){
+
+void Surface::moverAbajo() {
     centro_y += 5;
     queue_draw();
 }
-void Surface::moverIzq(){
+
+void Surface::moverIzq() {
     centro_x -= 5;
     queue_draw();
 }
-void Surface::moverDer(){
+
+void Surface::moverDer() {
     centro_x += 5;
     queue_draw();
 }

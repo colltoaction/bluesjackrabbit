@@ -4,23 +4,29 @@
 #include <gtkmm/drawingarea.h>
 
 class Surface : public Gtk::DrawingArea {
-public:
+ public:
     Surface();
+
     virtual ~Surface();
+
     void moverArriba();
+
     void moverAbajo();
+
     void moverIzq();
+
     void moverDer();
 
-protected:
-    //Override default signal handler:
+ protected:
+    // Override default signal handler:
     virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
-private:
-	bool primero;
-	double centro_x;
-	double centro_y;
-	double radio;
+
+ private:
+    bool primero;
+    double centro_x;
+    double centro_y;
+    double radio;
 };
 
 
-#endif //BLUESJACKRABBIT_SURFACE_H
+#endif  // BLUESJACKRABBIT_SURFACE_H
