@@ -1,3 +1,4 @@
+#include <glibmm-2.4/glibmm/main.h>
 #include "Event.h"
 #include "EventBus.h"
 
@@ -11,7 +12,10 @@ bool EventBus::KeyReleaseEvent(GdkEventKey *event) {
     return true;
 }
 
-bool EventBus::TimeoutEvent() {
+bool EventBus::IdleEvent() {
+    clock_t current_time = clock();
+    clock_t elapsed = current_time - last_time;
+    last_time = current_time;
     for (std::map< guint, std::vector<Handler> >::iterator itKeys = handlers.begin();
          itKeys != handlers.end();
          ++itKeys) {
@@ -19,7 +23,7 @@ bool EventBus::TimeoutEvent() {
             continue;
         }
 
-        Event event;
+        Event event(elapsed);
         for (std::vector<Handler>::iterator itHandlers = itKeys->second.begin();
              itHandlers != itKeys->second.end();
              ++itHandlers) {

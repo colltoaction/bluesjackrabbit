@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_CLIENT_EVENTBUS_H
 
 
+#include <ctime>
 #include <gdk/gdk.h>
 #include <map>
 #include <sigc++/functors/slot.h>
@@ -16,12 +17,13 @@ class EventBus {
 
     bool KeyReleaseEvent(GdkEventKey *event);
 
-    bool TimeoutEvent();
+    bool IdleEvent();
 
     void SubscribeKeyPress(guint key, Handler handler);
  private:
     std::map< guint, std::vector<Handler> > handlers;
     std::map<guint, bool> pressed;
+    clock_t last_time = clock();
 };
 
 

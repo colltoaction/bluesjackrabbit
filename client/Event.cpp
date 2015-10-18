@@ -1,5 +1,10 @@
 #include "Event.h"
 
-unsigned int Event::TimeDelta() const {
-    return 1;
+
+Event::Event(clock_t time_delta)
+        : time_delta(time_delta) {
+}
+
+clock_t Event::TimeDelta() const {
+    return time_delta;
 }

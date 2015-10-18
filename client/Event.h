@@ -2,9 +2,15 @@
 #define BLUESJACKRABBIT_CLIENT_EVENT_H
 
 
+#include <ctime>
+
 class Event {
  public:
-    unsigned int TimeDelta() const;
+    explicit Event(clock_t time_delta);
+    clock_t TimeDelta() const;
+
+ private:
+    clock_t time_delta;
 };
 
 
