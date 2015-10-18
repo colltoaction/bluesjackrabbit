@@ -2,22 +2,14 @@
 #include <iostream>
 
 Surface::Surface() {
-    primero = true;
-    centro_x = get_width() / 2;
-    centro_y = get_height() / 2;
-    radio = get_height() / 4;
+    centro_x = 0.5;
+    centro_y = 0.5;
 }
 
 Surface::~Surface() {
 }
 
 bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
-    if (primero) {
-        centro_x = get_width() / 2;
-        centro_y = get_height() / 2;
-        radio = get_height() / 4;
-        primero = false;
-    }
     cr->set_source_rgb(0.86, 0.85, 0.47);
     cr->paint();  // fill image with the color
     cr->restore();  // color is back to black now
@@ -30,9 +22,9 @@ bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 
     cr->set_source_rgba(0.0, 0.0, 0.0, 0.7);
     // draw a circle in the center of the image
-    cr->arc(this->centro_x,
-            this->centro_y,
-            this->radio,
+    cr->arc(centro_x * get_width(),
+            centro_y * get_height(),
+            get_height() / 4,
             0.0,
             2.0 * M_PI);
     cr->stroke();
@@ -46,21 +38,21 @@ bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 }
 
 void Surface::moverArriba() {
-    centro_y -= 5;
+    centro_y -= 0.05;
     queue_draw();
 }
 
 void Surface::moverAbajo() {
-    centro_y += 5;
+    centro_y += 0.05;
     queue_draw();
 }
 
 void Surface::moverIzq() {
-    centro_x -= 5;
+    centro_x -= 0.05;
     queue_draw();
 }
 
 void Surface::moverDer() {
-    centro_x += 5;
+    centro_x += 0.05;
     queue_draw();
 }

@@ -22,10 +22,8 @@ class Surface : public Gtk::DrawingArea {
     virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
-    bool primero;
     double centro_x;
     double centro_y;
-    double radio;
 };
 
 

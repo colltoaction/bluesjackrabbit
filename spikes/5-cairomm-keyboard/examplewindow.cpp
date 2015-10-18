@@ -28,7 +28,7 @@ bool ExampleWindow::on_key_press_event(GdkEventKey *event) {
             surface->moverAbajo();
             break;
         default:
-            break;
+            return false;
     }
 
     return true;
