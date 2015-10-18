@@ -59,24 +59,18 @@ bool ExampleWindow::on_key_press_event(GdkEventKey *event) {
         case GDK_KEY_Down:
             this->surface->moverAbajo();
             break;
+        default:
+            break;
     }
-    if (event->type == GDK_KEY_PRESS &&
-        event->keyval == GDK_KEY_1 &&
-        (event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK)) == GDK_MOD1_MASK) {
-        return true;
-    }
-    return false;
+    return event->type == GDK_KEY_PRESS &&
+           event->keyval == GDK_KEY_1 &&
+           (event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK)) == GDK_MOD1_MASK;
 }
 
 // By changing the return value we allow, or don't allow, the event to propagate to other elements.
 bool ExampleWindow::entryKeyRelease(GdkEventKey * /* event */ ) {
     std::cout << "Entry" << std::endl;
-
-    if (m_checkbutton_can_propagate.get_active()) {
-        return false;
-    }
-
-    return true;
+    return !m_checkbutton_can_propagate.get_active();
 }
 
 bool ExampleWindow::gridKeyRelease(GdkEventKey * /* event */ ) {
