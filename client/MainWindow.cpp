@@ -15,7 +15,7 @@ MainWindow::MainWindow(EventBus *eventBus) {
     //         sigc::mem_fun(*eventBus, &EventBus::Main));
     Glib::signal_timeout().connect(
             sigc::mem_fun(*eventBus, &EventBus::Main),
-            1);  // smallest timeout avaiable
+            timeout_value);
 }
 
 MainWindow::~MainWindow() {

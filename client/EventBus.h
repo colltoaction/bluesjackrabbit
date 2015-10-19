@@ -2,19 +2,17 @@
 #define BLUESJACKRABBIT_CLIENT_EVENTBUS_H
 
 
-#include <ctime>
 #include <gdk/gdk.h>
 #include <map>
 #include <sigc++/functors/slot.h>
 #include <vector>
 #include "Event.h"
+#include "Stopwatch.h"
 
 typedef sigc::slot<void, Event const&> Handler;
 
 class EventBus {
  public:
-    EventBus();
-
     bool KeyPressEvent(GdkEventKey *event);
 
     bool KeyReleaseEvent(GdkEventKey *event);
@@ -25,7 +23,7 @@ class EventBus {
  private:
     std::map< guint, std::vector<Handler> > handlers;
     std::map<guint, bool> pressed;
-    struct timespec last_time;
+    Stopwatch stopwatch;
 };
 
 

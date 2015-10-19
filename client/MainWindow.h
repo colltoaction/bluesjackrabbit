@@ -9,7 +9,7 @@ class MainWindow : public Gtk::Window {
     virtual ~MainWindow();
 
  private:
-    static const unsigned int timeout_value = 10;
+    static const unsigned int timeout_value = 1;  // smallest timeout avaiable
 };
 
 

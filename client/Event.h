@@ -2,7 +2,6 @@
 #define BLUESJACKRABBIT_CLIENT_EVENT_H
 
 
-#include <ctime>
 #include <stdint.h>
 
 class Event {
