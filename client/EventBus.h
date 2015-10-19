@@ -13,6 +13,8 @@ typedef sigc::slot<void, Event const&> Handler;
 
 class EventBus {
  public:
+    EventBus();
+
     bool KeyPressEvent(GdkEventKey *event);
 
     bool KeyReleaseEvent(GdkEventKey *event);
@@ -23,7 +25,7 @@ class EventBus {
  private:
     std::map< guint, std::vector<Handler> > handlers;
     std::map<guint, bool> pressed;
-    clock_t last_time = clock();
+    struct timespec last_time;
 };
 
 

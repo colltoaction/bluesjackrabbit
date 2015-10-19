@@ -38,21 +38,21 @@ bool Surface::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 }
 
 void Surface::MoverArriba(Event const &event) {
-    centro_y -= 0.001 * static_cast<double>(event.TimeDelta());
+    centro_y -= static_cast<double>(event.TimeDelta()) / 1000000000;
     queue_draw();
 }
 
 void Surface::MoverAbajo(Event const &event) {
-    centro_y += 0.001 * static_cast<double>(event.TimeDelta());
+    centro_y += static_cast<double>(event.TimeDelta()) / 1000000000;
     queue_draw();
 }
 
 void Surface::MoverIzquierda(Event const &event) {
-    centro_x -= 0.001 * static_cast<double>(event.TimeDelta());
+    centro_x -= static_cast<double>(event.TimeDelta()) / 1000000000;
     queue_draw();
 }
 
 void Surface::MoverDerecha(Event const &event) {
-    centro_x += 0.001 * static_cast<double>(event.TimeDelta());
+    centro_x += static_cast<double>(event.TimeDelta()) / 1000000000;
     queue_draw();
 }

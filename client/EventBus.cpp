@@ -13,8 +13,10 @@ bool EventBus::KeyReleaseEvent(GdkEventKey *event) {
 }
 
 bool EventBus::IdleEvent() {
-    clock_t current_time = clock();
-    clock_t elapsed = current_time - last_time;
+    struct timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    // Does it overflow?
+    uint32_t elapsed = static_cast<uint32_t>(std::max(0L, current_time.tv_nsec - last_time.tv_nsec));
     last_time = current_time;
     for (std::map< guint, std::vector<Handler> >::iterator itKeys = handlers.begin();
          itKeys != handlers.end();
@@ -36,4 +38,8 @@ bool EventBus::IdleEvent() {
 
 void EventBus::SubscribeKeyPress(guint key, Handler handler) {
     handlers[key].push_back(handler);
+}
+
+EventBus::EventBus() {
+    clock_gettime(CLOCK_MONOTONIC, &last_time);
 }

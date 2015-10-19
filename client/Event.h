@@ -3,14 +3,15 @@
 
 
 #include <ctime>
+#include <stdint.h>
 
 class Event {
  public:
-    explicit Event(clock_t time_delta);
-    clock_t TimeDelta() const;
+    explicit Event(uint32_t time_delta);
+    uint32_t TimeDelta() const;
 
  private:
-    clock_t time_delta;
+    uint32_t time_delta;
 };
 
 

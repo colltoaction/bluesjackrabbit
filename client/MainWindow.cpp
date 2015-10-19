@@ -13,3 +13,6 @@ MainWindow::MainWindow(EventBus *eventBus) {
     Glib::signal_idle().connect(
             sigc::mem_fun(*eventBus, &EventBus::IdleEvent));
 }
+
+MainWindow::~MainWindow() {
+}
