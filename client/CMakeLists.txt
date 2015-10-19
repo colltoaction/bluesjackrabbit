@@ -10,7 +10,7 @@ link_directories(${GTKMM3_LIBRARY_DIRS})
 include_directories(SYSTEM ${CAIROMM_INCLUDE_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
-set(SOURCES main.cpp MainWindow.cpp MainWindow.h EventBus.cpp EventBus.h Event.cpp Event.h Surface.cpp Surface.h Stopwatch.cpp Stopwatch.h)
+set(SOURCES main.cpp MainWindow.cpp MainWindow.h EventBus.cpp EventBus.h Event.cpp Event.h Surface.cpp Surface.h Stopwatch.cpp Stopwatch.h Renderer.cpp Renderer.h Transform.cpp Transform.h Point.cpp Point.h)
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

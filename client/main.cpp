@@ -2,11 +2,16 @@
 #include "EventBus.h"
 #include "MainWindow.h"
 #include "Surface.h"
+#include "Renderer.h"
 
 int main(int argc, char *argv[]) {
     Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
     EventBus eventBus;
     Surface surface;
+    Scene scene;
+    GameObject circle;
+    Renderer circleRenderer;
+    circle.AddComponent(circleRenderer);
     eventBus.SubscribeKeyPress(GDK_KEY_Up, sigc::mem_fun(surface, &Surface::MoverArriba));
     eventBus.SubscribeKeyPress(GDK_KEY_Down, sigc::mem_fun(surface, &Surface::MoverAbajo));
     eventBus.SubscribeKeyPress(GDK_KEY_Left, sigc::mem_fun(surface, &Surface::MoverIzquierda));
