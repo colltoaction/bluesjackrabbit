@@ -24,6 +24,8 @@ class Surface : public Gtk::DrawingArea {
  private:
     double centro_x;
     double centro_y;
+
+    void Mover(Event const &event, int x, int y);
 };
 
 
