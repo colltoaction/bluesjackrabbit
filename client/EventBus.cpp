@@ -12,7 +12,7 @@ bool EventBus::KeyReleaseEvent(GdkEventKey *event) {
     return true;
 }
 
-bool EventBus::IdleEvent() {
+bool EventBus::Main() {
     struct timespec current_time;
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     // Does it overflow?

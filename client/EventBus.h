@@ -19,7 +19,7 @@ class EventBus {
 
     bool KeyReleaseEvent(GdkEventKey *event);
 
-    bool IdleEvent();
+    bool Main();
 
     void SubscribeKeyPress(guint key, Handler handler);
  private:

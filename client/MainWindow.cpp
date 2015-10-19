@@ -10,8 +10,12 @@ MainWindow::MainWindow(EventBus *eventBus) {
             sigc::mem_fun(*eventBus, &EventBus::KeyPressEvent), false);  // Why before the default event??
     signal_key_release_event().connect(
             sigc::mem_fun(*eventBus, &EventBus::KeyReleaseEvent), false);
-    Glib::signal_idle().connect(
-            sigc::mem_fun(*eventBus, &EventBus::IdleEvent));
+    // Is this a good idea?
+    // Glib::signal_idle().connect(
+    //         sigc::mem_fun(*eventBus, &EventBus::Main));
+    Glib::signal_timeout().connect(
+            sigc::mem_fun(*eventBus, &EventBus::Main),
+            1);  // smallest timeout avaiable
 }
 
 MainWindow::~MainWindow() {
