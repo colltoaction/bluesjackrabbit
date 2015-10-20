@@ -5,7 +5,7 @@ GameObject &Scene::AddGameObject() {
 #if __cplusplus > 199711L
     gameObjects.emplace_back();
 #else
-    // this shows a warining in C++11 because of move semantics
+    // this shows a warning in C++11 because of move semantics
     gameObjects.push_back(GameObject());
 #endif
     GameObject &gameObject = gameObjects.back();
