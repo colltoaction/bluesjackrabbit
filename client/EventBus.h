@@ -20,6 +20,7 @@ class EventBus {
     bool Main();
 
     void SubscribeKeyPress(guint key, Handler handler);
+
  private:
     std::map< guint, std::vector<Handler> > handlers;
     std::map<guint, bool> pressed;
