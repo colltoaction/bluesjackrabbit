@@ -1,23 +1,20 @@
 #include <gtkmm/application.h>
 #include "EventBus.h"
 #include "MainWindow.h"
-#include "Surface.h"
 #include "Renderer.h"
+#include "Scene.h"
 
 int main(int argc, char *argv[]) {
     Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-    EventBus eventBus;
-    Surface surface;
-    Scene scene;
-    GameObject circle;
-    Renderer circleRenderer;
-    circle.AddComponent(circleRenderer);
-    eventBus.SubscribeKeyPress(GDK_KEY_Up, sigc::mem_fun(surface, &Surface::MoverArriba));
-    eventBus.SubscribeKeyPress(GDK_KEY_Down, sigc::mem_fun(surface, &Surface::MoverAbajo));
-    eventBus.SubscribeKeyPress(GDK_KEY_Left, sigc::mem_fun(surface, &Surface::MoverIzquierda));
-    eventBus.SubscribeKeyPress(GDK_KEY_Right, sigc::mem_fun(surface, &Surface::MoverDerecha));
+    EventBus eventBus = EventBus();
+    Scene scene = Scene();
+    GameObject &circle = scene.AddGameObject();
+    eventBus.SubscribeKeyPress(GDK_KEY_Up, sigc::mem_fun(circle.Transform(), &Transform::MoveUp));
+    eventBus.SubscribeKeyPress(GDK_KEY_Down, sigc::mem_fun(circle.Transform(), &Transform::MoveDown));
+    eventBus.SubscribeKeyPress(GDK_KEY_Left, sigc::mem_fun(circle.Transform(), &Transform::MoveLeft));
+    eventBus.SubscribeKeyPress(GDK_KEY_Right, sigc::mem_fun(circle.Transform(), &Transform::MoveRight));
     MainWindow window(&eventBus);
-    window.add(surface);
+    window.add(scene);
     window.show_all();
     return app->run(window);
 }

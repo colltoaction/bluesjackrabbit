@@ -2,15 +2,18 @@
 #define BLUESJACKRABBIT_CLIENT_RENDERER_H
 
 
+#include <cairomm/context.h>
+#include <gtkmm/drawingarea.h>
 #include "Transform.h"
 
-class Renderer {
+class Renderer : public Gtk::DrawingArea {
  public:
-    Renderer(Transform const& transform);
-    void Render(const Cairo::RefPtr <Cairo::Context> &cr);
+    void Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &transform);
 
  private:
-    Transform const& transform;
+    const double width = 500;
+
+    const double height = 500;
 };
 
 

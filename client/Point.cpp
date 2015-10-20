@@ -1,9 +1,17 @@
 #include "Point.h"
 
 double Point::X() const {
-    return 0;
+    return x;
 }
 
 double Point::Y() const {
-    return 0;
+    return y;
+}
+
+void Point::X(double d) {
+    x = d;
+}
+
+void Point::Y(double d) {
+    y = d;
 }
