@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[]) {
     Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-    EventBus eventBus = EventBus();
-    Scene scene = Scene();
+    EventBus eventBus;
+    Scene scene;
     GameObject &circle = scene.AddGameObject();
     eventBus.SubscribeKeyPress(GDK_KEY_Up, sigc::mem_fun(circle.Transform(), &Transform::MoveUp));
     eventBus.SubscribeKeyPress(GDK_KEY_Down, sigc::mem_fun(circle.Transform(), &Transform::MoveDown));

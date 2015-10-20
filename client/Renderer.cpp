@@ -11,3 +11,7 @@ void Renderer::Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &
             2.0 * M_PI);
     cr->stroke();
 }
+
+Renderer::Renderer()
+        : width(500), height(500) {
+}

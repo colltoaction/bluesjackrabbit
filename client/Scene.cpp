@@ -9,7 +9,7 @@ GameObject &Scene::AddGameObject() {
     gameObjects.push_back(GameObject());
 #endif
     GameObject &gameObject = gameObjects.back();
-    gameObject.Transform().Subscribe(sigc::mem_fun(this, queue_draw));
+    gameObject.Transform().Subscribe(sigc::mem_fun(*this, &Scene::queue_draw));
     return gameObject;
 }
 

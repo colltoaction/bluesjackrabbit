@@ -6,14 +6,16 @@
 #include <gtkmm/drawingarea.h>
 #include "Transform.h"
 
-class Renderer : public Gtk::DrawingArea {
+class Renderer {
  public:
+    Renderer();
+
     void Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &transform);
 
  private:
-    const double width = 500;
+    double width;
 
-    const double height = 500;
+    double height;
 };
 
 
