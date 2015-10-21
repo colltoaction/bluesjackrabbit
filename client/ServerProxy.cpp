@@ -2,6 +2,8 @@
 #include <vector>
 #include "ServerProxy.h"
 
+const double ServerProxy::step = 0.2;
+
 void ServerProxy::MoveUp() {
     moveY = -step;
 }
