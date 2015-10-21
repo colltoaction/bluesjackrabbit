@@ -3,7 +3,6 @@
 
 
 #include <sigc++/functors/slot.h>
-#include "Event.h"
 #include "GameObject.h"
 
 /**
@@ -15,13 +14,13 @@ class ServerProxy {
  public:
     ServerProxy();
 
-    void MoveUp(Event const &event);
+    void MoveUp();
 
-    void MoveDown(Event const &event);
+    void MoveDown();
 
-    void MoveLeft(Event const &event);
+    void MoveLeft();
 
-    void MoveRight(Event const &event);
+    void MoveRight();
 
     /**
      * Receives a functor object subscribing to updates.
@@ -31,12 +30,19 @@ class ServerProxy {
     std::vector<GameObject> &GameObjects();
 
  private:
+#if __cplusplus > 199711L
+    static constexpr double step = 0.05;
+#else
+    // this shows a warning in C++11 because of -fpermissive
+    static const double step = 0.05;
+#endif
+    static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
+    double moveX;
+    double moveY;
     std::vector<GameObject> gameObjects;
-
     std::vector<Subscriber> subscribers;
 
-    void Move(Event const &event, int x, int y);
-
+    void FixedUpdate();
     void Notify();
 };
 
