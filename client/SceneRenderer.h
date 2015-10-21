@@ -5,16 +5,20 @@
 #include <gtkmm/drawingarea.h>
 #include <vector>
 #include "GameObject.h"
+#include "ServerProxy.h"
 
-class Scene : public Gtk::DrawingArea {
+class SceneRenderer : public Gtk::DrawingArea {
  public:
-    GameObject &AddGameObject();
+    explicit SceneRenderer(ServerProxy *serverProxy);
+
+    void Update();
 
  protected:
     virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
     std::vector<GameObject> gameObjects;
+    ServerProxy *serverProxy;
 };
 
 

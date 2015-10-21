@@ -13,5 +13,5 @@ void Renderer::Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &
 }
 
 Renderer::Renderer()
-        : width(500), height(500) {
+        : width(15), height(15) {
 }
