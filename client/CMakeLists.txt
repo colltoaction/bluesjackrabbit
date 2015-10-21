@@ -27,8 +27,8 @@ set(SOURCES main.cpp
         Point.h
         GameObject.cpp
         GameObject.h
-        Scene.cpp
-        Scene.h)
+        SceneRenderer.cpp
+        SceneRenderer.h ServerProxy.cpp ServerProxy.h)
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

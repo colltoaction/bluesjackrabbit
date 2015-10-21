@@ -5,11 +5,8 @@
 
 class MainWindow : public Gtk::Window {
  public:
-    explicit MainWindow(EventBus *eventBus);
+    MainWindow();
     virtual ~MainWindow();
-
- private:
-    static const unsigned int timeout_value = 1;  // smallest timeout avaiable
 };
 
 

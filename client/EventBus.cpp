@@ -35,3 +35,21 @@ bool EventBus::Main() {
 void EventBus::SubscribeKeyPress(guint key, Handler handler) {
     handlers[key].push_back(handler);
 }
+
+EventBus::EventBus(Gtk::Window *window) {
+    window->add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
+    window->signal_key_press_event().connect(
+            sigc::mem_fun(*this, &EventBus::KeyPressEvent), false);  // Why before the default event??
+    window->signal_key_release_event().connect(
+            sigc::mem_fun(*this, &EventBus::KeyReleaseEvent), false);
+    // It should run the physics simulation in GTK's idle time
+    // Is this a good idea?
+//     Glib::signal_idle().connect(
+//             sigc::mem_fun(*this, &EventBus::Main));
+    Glib::signal_timeout().connect(
+            sigc::mem_fun(*this, &EventBus::Main),
+            timeout_value);
+//    Glib::signal_timeout().connect(
+//            sigc::bind_return(sigc::mem_fun(*window, &Gtk::Window::queue_draw), true),
+//            16);  // 60 fps aprox
+}
