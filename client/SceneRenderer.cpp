@@ -7,7 +7,14 @@ void SceneRenderer::Update() {
 
 // TODO(tinchou): avoid redrawing everything
 bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
-    Cairo::Matrix matrix = Cairo::Matrix(1, 0, 0, 1, get_width() / 2, get_height() / 2);
+    gint monitorWidth = get_screen()->get_monitor_width_mm(get_screen()->get_primary_monitor());
+    gint monitorHeight = get_screen()->get_monitor_height_mm(get_screen()->get_primary_monitor());
+    Cairo::Matrix matrix = Cairo::Matrix(static_cast<double>(get_width()) / monitorWidth,
+                                         0,
+                                         0,
+                                         static_cast<double>(get_height()) / monitorHeight,
+                                         get_width() / 2,
+                                         get_height() / 2);
     cr->transform(matrix);
     for (std::vector<GameObject>::iterator gameObject = serverProxy->GameObjects().begin();
          gameObject != serverProxy->GameObjects().end();

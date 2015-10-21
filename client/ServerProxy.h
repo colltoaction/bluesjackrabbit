@@ -31,10 +31,10 @@ class ServerProxy {
 
  private:
 #if __cplusplus > 199711L
-    static constexpr double step = 0.05;
+    static constexpr double step = 0.2;
 #else
     // this shows a warning in C++11 because of -fpermissive
-    static const double step = 0.05;
+    static const double step = 0.2;
 #endif
     static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
     double moveX;

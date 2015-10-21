@@ -5,7 +5,7 @@
 #include "ServerProxy.h"
 
 int main(int argc, char *argv[]) {
-    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "bluesjackrabbit");
+    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
     ServerProxy serverProxy;
     SceneRenderer scene(&serverProxy);
     serverProxy.SubscribeUpdate(sigc::mem_fun(scene, &SceneRenderer::Update));
