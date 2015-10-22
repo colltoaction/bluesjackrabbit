@@ -7,6 +7,7 @@
 #include <gtkmm/window.h>
 #include "SceneRenderer.h"
 #include "InitialScreen.h"
+#include "NewGameScreen.h"
 
 
 class MainWindow : public Gtk::Window {
@@ -18,6 +19,8 @@ class MainWindow : public Gtk::Window {
  private:
     Gtk::Box mainFrame;
     InitialScreen initialScreen;
+    NewGameScreen newGameScreen;
+
     SceneRenderer *scene;
     void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
 };

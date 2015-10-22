@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_CLIENT_INITIALSCREEN_H
 #define BLUESJACKRABBIT_CLIENT_INITIALSCREEN_H
 
+#include <gtkmm.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 
@@ -11,11 +12,6 @@ class InitialScreen : public Gtk::Box {
  public:
     explicit InitialScreen(Clickeable clickable);
     virtual ~InitialScreen();
-
- private:
-    Gtk::Button newGameButton;
-    Gtk::Button joinGameButton;
-    Gtk::Button exitButton;
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_INITIALSCREEN_H

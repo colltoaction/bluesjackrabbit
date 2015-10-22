@@ -11,16 +11,22 @@
 MainWindow::MainWindow(SceneRenderer *scene)
         : mainFrame(),
           initialScreen(sigc::mem_fun(*this, &MainWindow::changeOnNewButtonClicked)),
+          newGameScreen(),
           scene(scene) {
     set_title("Blues Jackrabbit");
     set_resizable(false);
     set_size_request(640, 480);
     set_position(Gtk::WIN_POS_CENTER);
+
+
     mainFrame.pack_start(*scene);
     mainFrame.pack_start(initialScreen);
+    mainFrame.pack_start(newGameScreen);
+
     add(mainFrame);
     show_all();
     scene->hide();
+    newGameScreen.hide();
 }
 
 MainWindow::~MainWindow() {
@@ -28,7 +34,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::changeOnNewButtonClicked() {
     initialScreen.hide();
-    scene->show();
+    newGameScreen.show();
 }
 
 void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget) {
@@ -44,7 +50,8 @@ void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidge
     }
 
     // FRAME HARDCODE. AL menos que todos los glade lo llamen frame y listo.
-    refBuilder->get_widget("frame", mainWidget);
-    mainWidget->reparent(*this);
+    Gtk::Widget *other;
+    refBuilder->get_widget("frame", other);
+    mainWidget->reparent(*other);
 }
 
