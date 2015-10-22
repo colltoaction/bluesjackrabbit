@@ -37,5 +37,5 @@ void ExampleWindow::on_button_clicked() {
 }
 
 void ExampleWindow::imprimir() {
-    std::cout << "BOTON 2 CLICKEADO\n";
+    std::cout << "BOTON 2 CLICKEADO " << ++vecesB2 << " veces\n";
 }
