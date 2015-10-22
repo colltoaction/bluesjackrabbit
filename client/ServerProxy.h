@@ -13,20 +13,15 @@ typedef sigc::slot<void> Subscriber;
 class ServerProxy {
  public:
     ServerProxy();
-
     void MoveUp();
-
     void MoveDown();
-
     void MoveLeft();
-
     void MoveRight();
 
     /**
      * Receives a functor object subscribing to updates.
      */
     void SubscribeUpdate(Subscriber subscriber);
-
     std::vector<GameObject> &GameObjects();
 
  private:
@@ -36,7 +31,6 @@ class ServerProxy {
     double moveY;
     std::vector<GameObject> gameObjects;
     std::vector<Subscriber> subscribers;
-
     void FixedUpdate();
     void Notify();
 };

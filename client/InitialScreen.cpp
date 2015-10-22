@@ -1,19 +1,18 @@
 #include "InitialScreen.h"
-#include "Clickeable.h"
 
-InitialScreen::InitialScreen(Clickeable *mainWindow)
-    : newGameButton("Nueva Partida"),
-      joinGameButton("Unirse a Partida"),
-      exitButton("Salir") {
-    this->set_visible(true);
-    this->set_orientation(Gtk::ORIENTATION_VERTICAL);
+InitialScreen::InitialScreen(Clickeable clickable)
+        : newGameButton("Nueva Partida"),
+          joinGameButton("Unirse a Partida"),
+          exitButton("Salir") {
+    set_visible(true);
+    set_orientation(Gtk::ORIENTATION_VERTICAL);
     add(newGameButton);
     add(joinGameButton);
     add(exitButton);
 
-    newGameButton.signal_clicked().connect(
-            sigc::mem_fun(*mainWindow, &Clickeable::onClick));
+    newGameButton.signal_clicked().connect(clickable);
 }
+
 InitialScreen::~InitialScreen() {
 }
 

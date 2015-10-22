@@ -1,10 +1,9 @@
 #include <gtkmm/application.h>
+#include <gtkmm/button.h>
 #include "EventBus.h"
 #include "MainWindow.h"
 #include "SceneRenderer.h"
 #include "ServerProxy.h"
-
-#include <gtkmm/button.h>
 
 int main(int argc, char *argv[]) {
     Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");

@@ -15,13 +15,9 @@ typedef sigc::slot<void, Event const&> Handler;
 class EventBus {
  public:
     explicit EventBus(Gtk::Window *window);
-
     bool KeyPressEvent(GdkEventKey *event);
-
     bool KeyReleaseEvent(GdkEventKey *event);
-
     bool Main();
-
     void SubscribeKeyPress(guint key, Handler handler);
 
  private:

@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(client)
 
-find_package (Threads)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(CAIROMM REQUIRED cairomm-1.0)
 pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
@@ -12,7 +11,6 @@ include_directories(SYSTEM ${CAIROMM_INCLUDE_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
 set(SOURCES main.cpp
-        Clickeable.h
         Event.cpp
         Event.h
         EventBus.cpp
@@ -49,4 +47,3 @@ file(COPY new_game.glade
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
-target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})

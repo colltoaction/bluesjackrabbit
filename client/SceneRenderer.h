@@ -1,5 +1,5 @@
-#ifndef BLUESJACKRABBIT_SCENE_H
-#define BLUESJACKRABBIT_SCENE_H
+#ifndef BLUESJACKRABBIT_CLIENT_SCENE_H
+#define BLUESJACKRABBIT_CLIENT_SCENE_H
 
 
 #include <gtkmm/drawingarea.h>
@@ -10,7 +10,6 @@
 class SceneRenderer : public Gtk::DrawingArea {
  public:
     explicit SceneRenderer(ServerProxy *serverProxy);
-
     void Update();
 
  protected:
@@ -22,4 +21,4 @@ class SceneRenderer : public Gtk::DrawingArea {
 };
 
 
-#endif  // BLUESJACKRABBIT_SCENE_H
+#endif  // BLUESJACKRABBIT_CLIENT_SCENE_H
