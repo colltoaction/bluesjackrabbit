@@ -23,7 +23,11 @@ MainWindow::~MainWindow() {
 void MainWindow::addScene(SceneRenderer *scene){
 	this->scene = scene;
 	mainFrame.pack_start(*this->scene);
+	mainFrame.pack_start(initialScreen);
 	this->show_all();
+
+	//this->scene->hide();
+	//initialScreen.hide();
 }
 
 void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget) {
