@@ -4,20 +4,26 @@
 #include <glibmm/markup.h>
 #include <gtkmm/builder.h>
 
-
 #include "EventBus.h"
 #include "MainWindow.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow() : mainFrame(), initialScreen() {
     set_title("Blues Jackrabbit");
     set_resizable(false);
-    set_size_request(300, 100);
+    set_size_request(640, 480);
     set_position(Gtk::WIN_POS_CENTER);
-    loadFrameFromGlade("new_game.glade", newGamePane);
-    maximize();
+    // loadFrameFromGlade("new_game.glade", newGamePane);
+    //mainFrame.pack_start(initialScreen);
+    this->add(mainFrame);
 }
 
 MainWindow::~MainWindow() {
+}
+
+void MainWindow::addScene(SceneRenderer *scene){
+	this->scene = scene;
+	mainFrame.pack_start(*this->scene);
+	this->show_all();
 }
 
 void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget) {

@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
     eventBus.SubscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(serverProxy, &ServerProxy::MoveDown)));
     eventBus.SubscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(serverProxy, &ServerProxy::MoveLeft)));
     eventBus.SubscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(serverProxy, &ServerProxy::MoveRight)));
-    window.add(scene);
-    window.show_all();
+    window.addScene(&scene);
     return app->run(window);
 }

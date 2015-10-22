@@ -1,19 +1,21 @@
 #ifndef BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 #define BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 
-#include <gtkmm/frame.h>
-#include <gtkmm/paned.h>
-#include <gtkmm/widget.h>
-#include <gtkmm/window.h>
+#include <gtkmm.h>
+#include "InitialScreen.h"
+#include "SceneRenderer.h"
 
 class MainWindow : public Gtk::Window {
  private:
-    Gtk::Frame *mainFrame;
+    Gtk::Box mainFrame;
+    InitialScreen initialScreen;
     Gtk::Paned *newGamePane;
+    SceneRenderer *scene;
 
  public:
     MainWindow();
     virtual ~MainWindow();
+    void addScene(SceneRenderer *scene);
     void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
 };
 
