@@ -5,13 +5,13 @@
 #include "Clickeable.h"
 
 class InitialScreen : public Gtk::Box {
-public:
-	InitialScreen(Clickeable *mainWindow);
-	virtual ~InitialScreen();
-private:
-	Gtk::Button newGameButton;
-	Gtk::Button joinGameButton;
-	Gtk::Button exitButton;
+ public:
+    explicit InitialScreen(Clickeable *mainWindow);
+    virtual ~InitialScreen();
+ private:
+    Gtk::Button newGameButton;
+    Gtk::Button joinGameButton;
+    Gtk::Button exitButton;
 };
 
 #endif /* INITIALSCREEN_H_ */

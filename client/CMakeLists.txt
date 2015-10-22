@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(client)
 
+find_package (Threads)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(CAIROMM REQUIRED cairomm-1.0)
 pkg_check_modules(GTKMM3 REQUIRED gtkmm-3.0)
@@ -11,24 +12,30 @@ include_directories(SYSTEM ${CAIROMM_INCLUDE_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
 set(SOURCES main.cpp
-        MainWindow.cpp
-        MainWindow.h
-        EventBus.cpp
-        EventBus.h
+        Clickeable.h
         Event.cpp
         Event.h
-        Stopwatch.cpp
-        Stopwatch.h
-        Renderer.cpp
-        Renderer.h
-        Transform.cpp
-        Transform.h
-        Point.cpp
-        Point.h
+        EventBus.cpp
+        EventBus.h
         GameObject.cpp
         GameObject.h
+        InitialScreen.cpp
+        InitialScreen.h
+        MainWindow.cpp
+        MainWindow.h
+        Point.cpp
+        Point.h
+        Renderer.cpp
+        Renderer.h
         SceneRenderer.cpp
-        SceneRenderer.h ServerProxy.cpp ServerProxy.h)
+        SceneRenderer.h
+        ServerProxy.cpp
+        ServerProxy.h
+        Stopwatch.cpp
+        Stopwatch.h
+        Transform.cpp
+        Transform.h
+        )
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -42,3 +49,4 @@ file(COPY new_game.glade
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
