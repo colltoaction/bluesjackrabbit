@@ -7,27 +7,30 @@
 #include "EventBus.h"
 #include "MainWindow.h"
 
-MainWindow::MainWindow() : mainFrame(), initialScreen() {
+
+MainWindow::MainWindow(SceneRenderer *scene) : mainFrame(),
+	initialScreen(this), scene(scene){
     set_title("Blues Jackrabbit");
     set_resizable(false);
     set_size_request(640, 480);
     set_position(Gtk::WIN_POS_CENTER);
-    // loadFrameFromGlade("new_game.glade", newGamePane);
-    //mainFrame.pack_start(initialScreen);
-    this->add(mainFrame);
-}
-
-MainWindow::~MainWindow() {
-}
-
-void MainWindow::addScene(SceneRenderer *scene){
-	this->scene = scene;
 	mainFrame.pack_start(*this->scene);
 	mainFrame.pack_start(initialScreen);
-	this->show_all();
+    this->add(mainFrame);
+    show_all();
+    scene->hide();
+}
 
-	//this->scene->hide();
-	//initialScreen.hide();
+MainWindow::~MainWindow(){
+}
+
+void MainWindow::changeOnNewButtonClicked(){
+	initialScreen.hide();
+	scene->show();
+}
+
+void MainWindow::onClick(){
+	this->changeOnNewButtonClicked();
 }
 
 void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget) {

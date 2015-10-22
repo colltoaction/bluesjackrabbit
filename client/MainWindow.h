@@ -2,21 +2,24 @@
 #define BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 
 #include <gtkmm.h>
-#include "InitialScreen.h"
+#include "Clickeable.h"
 #include "SceneRenderer.h"
+#include "InitialScreen.h"
 
-class MainWindow : public Gtk::Window {
+
+class MainWindow : public Gtk::Window, public Clickeable {
  private:
     Gtk::Box mainFrame;
     InitialScreen initialScreen;
-    Gtk::Paned *newGamePane;
     SceneRenderer *scene;
 
+
  public:
-    MainWindow();
+    explicit MainWindow(SceneRenderer *scene);
     virtual ~MainWindow();
-    void addScene(SceneRenderer *scene);
     void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
+    void changeOnNewButtonClicked();
+    void onClick();
 };
 
 
