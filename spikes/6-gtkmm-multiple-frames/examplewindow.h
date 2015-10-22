@@ -27,7 +27,7 @@ class ExampleWindow : public Gtk::Window {
     Gtk::Button b3;
 
  private:
-    int vecesB2 = 0;
+    int vecesB2;
 };
 
 #endif  // GTKMM_EXAMPLEWINDOW_H
