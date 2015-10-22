@@ -1,6 +1,5 @@
 #include <iostream>
 #include "examplewindow.h"
-#include "packbox.h"
 
 ExampleWindow::ExampleWindow() : b1("B1"), b2("B2"), b3("Boton 3") {
     dosBotones.add(b1);

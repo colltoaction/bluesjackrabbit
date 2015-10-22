@@ -10,7 +10,7 @@ link_directories(${GTKMM3_LIBRARY_DIRS})
 include_directories(SYSTEM ${CAIROMM_INCLUDE_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
-set(SOURCES main.cpp examplewindow.cpp examplewindow.h packbox.cpp packbox.h)
+set(SOURCES main.cpp examplewindow.cpp examplewindow.h)
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
