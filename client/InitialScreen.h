@@ -1,10 +1,12 @@
 #ifndef BLUESJACKRABBIT_CLIENT_INITIALSCREEN_H
 #define BLUESJACKRABBIT_CLIENT_INITIALSCREEN_H
 
-#include <gtkmm.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
-
+#include <gtkmm/frame.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/markup.h>
 
 typedef sigc::slot<void> Clickeable;
 

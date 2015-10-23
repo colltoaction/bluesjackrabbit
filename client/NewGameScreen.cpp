@@ -1,6 +1,7 @@
 #include "NewGameScreen.h"
 #include <iostream>
 
+
 NewGameScreen::NewGameScreen() {
 	Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
 	try {
