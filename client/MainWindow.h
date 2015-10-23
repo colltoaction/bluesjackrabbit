@@ -18,8 +18,8 @@ class MainWindow : public Gtk::Window {
 
  private:
     Gtk::Box mainFrame;
-    InitialScreen initialScreen;
-    NewGameScreen newGameScreen;
+    Gtk::Box initialScreen;
+    Gtk::Box newGameScreen;
 
     SceneRenderer *scene;
     void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
