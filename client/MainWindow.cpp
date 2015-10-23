@@ -22,17 +22,17 @@ MainWindow::MainWindow(SceneRenderer *scene)
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
 
-  load_from_glade("main_frame.glade", &initial_screen, true);
-  load_from_glade("new_game.glade", &new_game_screen, false);
+//  load_from_glade("main_frame.glade", &initial_screen, true);
+//  load_from_glade("new_game.glade", &new_game_screen, false);
 
   main_frame.pack_start(*scene);
-  main_frame.pack_start(initial_screen);
-  main_frame.pack_start(new_game_screen);
+//  main_frame.pack_start(initial_screen);
+//  main_frame.pack_start(new_game_screen);
 
   add(main_frame);
   show_all();
-  scene->hide();
-  new_game_screen.hide();
+//  scene->hide();
+//  new_game_screen.hide();
 }
 
 MainWindow::~MainWindow() {

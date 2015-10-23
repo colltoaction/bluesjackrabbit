@@ -10,10 +10,8 @@ class RigidBody {
   const Vector &velocity();
   void apply_force(const Vector &vector);
   void update_fixed();
-  Vector force_or_friction();
 
  private:
-  static const double min_speed_;
   static const double friction_magnitude_;
   Vector force_;
   Vector velocity_;

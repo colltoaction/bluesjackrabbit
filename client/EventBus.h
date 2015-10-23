@@ -21,7 +21,7 @@ class EventBus {
   void subscribeKeyPress(guint key, Handler handler);
 
  private:
-  static const unsigned int timeout_value = 20;  // Same as Unity's physics step
+  static const unsigned int timeout_value = 5;
   std::map<guint, std::vector<Handler> > handlers;
   std::map<guint, bool> pressed;
   Stopwatch stopwatch;

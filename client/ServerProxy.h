@@ -17,26 +17,17 @@ typedef sigc::slot<void> Subscriber;
 class ServerProxy {
  public:
   ServerProxy();
-  ~ServerProxy();
   void MoveUp();
   void MoveDown();
   void MoveLeft();
   void MoveRight();
-
-  /**
-   * Receives a functor object subscribing to updates.
-   */
-  void SubscribeUpdate(Subscriber subscriber);
-  std::vector<GameObjectProxy> &GameObjects();
+  std::vector<Renderer> &renderers();
 
  private:
   static const double step;
-  std::map<std::string, Renderer> renderers_;
   Engine engine_;
-  std::vector<GameObjectProxy> gameObjects;
+  std::vector<Renderer> renderers_;
   std::vector<Subscriber> subscribers;
-  void Notify();
-  GameObjectProxy *character_;
 };
 
 

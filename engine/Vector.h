@@ -12,10 +12,11 @@ class Vector {
   void set_y(double d);
   double magnitude() const;
   Vector direction();
-  bool operator==(const Vector &other);
-  Vector operator*(const double &factor);
-  Vector operator+(const Vector &other);
-  Vector &operator+=(const Vector &other);
+  bool operator==(const Vector &other) const;
+  Vector operator*(const double &factor) const;
+  Vector operator+(const Vector &other) const;
+  // TODO(tinchou): check why it isn't working
+  //  Vector &operator+=(const Vector &other);
 
  private:
   static const Vector zero_;

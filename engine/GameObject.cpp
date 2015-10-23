@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "RigidBody.h"
 
-::Transform &GameObject::transform() {
+const ::Transform &GameObject::transform() const {
   return transform_;
 }
 

@@ -1,7 +1,6 @@
 #include "RigidBody.h"
 
-const double RigidBody::min_speed_ = 0.2;
-const double RigidBody::friction_magnitude_ = 0.5;
+const double RigidBody::friction_magnitude_ = 0.08;
 
 RigidBody::RigidBody()
     : force_(0, 0),
@@ -9,7 +8,7 @@ RigidBody::RigidBody()
 }
 
 void RigidBody::apply_force(const Vector &force) {
-  force_ += force;
+  force_ = force_ + force;
 }
 
 const Vector &RigidBody::velocity() {
@@ -17,19 +16,15 @@ const Vector &RigidBody::velocity() {
 }
 
 void RigidBody::update_fixed() {
-  if (velocity_.magnitude() < min_speed_) {
-    velocity_ = Vector::zero();
-  } else {
-    Vector force = force_or_friction();
-    velocity_ += force;
+  if (force_ == Vector::zero()) {
+    Vector friction = velocity_.direction() * -friction_magnitude_;
+    if (velocity_.magnitude() < friction.magnitude()) {
+      velocity_ = Vector::zero();
+    } else {
+      force_ = friction;
+    }
   }
 
+  velocity_ = velocity_ + force_;
   force_ = Vector::zero();
-}
-Vector RigidBody::force_or_friction() {
-  if (force_ == Vector::zero()) {
-    return Vector::zero();
-  } else {
-    return force_.direction() * -friction_magnitude_;
-  }
 }

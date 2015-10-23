@@ -7,9 +7,8 @@ const Vector &Vector::zero() {
   return zero_;
 }
 
-Vector::Vector(double x, double y) {
-  x_ = x;
-  y_ = y;
+Vector::Vector(double x, double y)
+    : x_(x), y_(y) {
 }
 
 double Vector::x() const {
@@ -33,24 +32,28 @@ double Vector::magnitude() const {
 }
 
 Vector Vector::direction() {
-  double factor = 1 / magnitude();
-  return *this * factor;
+  double m = magnitude();
+  if (m > 0) {
+    return *this * (1 / m);
+  }
+
+  return Vector::zero();
 }
 
-bool Vector::operator==(const Vector &other) {
+bool Vector::operator==(const Vector &other) const {
   return x_ == other.x_ && y_ == other.y_;
 }
 
-Vector Vector::operator*(const double &factor) {
+Vector Vector::operator*(const double &factor) const {
   return Vector(x_ * factor, y_ * factor);
 }
 
-Vector Vector::operator+(const Vector &other) {
+Vector Vector::operator+(const Vector &other) const {
   return Vector(x_ + other.x_, y_ + other.y_);
 }
 
-Vector &Vector::operator+=(const Vector &other) {
-  x_ += other.x_;
-  y_ += other.y_;
-  return *this;
-}
+// Vector &Vector::operator+=(const Vector &other) {
+//   x_ += other.x_;
+//   y_ += other.y_;
+//   return *this;
+// }
