@@ -22,7 +22,7 @@ MainWindow::MainWindow(SceneRenderer *scene)
     loadFrameFromGlade("main_frame.glade", &initialScreen);
     loadFrameFromGlade("new_game.glade", &newGameScreen);
 
-    //sigc::mem_fun(*this, &MainWindow::changeOnNewButtonClicked);
+    // sigc::mem_fun(*this, &MainWindow::changeOnNewButtonClicked);
 
     mainFrame.pack_start(*scene);
     mainFrame.pack_start(initialScreen);
@@ -30,8 +30,8 @@ MainWindow::MainWindow(SceneRenderer *scene)
 
     add(mainFrame);
     show_all();
-    //scene->hide();
-    //newGameScreen.hide();
+    // scene->hide();
+    // newGameScreen.hide();
 }
 
 MainWindow::~MainWindow() {
