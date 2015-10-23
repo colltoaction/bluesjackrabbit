@@ -7,11 +7,11 @@
 
 class Stopwatch {
  public:
-    Stopwatch();
-    uint32_t reset();
+  Stopwatch();
+  uint32_t reset();
 
  private:
-    struct timespec last_time;
+  struct timespec last_time;
 };
 
 

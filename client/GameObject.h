@@ -9,11 +9,11 @@ class Renderer;
 
 class GameObject {
  public:
-    ::Transform& Transform();
-    ::Renderer& Renderer();
+  ::Transform &Transform();
+  ::Renderer &Renderer();
  private:
-    ::Transform transform;
-    ::Renderer renderer;
+  ::Transform transform;
+  ::Renderer renderer;
 };
 
 

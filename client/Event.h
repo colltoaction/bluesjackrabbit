@@ -6,11 +6,11 @@
 
 class Event {
  public:
-    explicit Event(uint32_t time_delta);
-    uint32_t timeDelta() const;
+  explicit Event(uint32_t time_delta);
+  uint32_t time_delta() const;
 
  private:
-    uint32_t time_delta;
+  uint32_t time_delta_;
 };
 
 

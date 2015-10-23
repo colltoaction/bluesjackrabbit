@@ -8,12 +8,12 @@
 
 class Renderer {
  public:
-    Renderer();
-    void Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &transform);
+  Renderer();
+  void Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &transform);
 
  private:
-    double width;
-    double height;
+  double width;
+  double height;
 };
 
 

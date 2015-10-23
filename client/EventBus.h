@@ -10,21 +10,21 @@
 #include "Event.h"
 #include "Stopwatch.h"
 
-typedef sigc::slot<void, Event const&> Handler;
+typedef sigc::slot<void, Event const &> Handler;
 
 class EventBus {
  public:
-    explicit EventBus(Gtk::Window *window);
-    bool keyPressEvent(GdkEventKey *event);
-    bool keyReleaseEvent(GdkEventKey *event);
-    bool main();
-    void subscribeKeyPress(guint key, Handler handler);
+  explicit EventBus(Gtk::Window *window);
+  bool keyPressEvent(GdkEventKey *event);
+  bool keyReleaseEvent(GdkEventKey *event);
+  bool main();
+  void subscribeKeyPress(guint key, Handler handler);
 
  private:
-    static const unsigned int timeout_value = 20;  // Same as Unity's physics step
-    std::map< guint, std::vector<Handler> > handlers;
-    std::map<guint, bool> pressed;
-    Stopwatch stopwatch;
+  static const unsigned int timeout_value = 20;  // Same as Unity's physics step
+  std::map<guint, std::vector<Handler> > handlers;
+  std::map<guint, bool> pressed;
+  Stopwatch stopwatch;
 };
 
 

@@ -1,12 +1,12 @@
-#ifndef NEWGAMESCREEN_H_
-#define NEWGAMESCREEN_H_
+#ifndef BLUESJACKRABBIT_CLIENT_NEWGAMESCREEN_H
+#define BLUESJACKRABBIT_CLIENT_NEWGAMESCREEN_H
 
-#include <gtkmm.h>
+#include <gtkmm/box.h>
 
-class NewGameScreen : public Gtk::Box {
-public:
-	NewGameScreen();
-	virtual ~NewGameScreen();
+class NewGameScreen: public Gtk::Box {
+ public:
+  NewGameScreen();
+  virtual ~NewGameScreen();
 };
 
-#endif /* NEWGAMESCREEN_H_ */
+#endif  // BLUESJACKRABBIT_CLIENT_NEWGAMESCREEN_H

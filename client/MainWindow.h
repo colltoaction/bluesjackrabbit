@@ -5,24 +5,23 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
-#include "SceneRenderer.h"
-#include "InitialScreen.h"
 #include "NewGameScreen.h"
+#include "SceneRenderer.h"
 
 
-class MainWindow : public Gtk::Window {
+class MainWindow: public Gtk::Window {
  public:
-    explicit MainWindow(SceneRenderer *scene);
-    virtual ~MainWindow();
-    void changeOnNewButtonClicked();
+  explicit MainWindow(SceneRenderer *scene);
+  virtual ~MainWindow();
+  void changeOnNewButtonClicked();
 
  private:
-    Gtk::Box mainFrame;
-    Gtk::Box initialScreen;
-    Gtk::Box newGameScreen;
+  Gtk::Box mainFrame;
+  Gtk::Box initialScreen;
+  Gtk::Box newGameScreen;
 
-    SceneRenderer *scene;
-    void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
+  SceneRenderer *scene;
+  void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_MAINWINDOW_H

@@ -12,27 +12,27 @@ typedef sigc::slot<void> Subscriber;
 
 class ServerProxy {
  public:
-    ServerProxy();
-    void MoveUp();
-    void MoveDown();
-    void MoveLeft();
-    void MoveRight();
+  ServerProxy();
+  void MoveUp();
+  void MoveDown();
+  void MoveLeft();
+  void MoveRight();
 
-    /**
-     * Receives a functor object subscribing to updates.
-     */
-    void SubscribeUpdate(Subscriber subscriber);
-    std::vector<GameObject> &GameObjects();
+  /**
+   * Receives a functor object subscribing to updates.
+   */
+  void SubscribeUpdate(Subscriber subscriber);
+  std::vector<GameObject> &GameObjects();
 
  private:
-    static const double step;
-    static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
-    double moveX;
-    double moveY;
-    std::vector<GameObject> gameObjects;
-    std::vector<Subscriber> subscribers;
-    void FixedUpdate();
-    void Notify();
+  static const double step;
+  static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
+  double moveX;
+  double moveY;
+  std::vector<GameObject> gameObjects;
+  std::vector<Subscriber> subscribers;
+  void FixedUpdate();
+  void Notify();
 };
 
 

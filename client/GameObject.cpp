@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
 ::Transform &GameObject::Transform() {
-    return transform;
+  return transform;
 }
 
 ::Renderer &GameObject::Renderer() {
-    return renderer;
+  return renderer;
 }

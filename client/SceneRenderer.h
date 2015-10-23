@@ -7,17 +7,17 @@
 #include "GameObject.h"
 #include "ServerProxy.h"
 
-class SceneRenderer : public Gtk::DrawingArea {
+class SceneRenderer: public Gtk::DrawingArea {
  public:
-    explicit SceneRenderer(ServerProxy *serverProxy);
-    void update();
+  explicit SceneRenderer(ServerProxy *serverProxy);
+  void update();
 
  protected:
-    virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
+  virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
-    std::vector<GameObject> gameObjects;
-    ServerProxy *serverProxy;
+  std::vector<GameObject> gameObjects;
+  ServerProxy *server_proxy_;
 };
 
 

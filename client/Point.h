@@ -4,14 +4,14 @@
 
 class Point {
  public:
-    double X() const;
-    double Y() const;
-    void X(double d);
-    void Y(double d);
+  double X() const;
+  double Y() const;
+  void X(double d);
+  void Y(double d);
 
  private:
-    double x;
-    double y;
+  double x;
+  double y;
 };
 
 

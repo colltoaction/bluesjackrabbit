@@ -17,8 +17,6 @@ set(SOURCES main.cpp
         EventBus.h
         GameObject.cpp
         GameObject.h
-        InitialScreen.cpp
-        InitialScreen.h
         MainWindow.cpp
         MainWindow.h
         Point.cpp
