@@ -9,6 +9,6 @@ Event::Event(uint32_t time_delta)
 /**
  * Returns the time delta in nanoseconds.
  */
-uint32_t Event::TimeDelta() const {
+uint32_t Event::timeDelta() const {
     return time_delta;
 }

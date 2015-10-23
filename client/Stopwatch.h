@@ -8,7 +8,7 @@
 class Stopwatch {
  public:
     Stopwatch();
-    uint32_t Reset();
+    uint32_t reset();
 
  private:
     struct timespec last_time;

@@ -10,7 +10,7 @@
 class SceneRenderer : public Gtk::DrawingArea {
  public:
     explicit SceneRenderer(ServerProxy *serverProxy);
-    void Update();
+    void update();
 
  protected:
     virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);

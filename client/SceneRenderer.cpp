@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "SceneRenderer.h"
 
-void SceneRenderer::Update() {
+void SceneRenderer::update() {
     queue_draw();
 }
 

@@ -15,10 +15,10 @@ typedef sigc::slot<void, Event const&> Handler;
 class EventBus {
  public:
     explicit EventBus(Gtk::Window *window);
-    bool KeyPressEvent(GdkEventKey *event);
-    bool KeyReleaseEvent(GdkEventKey *event);
-    bool Main();
-    void SubscribeKeyPress(guint key, Handler handler);
+    bool keyPressEvent(GdkEventKey *event);
+    bool keyReleaseEvent(GdkEventKey *event);
+    bool main();
+    void subscribeKeyPress(guint key, Handler handler);
 
  private:
     static const unsigned int timeout_value = 20;  // Same as Unity's physics step

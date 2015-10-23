@@ -51,7 +51,7 @@ std::vector<GameObject> &ServerProxy::GameObjects() {
 void ServerProxy::FixedUpdate() {
 //    double step = static_cast<double>(event.TimeDelta()) / 1000000000;
     GameObject &gameObject = gameObjects.back();
-    gameObject.Transform().UpdatePosition(gameObject.Transform().Position().X() + moveX,
+    gameObject.Transform().updatePosition(gameObject.Transform().Position().X() + moveX,
                                           gameObject.Transform().Position().Y() + moveY);
 
     moveX = 0;

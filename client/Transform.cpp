@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-void Transform::UpdatePosition(double x, double y) {
+void Transform::updatePosition(double x, double y) {
     position.X(x);
     position.Y(y);
 }

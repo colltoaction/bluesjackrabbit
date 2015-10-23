@@ -2,18 +2,18 @@
 #include "Event.h"
 #include "EventBus.h"
 
-bool EventBus::KeyPressEvent(GdkEventKey *event) {
+bool EventBus::keyPressEvent(GdkEventKey *event) {
     pressed[event->keyval] = true;
     return true;
 }
 
-bool EventBus::KeyReleaseEvent(GdkEventKey *event) {
+bool EventBus::keyReleaseEvent(GdkEventKey *event) {
     pressed[event->keyval] = false;
     return true;
 }
 
-bool EventBus::Main() {
-    uint32_t elapsed = stopwatch.Reset();
+bool EventBus::main() {
+    uint32_t elapsed = stopwatch.reset();
     for (std::map< guint, std::vector<Handler> >::iterator itKeys = handlers.begin();
          itKeys != handlers.end();
          ++itKeys) {
@@ -32,22 +32,22 @@ bool EventBus::Main() {
     return true;
 }
 
-void EventBus::SubscribeKeyPress(guint key, Handler handler) {
+void EventBus::subscribeKeyPress(guint key, Handler handler) {
     handlers[key].push_back(handler);
 }
 
 EventBus::EventBus(Gtk::Window *window) {
     window->add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
     window->signal_key_press_event().connect(
-            sigc::mem_fun(*this, &EventBus::KeyPressEvent), false);  // Why before the default event??
+            sigc::mem_fun(*this, &EventBus::keyPressEvent), false);  // Why before the default event??
     window->signal_key_release_event().connect(
-            sigc::mem_fun(*this, &EventBus::KeyReleaseEvent), false);
+            sigc::mem_fun(*this, &EventBus::keyReleaseEvent), false);
     // It should run the physics simulation in GTK's idle time
     // Is this a good idea?
 //     Glib::signal_idle().connect(
 //             sigc::mem_fun(*this, &EventBus::Main));
     Glib::signal_timeout().connect(
-            sigc::mem_fun(*this, &EventBus::Main),
+            sigc::mem_fun(*this, &EventBus::main),
             timeout_value);
 //    Glib::signal_timeout().connect(
 //            sigc::bind_return(sigc::mem_fun(*window, &Gtk::Window::queue_draw), true),

@@ -9,7 +9,7 @@
 
 class Transform {
  public:
-    void UpdatePosition(double x, double y);
+    void updatePosition(double x, double y);
     const Point &Position() const;
 
  private:

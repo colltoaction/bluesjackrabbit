@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Stopwatch.h"
 
-uint32_t Stopwatch::Reset() {
+uint32_t Stopwatch::reset() {
     struct timespec current_time;
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     // Does it overflow?
