@@ -8,20 +8,21 @@
 #include "NewGameScreen.h"
 #include "SceneRenderer.h"
 
+typedef sigc::slot<void> Clickeable;
 
 class MainWindow: public Gtk::Window {
  public:
   explicit MainWindow(SceneRenderer *scene);
   virtual ~MainWindow();
-  void changeOnNewButtonClicked();
+  void new_game_click();
 
  private:
-  Gtk::Box mainFrame;
-  Gtk::Box initialScreen;
-  Gtk::Box newGameScreen;
+  Gtk::Box main_frame;
+  Gtk::Box initial_screen;
+  Gtk::Box new_game_screen;
 
   SceneRenderer *scene;
-  void loadFrameFromGlade(std::string fileName, Gtk::Widget *mainWidget);
+  void load_from_glade(std::string file_name, Gtk::Widget *parent, bool signal);
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_MAINWINDOW_H

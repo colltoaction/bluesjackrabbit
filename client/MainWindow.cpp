@@ -3,48 +3,53 @@
 #include <glibmm/fileutils.h>
 #include <glibmm/markup.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/paned.h>
 
 #include "EventBus.h"
 #include "MainWindow.h"
 
 
 MainWindow::MainWindow(SceneRenderer *scene)
-    : mainFrame(),
-      initialScreen(),
-      newGameScreen(),
+    : main_frame(),
+    //
+      initial_screen(),
+      new_game_screen(),
       scene(scene) {
   set_title("Blues Jackrabbit");
   set_resizable(false);
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
 
-  loadFrameFromGlade("main_frame.glade", &initialScreen);
-  loadFrameFromGlade("new_game.glade", &newGameScreen);
+  load_from_glade("main_frame.glade", &initial_screen, true);
+  load_from_glade("new_game.glade", &new_game_screen, false);
 
-  // sigc::mem_fun(*this, &MainWindow::changeOnNewButtonClicked);
+  // sigc::mem_fun(*this, &MainWindow::new_game_click);
 
-  mainFrame.pack_start(*scene);
-  mainFrame.pack_start(initialScreen);
-  mainFrame.pack_start(newGameScreen);
+  main_frame.pack_start(*scene);
+  main_frame.pack_start(initial_screen);
+  main_frame.pack_start(new_game_screen);
 
-  add(mainFrame);
+  add(main_frame);
   show_all();
-  // scene->hide();
-  // newGameScreen.hide();
+  scene->hide();
+  new_game_screen.hide();
 }
 
 MainWindow::~MainWindow() {
 }
 
-void MainWindow::changeOnNewButtonClicked() {
-  initialScreen.hide();
-  newGameScreen.show();
+void MainWindow::new_game_click() {
+  initial_screen.hide();
+  new_game_screen.show();
 }
 
-void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *parent) {
+void MainWindow::load_from_glade(std::string file_name, Gtk::Widget *parent, bool signal) {
   Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
   try {
-    refBuilder->add_from_file(fileName);
+    refBuilder->add_from_file(file_name);
   } catch (const Glib::FileError &ex) {
     std::cerr << "FileError: " << ex.what() << std::endl;
   } catch (const Glib::MarkupError &ex) {
@@ -57,5 +62,12 @@ void MainWindow::loadFrameFromGlade(std::string fileName, Gtk::Widget *parent) {
   Gtk::Widget *other;
   refBuilder->get_widget("frame", other);
   other->reparent(*parent);
+  if (signal) {
+    Gtk::Button *button = NULL;
+    refBuilder->get_widget("buttonNewGame", button);
+    if (button) {
+      button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::new_game_click));
+    }
+  }
 }
 
