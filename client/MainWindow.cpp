@@ -60,11 +60,11 @@ void MainWindow::load_from_glade(std::string file_name, Gtk::Widget *parent, boo
     refBuilder->get_widget("frame", other);
     other->reparent(*parent);
     if (signal) {
-    	Gtk::Button *button = NULL;
-    	refBuilder->get_widget("buttonNewGame", button);
-    	if (button){
-    		button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::new_game_click));
-    	}
+        Gtk::Button *button = NULL;
+        refBuilder->get_widget("buttonNewGame", button);
+        if (button) {
+            button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::new_game_click));
+        }
     }
 }
 
