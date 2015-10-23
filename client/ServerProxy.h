@@ -3,7 +3,11 @@
 
 
 #include <sigc++/functors/slot.h>
-#include "GameObject.h"
+#include <engine/Engine.h>
+#include <engine/GameObject.h>
+#include <map>
+#include <string>
+#include "GameObjectProxy.h"
 
 /**
  * A functor object complying to void functor().
@@ -13,6 +17,7 @@ typedef sigc::slot<void> Subscriber;
 class ServerProxy {
  public:
   ServerProxy();
+  ~ServerProxy();
   void MoveUp();
   void MoveDown();
   void MoveLeft();
@@ -22,17 +27,16 @@ class ServerProxy {
    * Receives a functor object subscribing to updates.
    */
   void SubscribeUpdate(Subscriber subscriber);
-  std::vector<GameObject> &GameObjects();
+  std::vector<GameObjectProxy> &GameObjects();
 
  private:
   static const double step;
-  static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
-  double moveX;
-  double moveY;
-  std::vector<GameObject> gameObjects;
+  std::map<std::string, Renderer> renderers_;
+  Engine engine_;
+  std::vector<GameObjectProxy> gameObjects;
   std::vector<Subscriber> subscribers;
-  void FixedUpdate();
   void Notify();
+  GameObjectProxy *character_;
 };
 
 

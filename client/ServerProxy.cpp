@@ -1,3 +1,4 @@
+#include <engine/engine.h>
 #include <glibmm/main.h>
 #include <vector>
 #include "ServerProxy.h"
@@ -5,19 +6,19 @@
 const double ServerProxy::step = 0.2;
 
 void ServerProxy::MoveUp() {
-  moveY = -step;
+  engine_.apply_force(character_, Vector(0, -step));
 }
 
 void ServerProxy::MoveDown() {
-  moveY = step;
+  engine_.apply_force(character_, Vector(0, step));
 }
 
 void ServerProxy::MoveLeft() {
-  moveX = -step;
+  engine_.apply_force(character_, Vector(-step, 0));
 }
 
 void ServerProxy::MoveRight() {
-  moveX = step;
+  engine_.apply_force(character_, Vector(step, 0));
 }
 
 void ServerProxy::SubscribeUpdate(Subscriber subscriber) {
@@ -33,28 +34,19 @@ void ServerProxy::Notify() {
 }
 
 ServerProxy::ServerProxy() {
-#if __cplusplus > 199711L
-  gameObjects.emplace_back();
-#else
-  // this shows a warning in C++11 because of move semantics
-  gameObjects.push_back(GameObject());
-#endif
-  Glib::signal_timeout().connect(
-      sigc::bind_return(sigc::mem_fun(*this, &ServerProxy::FixedUpdate), true),
-      fixedUpdateStep);
+  renderers_["circulo"] = Renderer();
+  character_ = new GameObjectProxy(engine_.game_objects()[0], renderers_[engine_.game_objects()[0].type()]);
+  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
+       game_object != engine_.game_objects().end();
+       ++game_object) {
+    gameObjects.push_back(GameObjectProxy(*game_object, renderers_[game_object->type()]));
+  }
 }
 
-std::vector<GameObject> &ServerProxy::GameObjects() {
+ServerProxy::~ServerProxy() {
+  delete character_;
+}
+
+std::vector<GameObjectProxy> &ServerProxy::GameObjects() {
   return gameObjects;
-}
-
-void ServerProxy::FixedUpdate() {
-//    double step = static_cast<double>(event.TimeDelta()) / 1000000000;
-  GameObject &gameObject = gameObjects.back();
-  gameObject.Transform().updatePosition(gameObject.Transform().Position().X() + moveX,
-                                        gameObject.Transform().Position().Y() + moveY);
-
-  moveX = 0;
-  moveY = 0;
-  Notify();
 }

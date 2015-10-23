@@ -1,4 +1,4 @@
-#include "GameObject.h"
+#include <engine/GameObject.h>
 #include "SceneRenderer.h"
 
 void SceneRenderer::update() {
@@ -16,10 +16,10 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
                                        get_width() / 2,
                                        get_height() / 2);
   cr->transform(matrix);
-  for (std::vector<GameObject>::iterator gameObject = server_proxy_->GameObjects().begin();
+  for (std::vector<GameObjectProxy>::iterator gameObject = server_proxy_->GameObjects().begin();
        gameObject != server_proxy_->GameObjects().end();
        ++gameObject) {
-    gameObject->Renderer().Render(cr, gameObject->Transform());
+    gameObject->renderer().Render(cr, gameObject->transform());
   }
 
   return true;

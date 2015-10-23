@@ -4,7 +4,6 @@
 
 #include <gtkmm/drawingarea.h>
 #include <vector>
-#include "GameObject.h"
 #include "ServerProxy.h"
 
 class SceneRenderer: public Gtk::DrawingArea {
@@ -16,7 +15,6 @@ class SceneRenderer: public Gtk::DrawingArea {
   virtual bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
-  std::vector<GameObject> gameObjects;
   ServerProxy *server_proxy_;
 };
 
