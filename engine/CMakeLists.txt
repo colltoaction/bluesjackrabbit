@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(engine)
 
-#link_directories(${SIGC_LIBRARY_DIRS})
-#include_directories(SYSTEM ${SIGC_INCLUDE_DIRS})
-#include_directories(SYSTEM ${GLIBMM_INCLUDE_DIRS})
-
 set(SOURCES
         Engine.cpp
         Engine.h
