@@ -24,15 +24,18 @@ MainWindow::MainWindow(SceneRenderer *scene)
 
   init_main_game_screen();
   init_new_game_screen();
+  init_join_game_screen();
 
   main_frame.pack_start(*scene);
   main_frame.pack_start(initial_screen);
   main_frame.pack_start(new_game_screen);
+  main_frame.pack_start(join_game_screen);
 
   add(main_frame);
   show_all();
   scene->hide();
   new_game_screen.hide();
+  join_game_screen.hide();
 }
 
 MainWindow::~MainWindow() {
@@ -43,6 +46,10 @@ void MainWindow::new_game_click() {
   new_game_screen.show();
 }
 
+void MainWindow::join_game_click() {
+  initial_screen.hide();
+  join_game_screen.show();
+}
 
 void MainWindow::init_click() {
   new_game_screen.hide();
@@ -74,6 +81,11 @@ void MainWindow::init_main_game_screen() {
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::new_game_click));
   }
+  button = NULL;
+  builder->get_widget("buttonJoinGame", button);
+  if (button) {
+      button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::join_game_click));
+  }
 }
 
 void MainWindow::init_new_game_screen() {
@@ -85,3 +97,6 @@ void MainWindow::init_new_game_screen() {
   }
 }
 
+void MainWindow::init_join_game_screen() {
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("join_game.glade", &join_game_screen);
+}
