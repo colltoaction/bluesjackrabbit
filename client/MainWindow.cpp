@@ -86,6 +86,11 @@ void MainWindow::init_main_game_screen() {
   if (button) {
       button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::join_game_click));
   }
+  button = NULL;
+  builder->get_widget("buttonExit", button);
+  if (button) {
+    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::close));
+  }
 }
 
 void MainWindow::init_new_game_screen() {
