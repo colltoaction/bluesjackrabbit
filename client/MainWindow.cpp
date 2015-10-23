@@ -14,7 +14,6 @@
 
 MainWindow::MainWindow(SceneRenderer *scene)
     : main_frame(),
-    //
       initial_screen(),
       new_game_screen(),
       scene(scene) {
@@ -25,8 +24,6 @@ MainWindow::MainWindow(SceneRenderer *scene)
 
   load_from_glade("main_frame.glade", &initial_screen, true);
   load_from_glade("new_game.glade", &new_game_screen, false);
-
-  // sigc::mem_fun(*this, &MainWindow::new_game_click);
 
   main_frame.pack_start(*scene);
   main_frame.pack_start(initial_screen);
