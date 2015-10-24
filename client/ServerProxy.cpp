@@ -25,7 +25,7 @@ ServerProxy::ServerProxy() {
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(Renderer(*game_object));
+    renderers_.push_back(Renderer(&(*game_object)));
   }
 }
 
