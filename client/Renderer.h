@@ -4,18 +4,18 @@
 
 #include <cairomm/context.h>
 #include <gtkmm/drawingarea.h>
-#include "Transform.h"
+#include <engine/Transform.h>
+#include <engine/GameObject.h>
 
 class Renderer {
  public:
-    Renderer();
-
-    void Render(const Cairo::RefPtr<Cairo::Context> &cr, const Transform &transform);
+  explicit Renderer(const GameObject *game_object);
+  void Render(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
-    double width;
-
-    double height;
+  const GameObject *game_object_;
+  double width;
+  double height;
 };
 
 
