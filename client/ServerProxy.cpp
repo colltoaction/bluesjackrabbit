@@ -1,4 +1,4 @@
-#include <engine/engine.h>
+#include <engine/Engine.h>
 #include <glibmm/main.h>
 #include <vector>
 #include "ServerProxy.h"
