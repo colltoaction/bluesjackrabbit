@@ -89,7 +89,7 @@ void MainWindow::init_main_game_screen() {
   button = NULL;
   builder->get_widget("buttonExit", button);
   if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::close));
+    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::hide));
   }
 }
 
