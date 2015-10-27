@@ -1,6 +1,6 @@
 #include "RigidBody.h"
 
-const double RigidBody::friction_magnitude_ = 0.08;
+const double RigidBody::friction_magnitude_ = 0.1;
 
 RigidBody::RigidBody()
     : force_(0, 0),

@@ -27,14 +27,13 @@ add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-lint)
 add_dependencies(${PROJECT_NAME} engine)
 
-
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} engine)
 
-file(COPY main_frame.glade
+file(COPY static/main_frame.glade
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY new_game.glade
+file(COPY static/new_game.glade
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY join_game.glade
+file(COPY static/join_game.glade
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
