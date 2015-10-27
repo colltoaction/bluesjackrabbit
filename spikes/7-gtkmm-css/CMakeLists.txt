@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(6-gtkmm-css)
+project(7-gtkmm-css)
 
 link_directories(${GTKMM3_LIBRARY_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
