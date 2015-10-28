@@ -52,8 +52,10 @@ Vector Vector::operator+(const Vector &other) const {
   return Vector(x_ + other.x_, y_ + other.y_);
 }
 
-// Vector &Vector::operator+=(const Vector &other) {
-//   x_ += other.x_;
-//   y_ += other.y_;
-//   return *this;
-// }
+Vector Vector::operator-(const Vector &other) const {
+  return Vector(x_ - other.x_, y_ - other.y_);
+}
+
+Vector Vector::lerp(const Vector &v0, const Vector &v1, double t) {
+  return v0 + (v1 - v0) * t;
+}

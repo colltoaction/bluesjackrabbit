@@ -5,6 +5,7 @@
 class Vector {
  public:
   static const Vector &zero();
+  static Vector lerp(const Vector &v0, const Vector &v1, double t);
   Vector(double x, double y);
   double x() const;
   double y() const;
@@ -15,8 +16,7 @@ class Vector {
   bool operator==(const Vector &other) const;
   Vector operator*(const double &factor) const;
   Vector operator+(const Vector &other) const;
-  // TODO(tinchou): check why it isn't working
-  //  Vector &operator+=(const Vector &other);
+  Vector operator-(const Vector &other) const;
 
  private:
   static const Vector zero_;
