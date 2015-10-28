@@ -23,7 +23,7 @@ class ServerProxy {
   void MoveLeft();
   void MoveRight();
   std::vector<Renderer*> &renderers();
-  const Transform &main_transform();
+  const Transform &character_transform();
 
  private:
   static const double step;

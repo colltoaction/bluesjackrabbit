@@ -22,7 +22,7 @@ void ServerProxy::MoveRight() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
 }
 
-const Transform &ServerProxy::main_transform() {
+const Transform &ServerProxy::character_transform() {
   return engine_.game_objects().front().transform();
 }
 

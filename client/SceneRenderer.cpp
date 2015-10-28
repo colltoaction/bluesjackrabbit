@@ -7,7 +7,7 @@ void SceneRenderer::update() {
 
 // TODO(tinchou): avoid redrawing everything
 bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
-  const Transform &main_transform = server_proxy_->main_transform();
+  const Transform &main_transform = server_proxy_->character_transform();
   gint monitorWidth = get_screen()->get_monitor_width_mm(get_screen()->get_primary_monitor());
   gint monitorHeight = get_screen()->get_monitor_height_mm(get_screen()->get_primary_monitor());
   cr->translate(get_width() / 2,
