@@ -17,16 +17,18 @@ typedef sigc::slot<void> Subscriber;
 class ServerProxy {
  public:
   ServerProxy();
+  ~ServerProxy();
   void MoveUp();
   void MoveDown();
   void MoveLeft();
   void MoveRight();
-  std::vector<Renderer> &renderers();
+  std::vector<Renderer*> &renderers();
+  const Transform &main_transform();
 
  private:
   static const double step;
   Engine engine_;
-  std::vector<Renderer> renderers_;
+  std::vector<Renderer*> renderers_;
   std::vector<Subscriber> subscribers;
 };
 
