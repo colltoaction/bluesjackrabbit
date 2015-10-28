@@ -28,7 +28,7 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   if (new_position.magnitude() > 0.3) {
     camera_position_ = new_position;
   }
-  
+
   return true;
 }
 

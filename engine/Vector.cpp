@@ -57,5 +57,5 @@ Vector Vector::operator-(const Vector &other) const {
 }
 
 Vector Vector::lerp(const Vector &v0, const Vector &v1, double t) {
-  return v0 + (v1 - v0) * t;
+  return v0 * (1-t) + v1 * t;
 }
