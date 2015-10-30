@@ -25,6 +25,10 @@ class ServerProxy {
   std::vector<Renderer*> &renderers();
   const Transform &character_transform();
 
+  bool connect();
+  std::list<std::string> list_maps();
+  bool start_game();
+
  private:
   static const double step;
   Engine engine_;

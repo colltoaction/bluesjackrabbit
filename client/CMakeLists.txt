@@ -13,6 +13,8 @@ set(SOURCES
         GameObjectProxy.h
         MainWindow.cpp
         MainWindow.h
+        MapComboBox.cpp
+        MapComboBox.h
         Renderer.cpp
         Renderer.h
         SceneRenderer.cpp
