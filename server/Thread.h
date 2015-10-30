@@ -2,13 +2,13 @@
 #define BLUESJACKRABBIT_SERVER_THREAD_H
 
 class Thread {
- public:
+public:
     virtual ~Thread() { }
     void Start();
     void Join();
- protected:
+protected:
     virtual void ThreadMain() = 0;
- private:
+private:
     pthread_t thread;
     static void* StartRoutine(void* arg);
 };

@@ -1,0 +1,24 @@
+#ifndef BLUESJACKRABBIT_SERVER_CLIENTS_H
+#define BLUESJACKRABBIT_SERVER_CLIENTS_H
+
+#include <vector>
+#include "AcceptorThread.h"
+#include "ClientProxy.h"
+
+class Clients: public AcceptHandler {
+ public:
+    Clients();
+    ~Clients();
+    void CloseConnections();
+
+    /**
+	* Implements the AcceptHandler interface.
+	* Receives a new connection from the acceptor thread and starts a new
+	* connection with the client.
+    */
+    void Handle(Socket* peerskt);
+ private:
+    std::vector<ClientProxy*> threads;
+};
+
+#endif // BLUESJACKRABBIT_SERVER_CLIENTS_H
