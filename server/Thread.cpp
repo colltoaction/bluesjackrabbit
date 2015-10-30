@@ -3,7 +3,7 @@
 
 
 void* Thread::StartRoutine(void* arg) {
-    Thread* self = reinterpret_cast<Thread*>(arg);
+    Thread* self = (Thread*)arg;
     self->ThreadMain();
     return NULL;
 }

@@ -3,22 +3,24 @@
 
 #include "Socket.h"
 
+#define MAX_CONNECTIONS_PER_TIME 20
+
 class ListenerSocket {
- public:
+public:
     explicit ListenerSocket(const char* port);
     ~ListenerSocket();
     void Listen() const;
     void Close() const;
 
-  /**
-  * Accepts a new connection and creates a new socket in peerskt.
-  * Returns -1 if the accept operation failed and the content of
-  * peerskt is undefined.
-  */
+	/**
+	* Accepts a new connection and creates a new socket in peerskt.
+	* Returns -1 if the accept operation failed and the content of
+	* peerskt is undefined.
+	*/
     int Accept(Socket*& peerskt) const;
- private:
+private:
     int skt;
     struct addrinfo *address_info;
 };
 
-#endif  // BLUESJACKRABBIT_SERVER_LISTENERSOCKET_H
+#endif // BLUESJACKRABBIT_SERVER_LISTENERSOCKET_H

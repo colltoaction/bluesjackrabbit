@@ -22,13 +22,13 @@ ListenerSocket::ListenerSocket(const char* port) {
         address_info->ai_protocol);
 }
 
-ListenerSocket::~ListenerSocket() {
+ListenerSocket::~ListenerSocket(){
     freeaddrinfo(address_info);
 }
 
 void ListenerSocket::Listen() const {
     bind(skt, address_info->ai_addr, address_info->ai_addrlen);
-    listen(skt, 20);
+    listen(skt, MAX_CONNECTIONS_PER_TIME);
 }
 
 void ListenerSocket::Close() const {
@@ -37,7 +37,7 @@ void ListenerSocket::Close() const {
 }
 
 int ListenerSocket::Accept(Socket*& peerskt) const {
-    int peersktFD = accept(skt, NULL, NULL);  // blocking
+    int peersktFD = accept(skt, NULL, NULL); // blocking
     if (peersktFD > -1) {
         peerskt = new Socket(peersktFD);
     }
