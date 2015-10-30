@@ -19,8 +19,9 @@ MainWindow::MainWindow(SceneRenderer *scene, const ServerProxy &server_proxy)
   : main_frame(),
     initial_screen(),
     new_game_screen(),
+    map_id(0),
     scene(scene),
-    map(NULL) {
+    map_combo(NULL) {
   this->server_proxy = server_proxy;
   set_title("Blues Jackrabbit");
   set_size_request(640, 480);
@@ -82,10 +83,10 @@ void MainWindow::main_game_view() {
 
 void MainWindow::new_game_click() {
   if (connected) {
-    std::list<std::string> maps = server_proxy.list_maps();
+    std::map<size_t, std::string> maps = server_proxy.list_maps();
+    load_combo(maps);
     initial_screen.hide();
     new_game_screen.show();
-    // TODO(tomas): Do something with maps...
   }
 }
 
@@ -108,7 +109,7 @@ void MainWindow::join_once_for_all() {
 }
 
 void MainWindow::init_click() {
-  server_proxy.start_game();
+  server_proxy.start_game(map_id);
   new_game_screen.hide();
   scene->show();
 }
@@ -128,7 +129,6 @@ Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gt
   Gtk::Widget *other;
   refBuilder->get_widget("frame", other);
   other->reparent(*parent);
-  // parent->pack_start(*other);
   return refBuilder;
 }
 
@@ -173,17 +173,30 @@ void MainWindow::init_new_game_screen() {
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::init_click));
   }
-  builder->get_widget_derived("map", map);
-  // map->signal_focus_in_event().connect(sigc::mem_fun(*this, &MainWindow::test));
-  map->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::test));
-  // new_game_screen.add(*map);
-  new_game_screen.pack_end(*map);
+  builder->get_widget("map", map_combo);
+  // Create the Combobox Tree model:
+  combo_model = Gtk::ListStore::create(columns);
+  map_combo->set_model(combo_model);
+  map_combo->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::combo_map_changed));
+  map_combo->pack_start(columns.id);
+  map_combo->pack_start(columns.map_name);
 }
 
-void MainWindow::test() {
-  std::cout << "Foco!!!!\n";
+void MainWindow::combo_map_changed() {
+  // std::cout << ((*map_combo->get_active())[columns.id]) << std::endl;
+  map_id = ((*map_combo->get_active())[columns.id]);
 }
 
 void MainWindow::init_join_game_screen() {
   Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen);
+}
+
+
+void MainWindow::load_combo(const std::map<size_t, std::string> &names) {
+  for (std::map<size_t, std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+    Gtk::TreeModel::Row row = *(combo_model->append());
+    row[columns.id] = it->first;
+    row[columns.map_name] = it->second;
+    // map_combo->set_active(row);
+  }
 }

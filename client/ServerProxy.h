@@ -26,8 +26,8 @@ class ServerProxy {
   virtual std::map<uint32_t, Renderer*> &renderers() = 0;
 
   bool connect();
-  std::list<std::string> list_maps();
-  bool start_game();
+  std::map<size_t, std::string> list_maps();
+  bool start_game(size_t map_id);
 
  private:
   static const double step;

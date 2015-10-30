@@ -14,7 +14,6 @@
 #include "EventBus.h"
 #include "SceneRenderer.h"
 #include "ServerProxy.h"
-#include "MapComboBox.h"
 
 class MainWindow: public Gtk::Window {
  public:
@@ -42,11 +41,7 @@ class MainWindow: public Gtk::Window {
 
   bool connected;
   ServerProxy server_proxy;
-
-
-  SceneRenderer *scene;
-  MapComboBox *map;
-  void test();
+  size_t map_id;
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();
@@ -58,11 +53,6 @@ class MainWindow: public Gtk::Window {
   void new_game_click();
   void init_click();
   void join_game_click();
-  void join_once_for_all();
-  void singleplayer_click();
-  void multiplayer_click();
-  void init_server_proxy();
-  void connect_bus_signals();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {
@@ -71,19 +61,18 @@ class MainWindow: public Gtk::Window {
         add(id);
         add(map_name);
       }
-      Gtk::TreeModelColumn<size_t> id;
-      Gtk::TreeModelColumn<std::string> map_name;
+
+      Gtk::TreeModelColumn<int> id;
+      Gtk::TreeModelColumn<Glib::ustring> map_name;
   };
 
   ModelColumns columns;
-  Glib::RefPtr<Gtk::ListStore> map_combo_model;
-  Glib::RefPtr<Gtk::ListStore> game_combo_model;
+  Glib::RefPtr<Gtk::ListStore> combo_model;
 
+  SceneRenderer *scene;
   Gtk::ComboBox *map_combo;
-  Gtk::ComboBox *game_combo;
   void combo_map_changed();
-  void combo_game_changed();
-  void load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names);
+  void load_combo(const std::map<size_t, std::string> &names);
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
