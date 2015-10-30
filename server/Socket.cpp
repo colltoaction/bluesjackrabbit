@@ -29,7 +29,7 @@ void Socket::Close() const {
     close(skt);
 }
 
-void Socket::Send(const char* msg, const size_t length) const {
+void Socket::Send(const char* msg, size_t length) const {
     size_t sent = 0;
     while (sent < length) {
         size_t s = ::send(skt, &msg[sent], length - sent, MSG_NOSIGNAL);
