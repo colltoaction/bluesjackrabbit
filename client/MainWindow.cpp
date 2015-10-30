@@ -13,23 +13,15 @@
 #include "EventBus.h"
 #include "LocalServerProxy.h"
 #include "MainWindow.h"
-#include "RemoteServerProxy.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow(const Configuration &config)
-    : config_(config)
-    , scene_()
-    , main_frame_()
-    , connection_screen_()
-    , initial_screen_()
-    , new_game_screen_()
-    , join_game_screen_()
-    , text_game_name_(NULL)
-    , server_proxy_(NULL)
-    , map_id_(0)
-    , game_id_(0)
-    , map_combo(NULL)
-    , game_combo(NULL) {
+MainWindow::MainWindow(SceneRenderer *scene, const ServerProxy &server_proxy)
+  : main_frame(),
+    initial_screen(),
+    new_game_screen(),
+    scene(scene),
+    map(NULL) {
+  this->server_proxy = server_proxy;
   set_title("Blues Jackrabbit");
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
@@ -56,10 +48,11 @@ MainWindow::MainWindow(const Configuration &config)
 
 
   show_all();
-  scene_.hide();
-  initial_screen_.hide();
-  new_game_screen_.hide();
-  join_game_screen_.hide();
+  scene->hide();
+  new_game_screen.hide();
+  join_game_screen.hide();
+
+  connected = this->server_proxy.connect();
 }
 
 MainWindow::~MainWindow() {
@@ -88,11 +81,11 @@ void MainWindow::main_game_view() {
 }
 
 void MainWindow::new_game_click() {
-  if (connected_) {
-    std::map<size_t, std::string> maps = server_proxy_->list_maps();
-    load_combo(&map_combo_model, maps);
-    initial_screen_.hide();
-    new_game_screen_.show();
+  if (connected) {
+    std::list<std::string> maps = server_proxy.list_maps();
+    initial_screen.hide();
+    new_game_screen.show();
+    // TODO(tomas): Do something with maps...
   }
 }
 
@@ -115,49 +108,9 @@ void MainWindow::join_once_for_all() {
 }
 
 void MainWindow::init_click() {
-  std::string game_name = text_game_name_->get_text();
-  server_proxy_->start_game(map_id_, game_name);
-  new_game_screen_.hide();
-  connect_bus_signals();
-  scene_.show();
-}
-
-void MainWindow::connect_bus_signals() {
-  add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
-  signal_key_press_event().connect(
-      sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
-  signal_key_release_event().connect(
-      sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
-}
-
-void MainWindow::singleplayer_click() {
-  server_proxy_ = new LocalServerProxy();
-  init_server_proxy();
-  main_game_view();
-}
-
-void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy(config_);
-  init_server_proxy();
-  main_game_view();
-}
-
-void MainWindow::init_server_proxy() {
-  connected_ = server_proxy_->connect();
-  if (!connected_) {
-    Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
-    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
-    dialog.run();
-    hide();
-    return;
-  }
-  bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
-  bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
-  bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
-  bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
-  bus_.subscribeKeyPress(GDK_KEY_space, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::jump)));
-  bus_.subscribeKeyPress(GDK_KEY_Control_L, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::shoot)));
-  scene_.set_server_proxy(server_proxy_);
+  server_proxy.start_game();
+  new_game_screen.hide();
+  scene->show();
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Box *parent) {
@@ -175,11 +128,12 @@ Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gt
   Gtk::Widget *other;
   refBuilder->get_widget("frame", other);
   other->reparent(*parent);
+  // parent->pack_start(*other);
   return refBuilder;
 }
 
 void MainWindow::init_main_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/main_frame.glade", &initial_screen_);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/main_frame.glade", &initial_screen);
   Gtk::Button *button = NULL;
   builder->get_widget("buttonNewGame", button);
   if (button) {
@@ -213,63 +167,23 @@ void MainWindow::init_connect_screen() {
 
 
 void MainWindow::init_new_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen_);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen);
   Gtk::Button *button = NULL;
   builder->get_widget("start", button);
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::init_click));
   }
-  button = NULL;
-  builder->get_widget("cancel", button);
-  if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::main_game_view));
-  }
-  builder->get_widget("game_name", text_game_name_);
-  builder->get_widget("map", map_combo);
-  // Create the Combobox Tree model:
-  map_combo_model = Gtk::ListStore::create(columns);
-  map_combo->set_model(map_combo_model);
-  map_combo->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::combo_map_changed));
-  map_combo->pack_start(columns.id);
-  map_combo->pack_start(columns.map_name);
+  builder->get_widget_derived("map", map);
+  // map->signal_focus_in_event().connect(sigc::mem_fun(*this, &MainWindow::test));
+  map->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::test));
+  // new_game_screen.add(*map);
+  new_game_screen.pack_end(*map);
 }
 
-void MainWindow::combo_map_changed() {
-  map_id_ = ((*map_combo->get_active())[columns.id]);
-}
-
-void MainWindow::combo_game_changed() {
-  game_id_ = ((*game_combo->get_active())[columns.id]);
+void MainWindow::test() {
+  std::cout << "Foco!!!!\n";
 }
 
 void MainWindow::init_join_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen_);
-  Gtk::Button *button = NULL;
-  builder->get_widget("cancel", button);
-  if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::main_game_view));
-  }
-  button = NULL;
-  builder->get_widget("join", button);
-  if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::join_once_for_all));
-  }
-
-  builder->get_widget("games", game_combo);
-    // Create the Combobox Tree model:
-  game_combo_model = Gtk::ListStore::create(columns);
-  game_combo->set_model(game_combo_model);
-  game_combo->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::combo_game_changed));
-  game_combo->pack_start(columns.id);
-  game_combo->pack_start(columns.map_name);
-}
-
-
-void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names) {
-  for (std::map<size_t, std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-    Gtk::TreeModel::Row row = *((*model)->append());
-    row[columns.id] = it->first;
-    row[columns.map_name] = it->second;
-    // map_combo->set_active(row);
-  }
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen);
 }

@@ -25,13 +25,15 @@ class ServerProxy {
   virtual Vector character_position() = 0;
   virtual std::map<uint32_t, Renderer*> &renderers() = 0;
 
-  virtual bool connect() = 0;
-  virtual std::map<size_t, std::string> list_maps() = 0;
-  virtual std::map<size_t, std::string> list_games() = 0;
-  virtual bool start_game(size_t map_id, std::string) = 0;
-  virtual void join_game(size_t game_id) = 0;
-  virtual void init_game() = 0;
-  virtual void shutdown() = 0;
+  bool connect();
+  std::list<std::string> list_maps();
+  bool start_game();
+
+ private:
+  static const double step;
+  Engine engine_;
+  std::vector<Renderer*> renderers_;
+  std::vector<Subscriber> subscribers;
 };
 
 

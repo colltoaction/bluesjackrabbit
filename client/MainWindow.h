@@ -14,10 +14,11 @@
 #include "EventBus.h"
 #include "SceneRenderer.h"
 #include "ServerProxy.h"
+#include "MapComboBox.h"
 
 class MainWindow: public Gtk::Window {
  public:
-  explicit MainWindow(const Configuration &config);
+  explicit MainWindow(SceneRenderer *scene, const ServerProxy &sever_proxy);
   virtual ~MainWindow();
 
  private:
@@ -38,6 +39,14 @@ class MainWindow: public Gtk::Window {
   static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);
+
+  bool connected;
+  ServerProxy server_proxy;
+
+
+  SceneRenderer *scene;
+  MapComboBox *map;
+  void test();
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();

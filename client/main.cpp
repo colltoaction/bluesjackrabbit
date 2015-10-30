@@ -3,15 +3,17 @@
 #include "MainWindow.h"
 
 int main(int argc, char *argv[]) {
-  (void)argc;  // UNUSED
-  int argc1 = 1;
-  Glib::RefPtr<Gtk::Application> app =
-      Gtk::Application::create(argc1,  // Hide the parameters from GTK
-                               argv,
-                               "org.fiuba.bluesjackrabbit",
-                               Gio::APPLICATION_NON_UNIQUE);  // Allow multiple windows
-  Configuration config("client.ini");
-  MainWindow window(config);
-  int result = app->run(window);
-  return result;
+  Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
+  ServerProxy server_proxy;
+  SceneRenderer scene(&server_proxy);
+  MainWindow window(&scene, server_proxy);
+  EventBus eventBus(&window);
+  eventBus.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveUp)));
+  eventBus.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveDown)));
+  eventBus.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveLeft)));
+  eventBus.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveRight)));
+  Glib::signal_timeout().connect(
+      sigc::bind_return(sigc::mem_fun(scene, &SceneRenderer::update), true),
+      render_step);
+  return app->run(window);
 }
