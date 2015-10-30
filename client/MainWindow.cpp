@@ -10,13 +10,15 @@
 
 #include "EventBus.h"
 #include "MainWindow.h"
+#include "ServerProxy.h"
 
-
-MainWindow::MainWindow(SceneRenderer *scene)
+MainWindow::MainWindow(SceneRenderer *scene, const ServerProxy &server_proxy)
   : main_frame(),
     initial_screen(),
     new_game_screen(),
-    scene(scene) {
+    scene(scene),
+    map(NULL) {
+  this->server_proxy = server_proxy;
   set_title("Blues Jackrabbit");
   set_resizable(false);
   set_size_request(640, 480);
@@ -36,14 +38,20 @@ MainWindow::MainWindow(SceneRenderer *scene)
   scene->hide();
   new_game_screen.hide();
   join_game_screen.hide();
+
+  connected = this->server_proxy.connect();
 }
 
 MainWindow::~MainWindow() {
 }
 
 void MainWindow::new_game_click() {
-  initial_screen.hide();
-  new_game_screen.show();
+  if (connected) {
+    std::list<std::string> maps = server_proxy.list_maps();
+    initial_screen.hide();
+    new_game_screen.show();
+    // TODO(tomas): Do something with maps...
+  }
 }
 
 void MainWindow::join_game_click() {
@@ -52,11 +60,12 @@ void MainWindow::join_game_click() {
 }
 
 void MainWindow::init_click() {
+  server_proxy.start_game();
   new_game_screen.hide();
   scene->show();
 }
 
-Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Widget *parent) {
+Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Box *parent) {
   Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
   try {
     refBuilder->add_from_file(file_name);
@@ -71,11 +80,12 @@ Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gt
   Gtk::Widget *other;
   refBuilder->get_widget("frame", other);
   other->reparent(*parent);
+  // parent->pack_start(*other);
   return refBuilder;
 }
 
 void MainWindow::init_main_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("main_frame.glade", &initial_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/main_frame.glade", &initial_screen);
   Gtk::Button *button = NULL;
   builder->get_widget("buttonNewGame", button);
   if (button) {
@@ -94,14 +104,23 @@ void MainWindow::init_main_game_screen() {
 }
 
 void MainWindow::init_new_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("new_game.glade", &new_game_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen);
   Gtk::Button *button = NULL;
   builder->get_widget("start", button);
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::init_click));
   }
+  builder->get_widget_derived("map", map);
+  // map->signal_focus_in_event().connect(sigc::mem_fun(*this, &MainWindow::test));
+  map->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::test));
+  // new_game_screen.add(*map);
+  new_game_screen.pack_end(*map);
+}
+
+void MainWindow::test() {
+  std::cout << "Foco!!!!\n";
 }
 
 void MainWindow::init_join_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("join_game.glade", &join_game_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen);
 }

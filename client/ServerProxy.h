@@ -23,6 +23,10 @@ class ServerProxy {
   void MoveRight();
   std::vector<Renderer> &renderers();
 
+  bool connect();
+  std::list<std::string> list_maps();
+  bool start_game();
+
  private:
   static const double step;
   Engine engine_;
