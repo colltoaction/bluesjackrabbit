@@ -1,6 +1,7 @@
 #include <engine/Engine.h>
 #include <glibmm/main.h>
 #include <vector>
+#include <stdlib.h>
 #include "ServerProxy.h"
 #include "CharacterRenderer.h"
 
@@ -50,16 +51,16 @@ bool ServerProxy::connect() {
 }
 
 // Read and write
-std::list<std::string> ServerProxy::list_maps() {
-  std::list<std::string> list;
-  list.push_back("Mapa 1");
-  list.push_back("Mapa 2");
-  list.push_back("Mapa 3");
-  return list;
+std::map<size_t, std::string> ServerProxy::list_maps() {
+  std::map<size_t, std::string> map;
+  map[1] = "Mapa 1";
+  map[2] = "Mapa 2";
+  map[3] = "Mapa 3";
+  return map;
 }
 
 // Write... and read only to check game started.
-bool ServerProxy::start_game() {
-  std::cout << "Start game...\n";
+bool ServerProxy::start_game(size_t map_id) {
+  std::cout << "Start game with map id: " << map_id << std::endl;
   return true;
 }
