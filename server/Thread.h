@@ -4,8 +4,8 @@
 class Thread {
 public:
     virtual ~Thread() { }
-    void Start();
-    void Join();
+    void start();
+    void join();
 protected:
     virtual void ThreadMain() = 0;
 private:

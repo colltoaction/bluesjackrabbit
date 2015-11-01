@@ -8,10 +8,10 @@ void* Thread::StartRoutine(void* arg) {
     return NULL;
 }
 
-void Thread::Start() {
+void Thread::start() {
     pthread_create(&thread, NULL, Thread::StartRoutine, this);
 }
 
-void Thread::Join() {
+void Thread::join() {
     pthread_join(thread, NULL);
 }
