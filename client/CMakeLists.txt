@@ -11,35 +11,30 @@ set(SOURCES
         Event.h
         EventBus.cpp
         EventBus.h
-        FloorRenderer.cpp
-        FloorRenderer.h
-        LocalServerProxy.cpp
-        LocalServerProxy.h
+        GameObjectProxy.cpp
+        GameObjectProxy.h
+        Lock.cpp
+        Lock.h
         MainWindow.cpp
         MainWindow.h
+        Mutex.cpp
+        Mutex.h
         Renderer.cpp
         Renderer.h
         SceneRenderer.cpp
         SceneRenderer.h
         ServerProxy.h
+        Socket.cpp
+        Socket.h
         Stopwatch.cpp
         Stopwatch.h
         TurtleRenderer.cpp
         TurtleRenderer.h
 )
-include(CppLint)
+# include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-
-add_custom_command(
-        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/client.ini"
-        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/client.ini" "${CMAKE_CURRENT_BINARY_DIR}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/client.ini"
-        COMMENT "Copying client configuration \"client.ini\"")
-add_custom_target(copy_client.ini DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/client.ini")
-add_dependencies(${PROJECT_NAME} copy_client.ini)
-
-add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
+# add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-lint)
 
 add_dependencies(${PROJECT_NAME} engine)

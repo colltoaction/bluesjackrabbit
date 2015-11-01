@@ -14,6 +14,8 @@ protected:
     void ThreadMain();
 private:
     Socket* peerskt;
+    bool keep_connection;
+    void say_hello();
 
     bool HandleLine(std::string const& line);
     void ReadSocket();

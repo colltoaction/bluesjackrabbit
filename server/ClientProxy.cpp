@@ -8,9 +8,12 @@
 #include <vector>
 #include "Socket.h"
 #include "ClientProxy.h"
+#include "Constants.h"
+
+#include <iostream>
 
 ClientProxy::ClientProxy(Socket* peerskt)
-    : peerskt(peerskt) {
+    : peerskt(peerskt), keep_connection(true) {
 }
 
 ClientProxy::~ClientProxy() {
@@ -22,6 +25,7 @@ void ClientProxy::OpenConnection() {
 }
 
 void ClientProxy::CloseConnection() {
+	keep_connection = false;
     peerskt->Close();
 }
 
@@ -61,21 +65,40 @@ bool ClientProxy::HandleLine(std::string const& line) {
     }*/
 }
 
+void ClientProxy::say_hello(){
+	char caa[10];
+	peerskt->Read(caa, 1);
+	caa[1] = '\0';
+	std::cout << "ME ENVIARON ESTO: " << caa << "\n";
+
+	char message = 1;
+	peerskt->Send(&message, 1);
+	std::cout << "ENVIADO EL HEADER\n";
+	char c = 65;
+	peerskt->Send(&c, 1);
+	std::cout << "EL TRUE\n";
+	peerskt->Read(caa, 1);
+	std::cout << "me mandaron: " << caa[0] << std::endl;
+}
+
 void ClientProxy::ThreadMain() {
+	std::cout << "ALGUIEN SE CONECTO\n";
     std::stringstream ss;
-    size_t current_line = 0;
-    while (peerskt->Read(ss) > 0) {
-        std::string line;
-        while (!std::getline(ss, line).eof()) {
-            if (!HandleLine(line)) {
-                peerskt->Close(); // reached end of message
-                return;
-            }
-
-            // current_line = ss.tellg();
+    // size_t current_line = 0;
+    say_hello();
+    bool cont = true;
+    while (keep_connection && cont) {
+    	std::cout << "ENTRO AL LOOP\n";
+        char option;
+        cont = peerskt->Read(&option, 1);
+        if (cont){
+			std::cout << "LEYO ALGO\n";
+			if (option == 'i') {
+				std::cout << "IZQ\n";
+			} else if (option == 'd') {
+				std::cout << "DER\n";
+			}
         }
-
-        ss.seekg(current_line);
-        ss.clear();
     }
+    std::cout << "FIN\n";
 }

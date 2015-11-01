@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 class Socket {
-public:
+ public:
     explicit Socket(struct addrinfo const& address_info);
     explicit Socket(int skt);
     void Connect(struct addrinfo const& address_info) const;
@@ -13,8 +13,8 @@ public:
     void Send(std::string const& msg) const;
     void Send(const char* msg, size_t length) const;
     ssize_t Read(std::ostream& oss) const;
-    bool Read(char *msg, size_t length) const;
-private:
+    void Read(char *msg, size_t length) const;
+ private:
     int skt;
 
 };

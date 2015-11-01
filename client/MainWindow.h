@@ -62,7 +62,7 @@ class MainWindow: public Gtk::Window {
         add(map_name);
       }
 
-      Gtk::TreeModelColumn<int> id;
+      Gtk::TreeModelColumn<size_t> id;
       Gtk::TreeModelColumn<Glib::ustring> map_name;
   };
 

@@ -9,15 +9,15 @@ class ListenerSocket {
 public:
     explicit ListenerSocket(const char* port);
     ~ListenerSocket();
-    void Listen() const;
-    void Close() const;
+    void listen_connections() const;
+    void close_socket() const;
 
 	/**
 	* Accepts a new connection and creates a new socket in peerskt.
 	* Returns -1 if the accept operation failed and the content of
 	* peerskt is undefined.
 	*/
-    int Accept(Socket*& peerskt) const;
+    int accept_connection(Socket*& peerskt) const;
 private:
     int skt;
     struct addrinfo *address_info;
