@@ -14,15 +14,15 @@ int main(int argc, char const *argv[]) {
 
     const char* port = argv[1];
     Clients clients;
-    AcceptorThread thread(port, clients);
-    thread.StartListening();
-    thread.Start();
+    AcceptorThread server(port, clients);
+    server.start_listening();
+    server.start();
     while (std::cin.get() != 'q') {
     }
 
-    thread.StopListening();
-    thread.Join();
-    clients.CloseConnections();
+    server.stop_listening();
+    server.join();
+    clients.close_connections();
 
     return 0;
 }
