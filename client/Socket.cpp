@@ -7,6 +7,10 @@
 #include <unistd.h>
 #include "Socket.h"
 
+
+
+#include <iostream>
+
 #define READ_BUFFER 0xFF
 
 
@@ -18,6 +22,7 @@ Socket::Socket(struct addrinfo const& address_info) {
         address_info.ai_family,
         address_info.ai_socktype,
         address_info.ai_protocol);
+    std::cout << "SOCKET CREADO...\n" << std::endl;
 }
 
 void Socket::Connect(struct addrinfo const& address_info) const {
@@ -30,10 +35,9 @@ void Socket::Close() const {
 }
 
 void Socket::Send(const char* msg, size_t length) const {
-    size_t sent = 0;
-    while (sent < length) {
-        size_t s = ::send(skt, &msg[sent], length - sent, MSG_NOSIGNAL);
-
+  size_t sent = 0;
+  while (sent < length) {
+      size_t s = ::send(skt, &msg[sent], length - sent, MSG_NOSIGNAL);
         if (s <= 0) {
             return;
         } else {
@@ -52,17 +56,16 @@ ssize_t Socket::Read(std::ostream& oss) const {
     return read;
 }
 
-bool Socket::Read(char *msg, size_t length) const {
-	size_t received = 0;
-	while (received < length){
-		size_t r = recv(skt, msg, length - received, MSG_NOSIGNAL);
-		if (r <= 0){
-			return false;
-		} else {
-			received += r;
-		}
-	}
-	return true;
+void Socket::Read(char *msg, size_t length) const {
+  size_t received = 0;
+  while (received < length) {
+    size_t r = recv(skt, msg, length - received, MSG_NOSIGNAL);
+    if (r <= 0) {
+      return;
+    } else {
+      received += r;
+    }
+  }
 }
 
 void Socket::Send(std::string const& msg) const {
