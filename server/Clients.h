@@ -8,7 +8,7 @@
 class Clients: public AcceptHandler {
  public:
     Clients();
-    ~Clients();
+    virtual ~Clients();
     void close_connections();
 
     /**

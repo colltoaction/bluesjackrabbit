@@ -7,12 +7,11 @@
 
 
 int main(int argc, char const *argv[]) {
-    if (argc != 2) {
-        std::cout << "Uso: ./server <puerto>\n";
-        return 1;
+	const char* port = std::string("socks").c_str();
+    if (argc == 2) {
+    	port = argv[1];
     }
-
-    const char* port = argv[1];
+    std::cout << "PORT: " << port << std::endl;
     Clients clients;
     AcceptorThread server(port, clients);
     server.start_listening();

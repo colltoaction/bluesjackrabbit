@@ -9,6 +9,13 @@
 #include <string>
 #include "GameObjectProxy.h"
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+#include "Socket.h"
+#include "Mutex.h"
+
 /**
  * A functor object complying to void functor().
  */
@@ -17,6 +24,7 @@ typedef sigc::slot<void> Subscriber;
 class ServerProxy {
  public:
   ServerProxy();
+  ~ServerProxy();
   void MoveUp();
   void MoveDown();
   void MoveLeft();
@@ -32,6 +40,10 @@ class ServerProxy {
   Engine engine_;
   std::vector<Renderer> renderers_;
   std::vector<Subscriber> subscribers;
+
+  struct addrinfo *address_info;
+  Socket *socket;
+  Mutex mutex;
 };
 
 
