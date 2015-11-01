@@ -13,19 +13,19 @@ Clients::~Clients() {
     }
 }
 
-void Clients::CloseConnections() {
+void Clients::close_connections() {
     for (std::vector<ClientProxy*>::iterator it = threads.begin();
          it != threads.end();
          ++it) {
         (*it)->CloseConnection();
-        (*it)->Join();
+        (*it)->join();
     }
 }
 
-void Clients::Handle(Socket* peerskt) {
+void Clients::handle(Socket* peerskt) {
     // ClientProxy deletes peerskt
     ClientProxy* clientThread = new ClientProxy(peerskt);
     clientThread->OpenConnection();
-    clientThread->Start();
+    clientThread->start();
     threads.push_back(clientThread);
 }

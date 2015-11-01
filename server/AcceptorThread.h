@@ -9,14 +9,14 @@
 
 class AcceptHandler {
 public:
-	virtual void Handle(Socket* socket) = 0;
+	virtual void handle(Socket* socket) = 0;
 };
 
 class AcceptorThread: public Thread {
 public:
     AcceptorThread(const char* port, AcceptHandler& handler);
-    void StartListening();
-    void StopListening();
+    void start_listening();
+    void stop_listening();
 protected:
     void ThreadMain();
 private:

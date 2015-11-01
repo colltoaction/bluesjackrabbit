@@ -9,14 +9,14 @@ class Clients: public AcceptHandler {
  public:
     Clients();
     ~Clients();
-    void CloseConnections();
+    void close_connections();
 
     /**
 	* Implements the AcceptHandler interface.
 	* Receives a new connection from the acceptor thread and starts a new
 	* connection with the client.
     */
-    void Handle(Socket* peerskt);
+    void handle(Socket* peerskt);
  private:
     std::vector<ClientProxy*> threads;
 };
