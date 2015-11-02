@@ -1,17 +1,23 @@
-#include <pthread.h>
 #include "Thread.h"
 
+#include <string.h>
 
-void* Thread::StartRoutine(void* arg) {
-    Thread* self = (Thread*)arg;
-    self->ThreadMain();
-    return NULL;
+Thread::Thread() {
+	memset(&this->thread, 0, sizeof(pthread_t));
 }
 
-void Thread::start() {
-    pthread_create(&thread, NULL, Thread::StartRoutine, this);
+Thread::~Thread() {
 }
 
-void Thread::join() {
-    pthread_join(thread, NULL);
+void* Thread::starter(void *data){
+	((Thread*)data)->run();
+	return NULL;
+}
+
+void Thread::start(){
+	pthread_create(& this->thread, NULL, Thread::starter, (void*) this);
+}
+
+void Thread::join(){
+	pthread_join(this->thread, NULL);
 }

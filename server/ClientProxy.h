@@ -1,24 +1,22 @@
-#ifndef BLUESJACKRABBIT_SERVER_CLIENTPROXY_H
-#define BLUESJACKRABBIT_SERVER_CLIENTPROXY_H
+#ifndef CLIENTPROXY_H_
+#define CLIENTPROXY_H_
+
 #include <string>
 #include "Socket.h"
 #include "Thread.h"
 
-class ClientProxy: public Thread {
-public:
-    ClientProxy(Socket* peerskt);
-    ~ClientProxy();
-    void OpenConnection();
-    void CloseConnection();
-protected:
-    void ThreadMain();
+class ClientProxy : public Thread {
 private:
-    Socket* peerskt;
-    bool keep_connection;
-    void say_hello();
-
-    bool HandleLine(std::string const& line);
-    void ReadSocket();
+	Socket *conexion;
+	bool finalizado;
+	std::string buffer;
+public:
+	ClientProxy(Socket *conexion);
+	~ClientProxy();
+	void run();
+	std::string imprimir();
+	void say_hello();
+	bool finalizar();
 };
 
-#endif // BLUESJACKRABBIT_SERVER_CLIENTPROXY_H
+#endif /* CLIENTPROXY_H_ */
