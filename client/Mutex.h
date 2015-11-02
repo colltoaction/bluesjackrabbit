@@ -1,5 +1,5 @@
-#ifndef BLUESJACKRABBIT_CLIENT_MUTEX_H
-#define BLUESJACKRABBIT_CLIENT_MUTEX_H
+#ifndef MUTEX_H_
+#define MUTEX_H_
 
 #include <pthread.h>
 
@@ -13,4 +13,4 @@ public:
 	void unlock();
 };
 
-#endif /* BLUESJACKRABBIT_CLIENT_MUTEX_H */
+#endif /* MUTEX_H_ */

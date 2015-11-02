@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 project(client)
 
+find_package (Threads)
+
+
 set(SOURCES
         main.cpp
         Event.cpp
@@ -25,6 +28,8 @@ set(SOURCES
         Socket.h
         Stopwatch.cpp
         Stopwatch.h
+        Thread.cpp
+        Thread.h
 )
 # include(CppLint)
 
@@ -35,6 +40,7 @@ add_dependencies(${PROJECT_NAME} engine)
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
+target_link_libraries (client ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} engine)
 
 file(COPY static/main_frame.glade
