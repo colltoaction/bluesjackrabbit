@@ -4,14 +4,8 @@ find_package (Threads)
 project(server)
 
 set(SOURCES
-	AcceptorThread.cpp
-        AcceptorThread.h
 	ClientProxy.cpp
         ClientProxy.h
-        Clients.cpp
-        Clients.h
-        ListenerSocket.cpp
-        ListenerSocket.h
         Socket.cpp
         Socket.h
         Thread.cpp

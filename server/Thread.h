@@ -1,16 +1,18 @@
-#ifndef BLUESJACKRABBIT_SERVER_THREAD_H
-#define BLUESJACKRABBIT_SERVER_THREAD_H
+#ifndef THREAD_H_
+#define THREAD_H_
+
+#include <pthread.h>
 
 class Thread {
-public:
-    virtual ~Thread() { }
-    void start();
-    void join();
-protected:
-    virtual void ThreadMain() = 0;
 private:
-    pthread_t thread;
-    static void* StartRoutine(void* arg);
+	pthread_t thread;
+public:
+	Thread();
+	virtual ~Thread();
+	static void* starter(void *data);
+	void start();
+	void join();
+	virtual void run() = 0;
 };
 
-#endif // BLUESJACKRABBIT_SERVER_THREAD_H
+#endif /* THREAD_H_ */
