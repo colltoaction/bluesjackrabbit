@@ -12,7 +12,7 @@ set(SOURCES
         Transform.h
         Vector.cpp
         Vector.h
-)
+        Collider.cpp Collider.h)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})

@@ -10,6 +10,7 @@ class RigidBody {
   const Vector &velocity();
   void apply_force(const Vector &vector);
   void update_fixed();
+  void bounce();
 
  private:
   static const double friction_magnitude_;
