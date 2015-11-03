@@ -28,3 +28,7 @@ void GameObject::update_fixed() {
   transform_.update_position(transform_.position().x() + rigid_body_.velocity().x(),
                              transform_.position().y() + rigid_body_.velocity().y());
 }
+
+const ::Collider &GameObject::collider() const {
+  return collider_;
+}

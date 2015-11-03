@@ -28,3 +28,7 @@ void RigidBody::update_fixed() {
   velocity_ = velocity_ + force_;
   force_ = Vector::zero();
 }
+
+void RigidBody::bounce() {
+  velocity_ = velocity_ * -1;
+}

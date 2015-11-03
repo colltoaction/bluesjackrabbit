@@ -31,9 +31,26 @@ void Engine::FixedUpdate() {
        ++game_object) {
     game_object->rigid_body().update_fixed();
     game_object->update_fixed();
+    if (collides(*game_object)) {
+      game_object->rigid_body().bounce();
+      // TODO(tinchou): don't call this twice
+      game_object->update_fixed();
+    }
   }
 }
 
 void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->rigid_body().apply_force(force);
+}
+
+bool Engine::collides(const GameObject &game_object) {
+  for (std::vector<GameObject>::iterator other = game_objects_.begin();
+       other != game_objects_.end();
+       ++other) {
+    if (&game_object != &(*other) && game_object.collider().collides(other->collider())) {
+      return true;
+    }
+  }
+
+  return false;
 }
