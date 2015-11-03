@@ -29,7 +29,8 @@ set(SOURCES
         StaticBody.h
         Vector.cpp
         Vector.h
-)
+        Collider.cpp Collider.h)
+include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")

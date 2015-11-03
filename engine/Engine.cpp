@@ -72,16 +72,13 @@ void Engine::move_objects() {
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
-    // Gravity no more applied here
-    // apply_force(game_object->second, gravity_);
-    if (will_collide(game_object)) {
-      // This is not done anymore because it depends with what you are colliding
-      // game_object->second->body().stop();
+    game_object->rigid_body().update_fixed();
+    game_object->update_fixed();
+    if (collides(*game_object)) {
+      game_object->rigid_body().bounce();
+      // TODO(tinchou): don't call this twice
+      game_object->update_fixed();
     }
-    // This applies all forces to the object
-    game_object->second->update_fixed(gravity_);
-    // With all forces applied, new position is calculated
-    game_object->second->body().update_fixed();
   }
 }
 
@@ -141,4 +138,16 @@ void Engine::update_player_direction(uint32_t object_id, bool right) {
   if (game_objects_.find(object_id) != game_objects_.end()) {
     static_cast<GameObjectPlayer*>(game_objects_[object_id])->new_direction(right);
   }
+}
+
+bool Engine::collides(const GameObject &game_object) {
+  for (std::vector<GameObject>::iterator other = game_objects_.begin();
+       other != game_objects_.end();
+       ++other) {
+    if (&game_object != &(*other) && game_object.collider().collides(other->collider())) {
+      return true;
+    }
+  }
+
+  return false;
 }

@@ -46,3 +46,7 @@ void GameObject::impact(GameObject *other) {
 bool GameObject::alive() {
   return true;
 }
+
+const ::Collider &GameObject::collider() const {
+  return collider_;
+}

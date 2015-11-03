@@ -10,18 +10,11 @@
  */
 class RigidBody : public Body {
  public:
-  explicit RigidBody(Vector *position);
-  virtual ~RigidBody();
-  virtual const Vector &velocity() const;
-  virtual void apply_force(const Vector &vector);
-  virtual Vector position() const;
-  virtual Vector next_position() const;
-  virtual void update_fixed();
-  virtual void stop();
-  virtual void stop_x();
-  virtual void stop_y();
-  virtual bool stopped();
-  virtual bool stopped_x();
+  RigidBody();
+  const Vector &velocity();
+  void apply_force(const Vector &vector);
+  void update_fixed();
+  void bounce();
 
  private:
   static const double friction_magnitude_;
