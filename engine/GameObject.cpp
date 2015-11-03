@@ -1,9 +1,8 @@
 #include "GameObject.h"
 
-#include <iostream>
-
-GameObject::GameObject() {
-  std::cout << "Game object construido\n";
+GameObject::GameObject(const Vector &position)
+    : transform_(position)
+    , collider_(transform_) {
 }
 
 const ::Transform &GameObject::transform() const {
@@ -47,6 +46,6 @@ bool GameObject::alive() {
   return true;
 }
 
-const ::Collider &GameObject::collider() const {
-  return collider_;
+bool GameObject::collides(const GameObject &other) const {
+  return collider_.collides(other.collider_);
 }
