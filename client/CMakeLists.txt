@@ -3,6 +3,8 @@ project(client)
 
 set(SOURCES
         main.cpp
+        CharacterRenderer.cpp
+        CharacterRenderer.h
         Event.cpp
         Event.h
         EventBus.cpp

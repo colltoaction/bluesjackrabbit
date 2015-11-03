@@ -16,6 +16,7 @@ class SceneRenderer: public Gtk::DrawingArea {
 
  private:
   ServerProxy *server_proxy_;
+  Vector camera_position_;
 };
 
 
