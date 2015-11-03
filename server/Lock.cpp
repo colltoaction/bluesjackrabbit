@@ -1,11 +1,11 @@
 #include "Lock.h"
 
 Lock::Lock(Mutex *mutex) {
-	this->mutex = mutex;
-	this->mutex->lock();
+  this->mutex = mutex;
+  this->mutex->lock();
 }
 
 Lock::~Lock() {
-	this->mutex->unlock();
+  this->mutex->unlock();
 }
 

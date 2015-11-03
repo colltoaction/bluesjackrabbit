@@ -12,7 +12,7 @@
 #include "MainWindow.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow(SceneRenderer *scene, const ServerProxy &server_proxy)
+MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   : main_frame(),
     initial_screen(),
     new_game_screen(),
@@ -40,7 +40,7 @@ MainWindow::MainWindow(SceneRenderer *scene, const ServerProxy &server_proxy)
   new_game_screen.hide();
   join_game_screen.hide();
 
-  connected = this->server_proxy.connect();
+  connected = this->server_proxy->connect();
   std::cout << ((connected) ?"OK" : "NO") << std::endl;
 }
 
@@ -49,7 +49,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::new_game_click() {
   if (connected) {
-    std::map<size_t, std::string> maps = server_proxy.list_maps();
+    std::map<size_t, std::string> maps = server_proxy->list_maps();
     load_combo(maps);
     initial_screen.hide();
     new_game_screen.show();
@@ -62,7 +62,7 @@ void MainWindow::join_game_click() {
 }
 
 void MainWindow::init_click() {
-  server_proxy.start_game(map_id);
+  server_proxy->start_game(map_id);
   new_game_screen.hide();
   scene->show();
 }

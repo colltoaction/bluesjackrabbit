@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
   ServerProxy server_proxy;
   SceneRenderer scene(&server_proxy);
-  MainWindow window(&scene, server_proxy);
+  MainWindow window(&scene, &server_proxy);
   EventBus eventBus(&window);
   eventBus.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveUp)));
   eventBus.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveDown)));
