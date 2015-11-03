@@ -8,15 +8,15 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "ServerProxy.h"
+#include "RemoteServerProxy.h"
 #include "Lock.h"
 #include "Constants.h"
 
 
-const double ServerProxy::step = 0.003;
+const double RemoteServerProxy::step = 0.003;
 
 // Socket write IN GAME
-void ServerProxy::MoveUp() {
+void RemoteServerProxy::MoveUp() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
   char move = UP;
@@ -24,7 +24,7 @@ void ServerProxy::MoveUp() {
 }
 
 // Socket write IN GAME
-void ServerProxy::MoveDown() {
+void RemoteServerProxy::MoveDown() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
   char move = DOWN;
@@ -33,7 +33,7 @@ void ServerProxy::MoveDown() {
 
 
 // Socket write IN GAME
-void ServerProxy::MoveLeft() {
+void RemoteServerProxy::MoveLeft() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
   char move = LEFT;
@@ -41,7 +41,7 @@ void ServerProxy::MoveLeft() {
 }
 
 // Socket write IN GAME
-void ServerProxy::MoveRight() {
+void RemoteServerProxy::MoveRight() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
   char move = RIGHT;
@@ -49,7 +49,7 @@ void ServerProxy::MoveRight() {
 }
 
 // Socket recibir. This should be done after start game (not in constructor)
-ServerProxy::ServerProxy() : socket(NULL){
+RemoteServerProxy::RemoteServerProxy() : socket(NULL){
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
@@ -57,17 +57,17 @@ ServerProxy::ServerProxy() : socket(NULL){
   }
 }
 
-ServerProxy::~ServerProxy() {
+RemoteServerProxy::~RemoteServerProxy() {
   delete socket;
 }
 
 // Nothing, it will be updated from other place
-std::vector<Renderer> &ServerProxy::renderers() {
+std::vector<Renderer> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
 // recibir and write.
-bool ServerProxy::connect() {
+bool RemoteServerProxy::connect() {
   socket = new Socket("localhost", "socks", 0);
   socket->conectar();
 
@@ -95,7 +95,7 @@ bool ServerProxy::connect() {
 }
 
 // recibir and write
-std::map<size_t, std::string> ServerProxy::list_maps() {
+std::map<size_t, std::string> RemoteServerProxy::list_maps() {
   std::map<size_t, std::string> map;
   map[1] = "Mapa 1";
   map[2] = "Mapa 2";
@@ -104,7 +104,7 @@ std::map<size_t, std::string> ServerProxy::list_maps() {
 }
 
 // Write... and recibir only to check game started.
-bool ServerProxy::start_game(size_t map_id) {
+bool RemoteServerProxy::start_game(size_t map_id) {
   std::cout << "Start game with map id: " << map_id << std::endl;
   return true;
 }
