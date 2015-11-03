@@ -2,10 +2,9 @@
 #include "GameObject.h"
 #include "RigidBody.h"
 
-#include <iostream>
-
-GameObject::GameObject() {
-  std::cout << "Game object construido\n";
+GameObject::GameObject(const Vector &position)
+    : transform_(position)
+    , collider_(transform_) {
 }
 
 const ::Transform &GameObject::transform() const {
@@ -29,6 +28,6 @@ void GameObject::update_fixed() {
                              transform_.position().y() + rigid_body_.velocity().y());
 }
 
-const ::Collider &GameObject::collider() const {
-  return collider_;
+bool GameObject::collides(const GameObject &other) const {
+  return collider_.collides(other.collider_);
 }

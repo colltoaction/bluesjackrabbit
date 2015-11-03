@@ -9,13 +9,13 @@
 
 class GameObject {
  public:
-  GameObject();
+  explicit GameObject(const Vector &position);
   const ::Transform &transform() const;
   ::Transform &transform_noconst();
   ::RigidBody &rigid_body();
-  const ::Collider &collider() const;
   std::string type() const;
   void update_fixed();
+  bool collides(const GameObject &other) const;
 
  private:
   ::Transform transform_;

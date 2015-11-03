@@ -31,6 +31,10 @@ double Vector::magnitude() const {
   return std::sqrt(x_ * x_ + y_ * y_);
 }
 
+double Vector::distance(const Vector &other) const {
+  return (*this - other).magnitude();
+}
+
 Vector Vector::direction() {
   double m = magnitude();
   if (m > 0) {

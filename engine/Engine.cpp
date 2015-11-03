@@ -4,17 +4,15 @@
 
 Engine::Engine() {
 #if __cplusplus > 199711L
-  game_objects_.emplace_back();
-  game_objects_.emplace_back();
-  game_objects_.emplace_back();
+  game_objects_.emplace_back(GameObject { Vector::zero() });
+  game_objects_.emplace_back(GameObject { Vector(20, 0) });
+  game_objects_.emplace_back(GameObject { Vector(0, 20) });
 #else
   // this shows a warning in C++11 because of move semantics
-  game_objects_.push_back(GameObject());
-  game_objects_.push_back(GameObject());
-  game_objects_.push_back(GameObject());
+  game_objects_.push_back(GameObject(Vector::zero()));
+  game_objects_.push_back(GameObject(Vector(20, 0)));
+  game_objects_.push_back(GameObject(Vector(0, 20)));
 #endif
-  apply_force(&game_objects_[1], Vector(2, 0));
-  apply_force(&game_objects_[2], Vector(0, 2));
   Glib::signal_timeout().connect(
       sigc::bind_return(sigc::mem_fun(*this, &Engine::FixedUpdate), true),
       fixedUpdateStep);
@@ -47,7 +45,7 @@ bool Engine::collides(const GameObject &game_object) {
   for (std::vector<GameObject>::iterator other = game_objects_.begin();
        other != game_objects_.end();
        ++other) {
-    if (&game_object != &(*other) && game_object.collider().collides(other->collider())) {
+    if (&game_object != &(*other) && game_object.collides(*other)) {
       return true;
     }
   }

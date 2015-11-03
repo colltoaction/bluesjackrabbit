@@ -12,6 +12,7 @@ class Vector {
   void set_x(double d);
   void set_y(double d);
   double magnitude() const;
+  double distance(const Vector &other) const;
   Vector direction();
   bool operator==(const Vector &other) const;
   Vector operator*(const double &factor) const;
