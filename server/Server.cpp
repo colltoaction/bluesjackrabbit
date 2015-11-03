@@ -2,25 +2,22 @@
 #include <iostream>
 #include "Server.h"
 
-Server::Server(const Configuration &config)
-    : game_monitor_()
-    , proxy_(config, &game_monitor_) {
+Server::Server(std::string puerto) :proxy(puerto) {
 }
 
 Server::~Server() {
 }
 
-void Server::init() {
-  proxy_.start();
+void Server::iniciar() {
+  proxy.start();
   bool keep_going = true;
   while (keep_going) {
     std::string incomming;
     getline(std::cin, incomming);
     if (incomming == "q") {
       keep_going = false;
-      game_monitor_.finalize();
-      proxy_.finalize();
+      proxy.finalize();
     }
   }
-  proxy_.join();
+  proxy.join();
 }

@@ -4,58 +4,54 @@
 #include <stdlib.h>
 
 
+#include <stdio.h>
 #include <iostream>
 #include <unistd.h>
 
 #include "ServerProxy.h"
 #include "CharacterRenderer.h"
 #include "Lock.h"
+#include "Constants.h"
 
 
 const double ServerProxy::step = 0.003;
 
 // Socket write IN GAME
 void ServerProxy::MoveUp() {
+  Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
+  char move = UP;
+  socket->enviar(&move, 1);
 }
 
 // Socket write IN GAME
 void ServerProxy::MoveDown() {
+  Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
+  char move = DOWN;
+  socket->enviar(&move, 1);
 }
 
-#include <stdio.h>
+
 // Socket write IN GAME
 void ServerProxy::MoveLeft() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
-  std::cout << "ENVIANDO IZQ CON 1 DE LENGHT\n";
-  char *c = (char*) malloc(sizeof(char));
-  *c = 'i';
-  ssize_t *len = (ssize_t*) malloc(sizeof(ssize_t));
-  *len = 1;
-  std::cout << "DIR MEMORIA: ";
-  printf("%p\n", (void*)c);
-  socket->enviar(c, *len);
-  free(c);
-  free(len);
-  std::cout << "FIN IZQ\n";
+  char move = LEFT;
+  socket->enviar(&move, 1);
 }
 
 // Socket write IN GAME
 void ServerProxy::MoveRight() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
-  std::cout << "ENVIANDO DER CON 1 DE LENGHT\n";
-  char c = 'd';
-  socket->enviar(&c, 1);
-  std::cout << "FIN DER\n";
+  char move = RIGHT;
+  socket->enviar(&move, 1);
 }
 
 // Socket recibir. This should be done after start game (not in constructor)
-ServerProxy::ServerProxy() {
-  renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
+ServerProxy::ServerProxy() : socket(NULL){
+  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
     renderers_.push_back(new Renderer(&(*game_object)));
@@ -73,12 +69,6 @@ std::vector<Renderer> &ServerProxy::renderers() {
 
 // recibir and write.
 bool ServerProxy::connect() {
-  struct addrinfo hints;
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_socktype = SOCK_STREAM;
-  hints.ai_family = AF_INET;
-
-  getaddrinfo("localhost", "socks", &hints, &address_info);
   socket = new Socket("localhost", "socks", 0);
   socket->conectar();
 
@@ -90,22 +80,19 @@ bool ServerProxy::connect() {
 
   char message_size;
   socket->recibir(&message_size, 1);
-  std::cout << "SIZE: " << message_size << "\n";
-
+  std::cout << "SIZE: " << (int)message_size << "\n";
   char c;
-  char *pt = (char*) &message_size;
-  if (*pt == 1) {
-    std::cout << "ME VA A MANDAR " << message_size << " BYTE\n";
-    socket->recibir(&c, message_size);
+  if (message_size == 1) {
+    std::cout << "ME VA A MANDAR " << (int) message_size << " BYTE\n";
   } else {
     std::cout << "NO DETECTO EL BYTE\n";
-    socket->recibir(&c, 1);
   }
-  std::cout << "RECIBIDO: " << c << "\n";
+  socket->recibir(&c, message_size);
+  /*std::cout << "RECIBIDO: " << c << "\n";
   bool asd = c == 'A';
   c = 'd';
-  socket->enviar(&c, 1);
-  return asd;
+  socket->enviar(&c, 1);*/
+  return true;
 }
 
 // recibir and write

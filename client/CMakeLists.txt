@@ -2,13 +2,8 @@ project(client)
 
 find_package (Threads)
 
-
 set(SOURCES
         main.cpp
-        BulletRenderer.cpp
-        BulletRenderer.h
-        CharacterRenderer.cpp
-        CharacterRenderer.h
         Constants.h
         Event.cpp
         Event.h

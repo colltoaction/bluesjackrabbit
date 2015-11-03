@@ -4,16 +4,14 @@
 #include <string>
 
 #include "ClientProxyAcceptor.h"
-#include "GameMonitor.h"
 
 class Server {
  private:
-  GameMonitor game_monitor_;
-  ClientProxyAcceptor proxy_;
+  ClientProxyAcceptor proxy;
  public:
-  explicit Server(const Configuration &config);
+  explicit Server(std::string puerto);
   ~Server();
-  void init();
+  void iniciar();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_SERVER_H */

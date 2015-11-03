@@ -3,14 +3,12 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include <common/Configuration.h>
 
-ClientProxyAcceptor::ClientProxyAcceptor(const Configuration &config, GameMonitor *game_monitor)
-    : socket_(config["host"], config["port"], AI_PASSIVE)
-    , keep_going_(true)
-    , clients_eliminated_(false)
-    , game_monitor_(game_monitor) {
-  socket_.bind_socket();
+ClientProxyAcceptor::ClientProxyAcceptor(std::string puerto)
+  : socket("localhost", puerto, AI_PASSIVE) {
+  this->keep_going = true;
+  this->clients_eliminated = false;
+  this->socket.bind_socket();
 }
 
 ClientProxyAcceptor::~ClientProxyAcceptor() {
@@ -21,17 +19,14 @@ ClientProxyAcceptor::~ClientProxyAcceptor() {
  * seguir recibiendo conexiones.
  * */
 void ClientProxyAcceptor::listen_connections() {
-  socket_.listen_socket();
-  keep_going_ = true;
-  while (keep_going_) {
-    Socket *new_connection = socket_.accept_connection();
-    if (keep_going_) {
-      ClientProxy *proxy = new ClientProxy(new_connection,
-          sigc::mem_fun(*game_monitor_, &GameMonitor::create_game),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::join_game),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::list_games),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::list_maps));
-      threads_.push_back(proxy);
+  this->socket.listen_socket();
+  this->keep_going = true;
+  while (this->keep_going) {
+    Socket *new_connection = this->socket.accept_connection();
+    if (this->keep_going) {
+      std::cout << "NUEVA\n";
+      ClientProxy *proxy = new ClientProxy(new_connection);
+      threads.push_back(proxy);
       proxy->start();
     } else {
       if (new_connection != NULL) {
@@ -39,31 +34,30 @@ void ClientProxyAcceptor::listen_connections() {
       }
     }
   }
-  eliminate_clients();
+  this->eliminate_clients();
 }
 
 /* Envia un mensaje de finalizacion a todos los clientes, no importa
  * lo que esten haciendo. El servidor se esta apagando.
  * */
 void ClientProxyAcceptor::eliminate_clients() {
-  if (!clients_eliminated_) {
-    for (std::list<ClientProxy*>::iterator it = threads_.begin();
-        it != threads_.end(); it++) {
-      (*it)->finalize();
+  if (!this->clients_eliminated) {
+    for (std::list<ClientProxy*>::iterator it = threads.begin();
+        it != threads.end(); it++) {
       (*it)->join();
       delete (*it);
     }
   }
-  clients_eliminated_ = true;
+  this->clients_eliminated = true;
 }
 
 /* Cierra el socket aceptor y todas las conexiones que fue derivando. */
 void ClientProxyAcceptor::finalize() {
-  keep_going_ = false;
-  eliminate_clients();
-  socket_.close_connection();
+  this->keep_going = false;
+  this->eliminate_clients();
+  this->socket.close_connection();
 }
 
 void ClientProxyAcceptor::run() {
-  listen_connections();
+  this->listen_connections();
 }

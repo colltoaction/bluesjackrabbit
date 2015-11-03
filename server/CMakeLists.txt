@@ -5,14 +5,23 @@ project(server)
 
 set(SOURCES
 	ClientProxy.cpp
-        ClientProxy.h
-        Socket.cpp
-        Socket.h
-        Thread.cpp
-        Thread.h
-        main.cpp
+	ClientProxy.h
+	ClientProxyAcceptor.cpp
+	ClientProxyAcceptor.h
+	Constants.h
+	Lock.cpp
+	Lock.h
+	Mutex.cpp
+	Mutex.h
+	Server.cpp
+	Server.h
+    Socket.cpp
+    Socket.h
+    Thread.cpp
+    Thread.h
+    main.cpp
 )
-# include(CppLint)
+include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
