@@ -8,7 +8,7 @@
 
 class Transform {
  public:
-  Transform();
+  explicit Transform(Vector position);
   void update_position(double x, double y);
   const Vector &position() const;
 

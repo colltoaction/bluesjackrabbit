@@ -1,7 +1,7 @@
 #include "Transform.h"
 
-Transform::Transform()
-    : position_(0, 0) {
+Transform::Transform(Vector position)
+    : position_(position) {
 }
 
 void Transform::update_position(double x, double y) {
