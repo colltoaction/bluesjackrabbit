@@ -1,70 +1,49 @@
 #ifndef BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXY_H
 #define BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXY_H
 
+#include <sigc++/functors/slot.h>
+#include <engine/Engine.h>
+#include <engine/GameObject.h>
 #include <map>
 #include <string>
-#include <sigc++/functors/slot.h>
+#include "GameObjectProxy.h"
 
-#include <common/Configuration.h>
-#include <common/Socket.h>
-#include <common/Mutex.h>
-#include <engine/GameObject.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 
 #include "ServerProxy.h"
-#include "RemoteServerProxyUpdater.h"
-#include "Renderer.h"
-
+#include "Socket.h"
+#include "Mutex.h"
 
 /**
  * A functor object complying to void functor().
  */
 typedef sigc::slot<void> Subscriber;
 
-
 class RemoteServerProxy : public ServerProxy {
  public:
-  explicit RemoteServerProxy(const Configuration &config);
+  RemoteServerProxy();
   virtual ~RemoteServerProxy();
   virtual void MoveUp();
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual void jump();
-  virtual void shoot();
-  virtual Vector character_position();
-  virtual std::map<uint32_t, Renderer*> &renderers();
+  virtual std::vector<Renderer> &renderers();
 
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
-  virtual std::map<size_t, std::string> list_games();
-  virtual bool start_game(size_t map_id, std::string game_name);
-  virtual void init_game();
-  virtual void join_game(size_t game_id);
-  virtual void shutdown();
+  virtual bool start_game(size_t map_id);
 
  private:
   static const double step;
-  // Engine engine_;
-  const Configuration &config_;
-  std::map<uint32_t, Renderer*> renderers_;
-  std::vector<Subscriber> subscribers_;
-  Socket *socket_;
-  RemoteServerProxyUpdater updater_;
-  Mutex mutex_;
-  uint32_t object_id_;
-  bool alive_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
-  void read_object_id(uint32_t *object_id);
-  void update_object(uint32_t object_id, double x, double y, char type, point_type points, bool alive);
-  void read_object_position(double *x, double *y);
-  void read_object_type(char *type);
-  std::list<Vector> read_object_points();
-  void read_alive(char *alive);
-  void read_double(double *value);
-  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
+  Engine engine_;
+  std::vector<Renderer> renderers_;
+  std::vector<Subscriber> subscribers;
+
+  struct addrinfo *address_info;
+  Socket *socket;
+  Mutex mutex;
 };
 
 

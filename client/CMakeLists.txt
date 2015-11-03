@@ -11,12 +11,16 @@ set(SOURCES
         EventBus.h
         GameObjectProxy.cpp
         GameObjectProxy.h
+        LocalServerProxy.cpp
+        LocalServerProxy.h
         Lock.cpp
         Lock.h
         MainWindow.cpp
         MainWindow.h
         Mutex.cpp
         Mutex.h
+        RemoteServerProxy.cpp
+        RemoteServerProxy.h
         Renderer.cpp
         Renderer.h
         SceneRenderer.cpp

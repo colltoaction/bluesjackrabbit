@@ -1,10 +1,14 @@
 #include <gtkmm/application.h>
 #include <common/Configuration.h>
 #include "MainWindow.h"
+#include "SceneRenderer.h"
+#include "RemoteServerProxy.h"
+
+const int render_step = 16;
 
 int main(int argc, char *argv[]) {
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
-  ServerProxy server_proxy;
+  RemoteServerProxy server_proxy;
   SceneRenderer scene(&server_proxy);
   MainWindow window(&scene, &server_proxy);
   EventBus eventBus(&window);
