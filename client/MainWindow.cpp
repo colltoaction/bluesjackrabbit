@@ -16,10 +16,10 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   : main_frame(),
     initial_screen(),
     new_game_screen(),
+    server_proxy(server_proxy),
     map_id(0),
     scene(scene),
     map_combo(NULL) {
-  this->server_proxy = server_proxy;
   set_title("Blues Jackrabbit");
   set_resizable(false);
   set_size_request(640, 480);

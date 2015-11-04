@@ -6,16 +6,16 @@
 #include "Thread.h"
 
 class ClientProxy : public Thread {
- private:
-  Socket *conexion;
-  bool finalizado;
  public:
-  explicit ClientProxy(Socket *conexion);
+  explicit ClientProxy(Socket *socket);
   ~ClientProxy();
   void run();
   std::string imprimir();
   void say_hello();
   bool finalizar();
+ private:
+  Socket *socket;
+  bool finalizado;
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */

@@ -50,7 +50,7 @@ void RemoteServerProxy::MoveRight() {
   socket->send_buffer(&move, 1);
 }
 
-// Socket recibir. This should be done after start game (not in constructor)
+// Socket read_buffer. This should be done after start game (not in constructor)
 RemoteServerProxy::RemoteServerProxy() : socket(NULL) {
   renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;

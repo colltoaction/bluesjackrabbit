@@ -43,7 +43,7 @@ add_dependencies(${PROJECT_NAME} engine)
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
-target_link_libraries (client ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} engine)
 
 file(COPY static/main_frame.glade

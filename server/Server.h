@@ -11,7 +11,7 @@ class Server {
  public:
   explicit Server(std::string puerto);
   ~Server();
-  void iniciar();
+  void init();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_SERVER_H */

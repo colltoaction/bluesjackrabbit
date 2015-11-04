@@ -2,13 +2,13 @@
 #include <iostream>
 #include "Server.h"
 
-Server::Server(std::string puerto) :proxy(puerto) {
+Server::Server(std::string port) :proxy(port) {
 }
 
 Server::~Server() {
 }
 
-void Server::iniciar() {
+void Server::init() {
   proxy.start();
   bool keep_going = true;
   while (keep_going) {
