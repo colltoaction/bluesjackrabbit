@@ -28,23 +28,7 @@ class Engine {
   static const unsigned int fixed_update_step = 20;
 
   Engine();
-
-  ~Engine();
-
-  /**
-   * A collection of game objects in this simulation.
-   */
-  std::map<uint32_t, GameObject*> &game_objects();
-
-  /**
-   * Update the physics simulation by $fixed_update_step milliseconds.
-   * Should be called repeatedly to run the simulation.
-   */
-  void FixedUpdate();
-
-  /**
-   * @deprecated Applies a force to a specific game object.
-   */
+  std::vector<GameObject*> &game_objects();
   void apply_force(GameObject *game_object, Vector force);
   void FixedUpdate();
 
@@ -92,8 +76,8 @@ class Engine {
 
  private:
   static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
-  std::vector<GameObject> game_objects_;
-  bool collides(const GameObject &game_object);
+  std::vector<GameObject*> game_objects_;
+  bool collides(const std::vector<GameObject*>::iterator &game_object);
 };
 
 
