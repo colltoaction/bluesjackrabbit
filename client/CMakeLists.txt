@@ -1,7 +1,5 @@
 project(client)
 
-find_package (Threads)
-
 set(SOURCES
         main.cpp
         Constants.h

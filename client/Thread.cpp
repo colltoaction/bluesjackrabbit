@@ -3,7 +3,7 @@
 #include <string.h>
 
 Thread::Thread() {
-  memset(&this->thread, 0, sizeof(pthread_t));
+  memset(&thread_, 0, sizeof(pthread_t));
 }
 
 Thread::~Thread() {
@@ -15,9 +15,9 @@ void* Thread::starter(void *data) {
 }
 
 void Thread::start() {
-  pthread_create(& this->thread, NULL, Thread::starter, static_cast<void*> (this));
+  pthread_create(&thread_, NULL, Thread::starter, static_cast<void*> (this));
 }
 
 void Thread::join() {
-  pthread_join(this->thread, NULL);
+  pthread_join(thread_, NULL);
 }
