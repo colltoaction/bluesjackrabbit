@@ -16,41 +16,41 @@
 
 const double RemoteServerProxy::step = 0.003;
 
-// Socket write IN GAME
+// Socket_ write IN GAME
 void RemoteServerProxy::MoveUp() {
-  Lock l(&mutex);
+  Lock l(&mutex_);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
   char move = UP;
-  socket->send_buffer(&move, 1);
+  socket_->send_buffer(&move, 1);
 }
 
-// Socket write IN GAME
+// Socket_ write IN GAME
 void RemoteServerProxy::MoveDown() {
-  Lock l(&mutex);
+  Lock l(&mutex_);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
   char move = DOWN;
-  socket->send_buffer(&move, 1);
+  socket_->send_buffer(&move, 1);
 }
 
 
-// Socket write IN GAME
+// Socket_ write IN GAME
 void RemoteServerProxy::MoveLeft() {
-  Lock l(&mutex);
+  Lock l(&mutex_);
   engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
   char move = LEFT;
-  socket->send_buffer(&move, 1);
+  socket_->send_buffer(&move, 1);
 }
 
-// Socket write IN GAME
+// Socket_ write IN GAME
 void RemoteServerProxy::MoveRight() {
-  Lock l(&mutex);
+  Lock l(&mutex_);
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
   char move = RIGHT;
-  socket->send_buffer(&move, 1);
+  socket_->send_buffer(&move, 1);
 }
 
-// Socket read_buffer. This should be done after start game (not in constructor)
-RemoteServerProxy::RemoteServerProxy() : socket(NULL) {
+// Socket_ read_buffer. This should be done after start game (not in constructor)
+RemoteServerProxy::RemoteServerProxy() : socket_(NULL) {
   renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
@@ -65,8 +65,8 @@ RemoteServerProxy::~RemoteServerProxy() {
        ++game_object) {
     delete *game_object;
   }
-  socket->close_connection();
-  delete socket;
+  socket_->close_connection();
+  delete socket_;
 }
 
 const Transform &RemoteServerProxy::character_transform() {
@@ -80,19 +80,19 @@ std::vector<Renderer*> &RemoteServerProxy::renderers() {
 
 // recibir and write.
 bool RemoteServerProxy::connect() {
-  socket = new Socket("localhost", "socks", 0);
-  socket->connect_socket();
+  socket_ = new Socket("localhost", "socks", 0);
+  socket_->connect_socket();
 
   char caa[10];
   caa[0] = 'h';
   caa[1] = 'a';
   caa[2] = 'b';
-  socket->send_buffer(caa, 1);
+  socket_->send_buffer(caa, 1);
 
   char message_size;
-  socket->read_buffer(&message_size, 1);
+  socket_->read_buffer(&message_size, 1);
   char c;
-  socket->read_buffer(&c, message_size);
+  socket_->read_buffer(&c, message_size);
   return c == 'A';
 }
 

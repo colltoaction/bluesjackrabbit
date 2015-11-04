@@ -1,25 +1,24 @@
 cmake_minimum_required(VERSION 2.6)
 
-find_package (Threads)
 project(server)
 
 set(SOURCES
-	ClientProxy.cpp
-	ClientProxy.h
-	ClientProxyAcceptor.cpp
-	ClientProxyAcceptor.h
-	Constants.h
-	Lock.cpp
-	Lock.h
-	Mutex.cpp
-	Mutex.h
-	Server.cpp
-	Server.h
-    Socket.cpp
-    Socket.h
-    Thread.cpp
-    Thread.h
-    main.cpp
+        ClientProxy.cpp
+        ClientProxy.h
+        ClientProxyAcceptor.cpp
+        ClientProxyAcceptor.h
+        Constants.h
+        Lock.cpp
+        Lock.h
+        Mutex.cpp
+        Mutex.h
+        Server.cpp
+        Server.h
+        Socket.cpp
+        Socket.h
+        Thread.cpp
+        Thread.h
+        main.cpp
 )
 include(CppLint)
 
