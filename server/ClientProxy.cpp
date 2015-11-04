@@ -7,8 +7,8 @@
 #include "Constants.h"
 
 ClientProxy::ClientProxy(Socket *socket)
-  : socket(socket),
-    finalizado(false) {
+  : socket_(socket),
+    finalized_(false) {
 }
 
 ClientProxy::~ClientProxy() {
@@ -17,16 +17,16 @@ ClientProxy::~ClientProxy() {
 
 void ClientProxy::say_hello() {
   char caa[10];
-  socket->read_buffer(caa, 1);
+  socket_->read_buffer(caa, 1);
   caa[1] = '\0';
   std::cout << "ME ENVIARON ESTO: " << caa << "\n";
 
   char message = 1;
-  socket->send_buffer(&message, 1);
+  socket_->send_buffer(&message, 1);
   sleep(1);
   std::cout << "ENVIADO EL HEADER\n";
   char c = 65;
-  socket->send_buffer(&c, 1);
+  socket_->send_buffer(&c, 1);
   std::cout << "EL TRUE\n";
 }
 
@@ -35,12 +35,12 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
-  bool seguir = true;
-  while (seguir && !finalizado) {
+  bool keep_reading = true;
+  while (keep_reading && !finalized_) {
     char option;
-    seguir = socket->read_buffer(&option, 1);
+    keep_reading = socket_->read_buffer(&option, 1);
     std::cout << "Llego algo\n";
-    if (seguir) {
+    if (keep_reading) {
       if (option == LEFT) {
         std::cout << "LEFT\n";
       } else if (option == RIGHT) {
@@ -52,16 +52,16 @@ void ClientProxy::run() {
       }
     }
   }
-  socket->close_connection();
-  delete socket;
+  socket_->close_connection();
+  delete socket_;
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar
  * el servidor, eso implica cerrar todas las socketes con los clientes.
- * Se marca como finalizado y se cierra la socket con la otra punta
+ * Se marca como finalized y se cierra la socket con la otra punta
  * */
 bool ClientProxy::finalizar() {
-  this->finalizado = true;
-  bool fin = socket->close_connection();
-  return fin;
+  this->finalized_ = true;
+  bool end = socket_->close_connection();
+  return end;
 }

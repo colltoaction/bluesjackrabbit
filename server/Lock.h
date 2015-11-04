@@ -5,7 +5,7 @@
 
 class Lock {
  private:
-  Mutex *mutex;
+  Mutex *mutex_;
  public:
   explicit Lock(Mutex *mutex);
   ~Lock();

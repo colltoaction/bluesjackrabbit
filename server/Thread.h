@@ -5,7 +5,7 @@
 
 class Thread {
  private:
-  pthread_t thread;
+  pthread_t thread_;
  public:
   Thread();
   virtual ~Thread();

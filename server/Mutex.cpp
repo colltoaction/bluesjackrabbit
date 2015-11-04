@@ -4,18 +4,18 @@
 #include <string.h>
 
 Mutex::Mutex() {
-  memset(&this->mutex, 0, sizeof(pthread_mutex_t));
-  pthread_mutex_init(&this->mutex, NULL);
+  memset(&mutex_, 0, sizeof(pthread_mutex_t));
+  pthread_mutex_init(&mutex_, NULL);
 }
 
 Mutex::~Mutex() {
-  pthread_mutex_destroy(&this->mutex);
+  pthread_mutex_destroy(&mutex_);
 }
 
 void Mutex::lock() {
-  pthread_mutex_lock(&this->mutex);
+  pthread_mutex_lock(&mutex_);
 }
 
 void Mutex::unlock() {
-  pthread_mutex_unlock(&this->mutex);
+  pthread_mutex_unlock(&mutex_);
 }
