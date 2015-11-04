@@ -5,15 +5,15 @@
 
 #include "Server.h"
 
-#define ARGUMENTOS_SERVIDOR 2
+#define ARGS_SERVER 2
 
 int main(int argc, char *argv[]) {
-  std::string puerto = "socks";
-  if (argc == ARGUMENTOS_SERVIDOR) {
-    puerto = std::string(argv[1]);
+  std::string port = "socks";
+  if (argc == ARGS_SERVER) {
+    port = std::string(argv[1]);
   }
 
-  Server servidor(puerto);
-  servidor.iniciar();
+  Server server(port);
+  server.init();
   return 0;
 }

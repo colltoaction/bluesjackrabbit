@@ -5,10 +5,10 @@
 #include <list>
 
 ClientProxyAcceptor::ClientProxyAcceptor(std::string puerto)
-  : socket("localhost", puerto, AI_PASSIVE) {
-  this->keep_going = true;
-  this->clients_eliminated = false;
-  this->socket.bind_socket();
+  : socket("localhost", puerto, AI_PASSIVE),
+  keep_going(true),
+  clients_eliminated(false) {
+  socket.bind_socket();
 }
 
 ClientProxyAcceptor::~ClientProxyAcceptor() {
@@ -19,11 +19,11 @@ ClientProxyAcceptor::~ClientProxyAcceptor() {
  * seguir recibiendo conexiones.
  * */
 void ClientProxyAcceptor::listen_connections() {
-  this->socket.listen_socket();
-  this->keep_going = true;
-  while (this->keep_going) {
-    Socket *new_connection = this->socket.accept_connection();
-    if (this->keep_going) {
+  socket.listen_socket();
+  keep_going = true;
+  while (keep_going) {
+    Socket *new_connection = socket.accept_connection();
+    if (keep_going) {
       std::cout << "NUEVA\n";
       ClientProxy *proxy = new ClientProxy(new_connection);
       threads.push_back(proxy);
@@ -34,30 +34,30 @@ void ClientProxyAcceptor::listen_connections() {
       }
     }
   }
-  this->eliminate_clients();
+  eliminate_clients();
 }
 
 /* Envia un mensaje de finalizacion a todos los clientes, no importa
  * lo que esten haciendo. El servidor se esta apagando.
  * */
 void ClientProxyAcceptor::eliminate_clients() {
-  if (!this->clients_eliminated) {
+  if (!clients_eliminated) {
     for (std::list<ClientProxy*>::iterator it = threads.begin();
         it != threads.end(); it++) {
       (*it)->join();
       delete (*it);
     }
   }
-  this->clients_eliminated = true;
+  clients_eliminated = true;
 }
 
 /* Cierra el socket aceptor y todas las conexiones que fue derivando. */
 void ClientProxyAcceptor::finalize() {
-  this->keep_going = false;
-  this->eliminate_clients();
-  this->socket.close_connection();
+  keep_going = false;
+  eliminate_clients();
+  socket.close_connection();
 }
 
 void ClientProxyAcceptor::run() {
-  this->listen_connections();
+  listen_connections();
 }
