@@ -24,6 +24,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/")
 find_package(Cppunit REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(Threads)
 enable_testing()
 
 pkg_check_modules(CAIROMM REQUIRED cairomm-1.0)

@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(client)
 
-find_package (Threads)
-
 set(SOURCES
         main.cpp
         Constants.h

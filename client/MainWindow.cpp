@@ -13,12 +13,13 @@
 #include "ServerProxy.h"
 
 MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
-  : main_frame(),
-    initial_screen(),
-    new_game_screen(),
-    server_proxy(server_proxy),
-    map_id(0),
-    scene(scene),
+  : main_frame_(),
+    initial_screen_(),
+    new_game_screen_(),
+    join_game_screen_(),
+    server_proxy_(server_proxy),
+    map_id_(0),
+    scene_(scene),
     map_combo(NULL) {
   set_title("Blues Jackrabbit");
   set_resizable(false);
@@ -29,42 +30,42 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   init_new_game_screen();
   init_join_game_screen();
 
-  main_frame.pack_start(*scene);
-  main_frame.pack_start(initial_screen);
-  main_frame.pack_start(new_game_screen);
-  main_frame.pack_start(join_game_screen);
+  main_frame_.pack_start(*scene_);
+  main_frame_.pack_start(initial_screen_);
+  main_frame_.pack_start(new_game_screen_);
+  main_frame_.pack_start(join_game_screen_);
 
-  add(main_frame);
+  add(main_frame_);
   show_all();
-  scene->hide();
-  new_game_screen.hide();
-  join_game_screen.hide();
+  scene_->hide();
+  new_game_screen_.hide();
+  join_game_screen_.hide();
 
-  connected = this->server_proxy->connect();
-  std::cout << ((connected) ?"OK" : "NO") << std::endl;
+  connected_ = this->server_proxy_->connect();
+  std::cout << ((connected_) ?"OK" : "NO") << std::endl;
 }
 
 MainWindow::~MainWindow() {
 }
 
 void MainWindow::new_game_click() {
-  if (connected) {
-    std::map<size_t, std::string> maps = server_proxy->list_maps();
+  if (connected_) {
+    std::map<size_t, std::string> maps = server_proxy_->list_maps();
     load_combo(maps);
-    initial_screen.hide();
-    new_game_screen.show();
+    initial_screen_.hide();
+    new_game_screen_.show();
   }
 }
 
 void MainWindow::join_game_click() {
-  initial_screen.hide();
-  join_game_screen.show();
+  initial_screen_.hide();
+  join_game_screen_.show();
 }
 
 void MainWindow::init_click() {
-  server_proxy->start_game(map_id);
-  new_game_screen.hide();
-  scene->show();
+  server_proxy_->start_game(map_id_);
+  new_game_screen_.hide();
+  scene_->show();
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Box *parent) {
@@ -86,7 +87,7 @@ Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gt
 }
 
 void MainWindow::init_main_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/main_frame.glade", &initial_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/main_frame.glade", &initial_screen_);
   Gtk::Button *button = NULL;
   builder->get_widget("buttonNewGame", button);
   if (button) {
@@ -105,7 +106,7 @@ void MainWindow::init_main_game_screen() {
 }
 
 void MainWindow::init_new_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen_);
   Gtk::Button *button = NULL;
   builder->get_widget("start", button);
   if (button) {
@@ -122,11 +123,11 @@ void MainWindow::init_new_game_screen() {
 
 void MainWindow::combo_map_changed() {
   // std::cout << ((*map_combo->get_active())[columns.id]) << std::endl;
-  map_id = ((*map_combo->get_active())[columns.id]);
+  map_id_ = ((*map_combo->get_active())[columns.id]);
 }
 
 void MainWindow::init_join_game_screen() {
-  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen);
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/join_game.glade", &join_game_screen_);
 }
 
 

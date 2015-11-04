@@ -39,12 +39,10 @@ class RemoteServerProxy : public ServerProxy {
  private:
   static const double step;
   Engine engine_;
-  std::vector<Renderer> renderers_;
-  std::vector<Subscriber> subscribers;
-
-  struct addrinfo *address_info;
-  Socket *socket;
-  Mutex mutex;
+  std::vector<Renderer*> renderers_;
+  std::vector<Subscriber> subscribers_;
+  Socket *socket_;
+  Mutex mutex_;
 };
 
 

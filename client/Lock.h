@@ -4,11 +4,11 @@
 #include "Mutex.h"
 
 class Lock {
+ private:
+  Mutex *mutex_;
  public:
   explicit Lock(Mutex *mutex);
   ~Lock();
- private:
-  Mutex *mutex;
 };
 
 #endif /* BLUESJACKRABBIT_COMMON_LOCK_H */

@@ -19,14 +19,14 @@ class MainWindow: public Gtk::Window {
   virtual ~MainWindow();
 
  private:
-  Gtk::Box main_frame;
-  Gtk::Box initial_screen;
-  Gtk::Box new_game_screen;
-  Gtk::Box join_game_screen;
+  Gtk::Box main_frame_;
+  Gtk::Box initial_screen_;
+  Gtk::Box new_game_screen_;
+  Gtk::Box join_game_screen_;
 
-  bool connected;
-  ServerProxy *server_proxy;
-  size_t map_id;
+  bool connected_;
+  ServerProxy *server_proxy_;
+  size_t map_id_;
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();
@@ -52,7 +52,7 @@ class MainWindow: public Gtk::Window {
   ModelColumns columns;
   Glib::RefPtr<Gtk::ListStore> combo_model;
 
-  SceneRenderer *scene;
+  SceneRenderer *scene_;
   Gtk::ComboBox *map_combo;
   void combo_map_changed();
   void load_combo(const std::map<size_t, std::string> &names);
