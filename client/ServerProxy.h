@@ -15,6 +15,7 @@ typedef sigc::slot<void> Subscriber;
 
 class ServerProxy {
  public:
+  virtual ~ServerProxy() {}
   virtual void MoveUp() = 0;
   virtual void MoveDown() = 0;
   virtual void MoveLeft() = 0;
@@ -25,7 +26,6 @@ class ServerProxy {
   virtual bool connect() = 0;
   virtual std::map<size_t, std::string> list_maps() = 0;
   virtual bool start_game(size_t map_id) = 0;
-
 };
 
 

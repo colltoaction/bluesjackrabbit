@@ -21,7 +21,7 @@ void RemoteServerProxy::MoveUp() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
   char move = UP;
-  socket->enviar(&move, 1);
+  socket->send_buffer(&move, 1);
 }
 
 // Socket write IN GAME
@@ -29,7 +29,7 @@ void RemoteServerProxy::MoveDown() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
   char move = DOWN;
-  socket->enviar(&move, 1);
+  socket->send_buffer(&move, 1);
 }
 
 
@@ -38,7 +38,7 @@ void RemoteServerProxy::MoveLeft() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
   char move = LEFT;
-  socket->enviar(&move, 1);
+  socket->send_buffer(&move, 1);
 }
 
 // Socket write IN GAME
@@ -46,11 +46,11 @@ void RemoteServerProxy::MoveRight() {
   Lock l(&mutex);
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
   char move = RIGHT;
-  socket->enviar(&move, 1);
+  socket->send_buffer(&move, 1);
 }
 
 // Socket recibir. This should be done after start game (not in constructor)
-RemoteServerProxy::RemoteServerProxy() : socket(NULL){
+RemoteServerProxy::RemoteServerProxy() : socket(NULL) {
   renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
@@ -65,6 +65,7 @@ RemoteServerProxy::~RemoteServerProxy() {
        ++game_object) {
     delete *game_object;
   }
+  socket->close_connection();
   delete socket;
 }
 
@@ -80,29 +81,19 @@ std::vector<Renderer*> &RemoteServerProxy::renderers() {
 // recibir and write.
 bool RemoteServerProxy::connect() {
   socket = new Socket("localhost", "socks", 0);
-  socket->conectar();
+  socket->connect_socket();
 
   char caa[10];
   caa[0] = 'h';
   caa[1] = 'a';
   caa[2] = 'b';
-  socket->enviar(caa, 1);
+  socket->send_buffer(caa, 1);
 
   char message_size;
-  socket->recibir(&message_size, 1);
-  std::cout << "SIZE: " << (int)message_size << "\n";
+  socket->read_buffer(&message_size, 1);
   char c;
-  if (message_size == 1) {
-    std::cout << "ME VA A MANDAR " << (int) message_size << " BYTE\n";
-  } else {
-    std::cout << "NO DETECTO EL BYTE\n";
-  }
-  socket->recibir(&c, message_size);
-  /*std::cout << "RECIBIDO: " << c << "\n";
-  bool asd = c == 'A';
-  c = 'd';
-  socket->enviar(&c, 1);*/
-  return true;
+  socket->read_buffer(&c, message_size);
+  return c == 'A';
 }
 
 // recibir and write
