@@ -15,6 +15,7 @@ typedef sigc::slot<void> Subscriber;
 
 class ServerProxy {
  public:
+  virtual ~ServerProxy() {}
   virtual void MoveUp() = 0;
   virtual void MoveDown() = 0;
   virtual void MoveLeft() = 0;

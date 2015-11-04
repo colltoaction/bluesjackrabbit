@@ -1,16 +1,16 @@
-#ifndef MUTEX_H_
-#define MUTEX_H_
+#ifndef BLUESJACKRABBIT_COMMON_MUTEX_H
+#define BLUESJACKRABBIT_COMMON_MUTEX_H
 
 #include <pthread.h>
 
 class Mutex {
-private:
-	pthread_mutex_t mutex;
-public:
-	Mutex();
-	~Mutex();
-	void lock();
-	void unlock();
+ private:
+  pthread_mutex_t mutex;
+ public:
+  Mutex();
+  ~Mutex();
+  void lock();
+  void unlock();
 };
 
-#endif /* MUTEX_H_ */
+#endif /* BLUESJACKRABBIT_COMMON_MUTEX_H */
