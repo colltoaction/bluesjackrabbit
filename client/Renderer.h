@@ -10,12 +10,12 @@
 class Renderer {
  public:
   explicit Renderer(const GameObject *game_object);
-  void Render(const Cairo::RefPtr<Cairo::Context> &cr);
+  virtual ~Renderer();
+  virtual void Render(const Cairo::RefPtr<Cairo::Context> &cr);
 
  private:
   const GameObject *game_object_;
-  double width;
-  double height;
+  double radius;
 };
 
 

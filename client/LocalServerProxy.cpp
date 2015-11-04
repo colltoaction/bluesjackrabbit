@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "LocalServerProxy.h"
+#include "CharacterRenderer.h"
 
 
 const double LocalServerProxy::step = 0.003;
@@ -31,20 +32,30 @@ void LocalServerProxy::MoveRight() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
 }
 
+const Transform &LocalServerProxy::character_transform() {
+  return engine_.game_objects().front().transform();
+}
+
 // Socket recibir. This should be done after start game (not in constructor)
 LocalServerProxy::LocalServerProxy() {
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
+  renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
+  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(Renderer(&(*game_object)));
+    renderers_.push_back(new Renderer(&(*game_object)));
   }
 }
 
 LocalServerProxy::~LocalServerProxy() {
+  for (std::vector<Renderer*>::iterator game_object = renderers_.begin();
+       game_object != renderers_.end();
+       ++game_object) {
+    delete *game_object;
+  }
 }
 
 // Nothing, it will be updated from other place
-std::vector<Renderer> &LocalServerProxy::renderers() {
+std::vector<Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
 }
 

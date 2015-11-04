@@ -6,6 +6,8 @@ find_package (Threads)
 set(SOURCES
         main.cpp
         Constants.h
+        CharacterRenderer.cpp
+        CharacterRenderer.h
         Event.cpp
         Event.h
         EventBus.cpp

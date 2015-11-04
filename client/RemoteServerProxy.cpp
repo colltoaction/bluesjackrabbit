@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #include "RemoteServerProxy.h"
+#include "CharacterRenderer.h"
 #include "Lock.h"
 #include "Constants.h"
 
@@ -50,19 +51,29 @@ void RemoteServerProxy::MoveRight() {
 
 // Socket recibir. This should be done after start game (not in constructor)
 RemoteServerProxy::RemoteServerProxy() : socket(NULL){
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
+  renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
+  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(Renderer(&(*game_object)));
+    renderers_.push_back(new Renderer(&(*game_object)));
   }
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
+  for (std::vector<Renderer*>::iterator game_object = renderers_.begin();
+       game_object != renderers_.end();
+       ++game_object) {
+    delete *game_object;
+  }
   delete socket;
 }
 
+const Transform &RemoteServerProxy::character_transform() {
+  return engine_.game_objects().front().transform();
+}
+
 // Nothing, it will be updated from other place
-std::vector<Renderer> &RemoteServerProxy::renderers() {
+std::vector<Renderer*> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 

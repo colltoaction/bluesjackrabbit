@@ -2,7 +2,7 @@
 #define BLUESJACKRABBIT_CLIENT_SERVERPROXY_H
 
 #include <sigc++/functors/slot.h>
-#include <engine/Engine.h>
+#include <engine/Transform.h>
 #include <engine/GameObject.h>
 #include <map>
 #include <string>
@@ -19,11 +19,13 @@ class ServerProxy {
   virtual void MoveDown() = 0;
   virtual void MoveLeft() = 0;
   virtual void MoveRight() = 0;
-  virtual std::vector<Renderer> &renderers() = 0;
+  virtual std::vector<Renderer*> &renderers() = 0;
+  virtual const Transform &character_transform() = 0;
 
   virtual bool connect() = 0;
   virtual std::map<size_t, std::string> list_maps() = 0;
   virtual bool start_game(size_t map_id) = 0;
+
 };
 
 
