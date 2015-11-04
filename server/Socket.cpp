@@ -13,7 +13,7 @@
  * posibles direcciones y crea un FD a donde se creo el socket.
  * Si no puede encontrar una direccion valida, lo informa por stderr
  * */
-Socket::Socket(std::string ip, std::string puerto, int flags) {
+Socket::Socket(std::string ip, std::string port, int flags) {
   struct addrinfo hints;
   struct addrinfo *posibilidades, *iterador;
   this->closed = false;
@@ -22,7 +22,7 @@ Socket::Socket(std::string ip, std::string puerto, int flags) {
   hints.ai_family = AF_INET; /* IP v4*/
   hints.ai_socktype = SOCK_STREAM; /* Protocolo TCP */
   hints.ai_flags = flags;
-  int resultado = getaddrinfo(ip.c_str(), puerto.c_str(), &hints,
+  int resultado = getaddrinfo(ip.c_str(), port.c_str(), &hints,
       &posibilidades);
   if (resultado != 0) {
     std::cerr << "ERROR EN ADDRINFO: " << gai_strerror(resultado)

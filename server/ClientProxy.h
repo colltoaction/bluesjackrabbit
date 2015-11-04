@@ -14,8 +14,8 @@ class ClientProxy : public Thread {
   void say_hello();
   bool finalizar();
  private:
-  Socket *socket;
-  bool finalizado;
+  Socket *socket_;
+  bool finalized_;
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */

@@ -7,9 +7,9 @@
 
 class Server {
  private:
-  ClientProxyAcceptor proxy;
+  ClientProxyAcceptor proxy_;
  public:
-  explicit Server(std::string puerto);
+  explicit Server(std::string port);
   ~Server();
   void init();
 };

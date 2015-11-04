@@ -16,10 +16,10 @@ class ClientProxyAcceptor : public Thread {
   void listen_connections();
   void finalize();
  private:
-  Socket socket;
-  bool keep_going;
-  std::list<ClientProxy*> threads;
-  bool clients_eliminated;
+  Socket socket_;
+  bool keep_going_;
+  std::list<ClientProxy*> threads_;
+  bool clients_eliminated_;
   void eliminate_clients();
 };
 
