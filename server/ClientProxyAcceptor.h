@@ -9,19 +9,18 @@
 #include "Thread.h"
 
 class ClientProxyAcceptor : public Thread {
- private:
-  Socket socket;
-  bool keep_going;
-  std::list<ClientProxy*> threads;
-  bool clients_eliminated;
-  void eliminate_clients();
-
  public:
   explicit ClientProxyAcceptor(std::string puerto);
   ~ClientProxyAcceptor();
   virtual void run();
   void listen_connections();
   void finalize();
+ private:
+  Socket socket;
+  bool keep_going;
+  std::list<ClientProxy*> threads;
+  bool clients_eliminated;
+  void eliminate_clients();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXYACCEPTOR_H */

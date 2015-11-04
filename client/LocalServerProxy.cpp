@@ -3,35 +3,31 @@
 #include <vector>
 #include <stdlib.h>
 
-#include <iostream>
-#include <unistd.h>
-
 #include "LocalServerProxy.h"
 
 
 const double LocalServerProxy::step = 0.003;
 
-// Socket write IN GAME
 void LocalServerProxy::MoveUp() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
 }
 
-// Socket write IN GAME
 void LocalServerProxy::MoveDown() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
 }
 
-// Socket write IN GAME
 void LocalServerProxy::MoveLeft() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
 }
 
-// Socket write IN GAME
 void LocalServerProxy::MoveRight() {
   engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
 }
 
-// Socket recibir. This should be done after start game (not in constructor)
+const Transform &LocalServerProxy::character_transform() {
+  return engine_.game_objects().front().transform();
+}
+
 LocalServerProxy::LocalServerProxy() {
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
@@ -64,6 +60,9 @@ std::map<size_t, std::string> LocalServerProxy::list_maps() {
 
 // Write... and recibir only to check game started.
 bool LocalServerProxy::start_game(size_t map_id) {
-  std::cout << "Start game with map id: " << map_id << std::endl;
+  // Dummy but cpplint does not compile if map_id is not used
+  if (map_id) {
+    return true;
+  }
   return true;
 }
