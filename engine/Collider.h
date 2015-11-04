@@ -3,6 +3,7 @@
 
 
 #include "Transform.h"
+
 class Collider {
  public:
   explicit Collider(const Transform &transform);
