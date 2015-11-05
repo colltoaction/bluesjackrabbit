@@ -3,6 +3,7 @@ project(client)
 
 set(SOURCES
         main.cpp
+        Constants.h
         CharacterRenderer.cpp
         CharacterRenderer.h
         Event.cpp
@@ -11,16 +12,27 @@ set(SOURCES
         EventBus.h
         GameObjectProxy.cpp
         GameObjectProxy.h
+        LocalServerProxy.cpp
+        LocalServerProxy.h
+        Lock.cpp
+        Lock.h
         MainWindow.cpp
         MainWindow.h
+        Mutex.cpp
+        Mutex.h
+        RemoteServerProxy.cpp
+        RemoteServerProxy.h
         Renderer.cpp
         Renderer.h
         SceneRenderer.cpp
         SceneRenderer.h
-        ServerProxy.cpp
         ServerProxy.h
+        Socket.cpp
+        Socket.h
         Stopwatch.cpp
         Stopwatch.h
+        Thread.cpp
+        Thread.h
 )
 include(CppLint)
 
@@ -31,6 +43,7 @@ add_dependencies(${PROJECT_NAME} engine)
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} engine)
 
 file(COPY static/main_frame.glade
