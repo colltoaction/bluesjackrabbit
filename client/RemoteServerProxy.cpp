@@ -7,9 +7,10 @@
 #include <iostream>
 #include <unistd.h>
 
+#include <common/Lock.h>
+
 #include "RemoteServerProxy.h"
 #include "CharacterRenderer.h"
-#include "Lock.h"
 #include "Constants.h"
 
 

@@ -5,17 +5,20 @@
 #include <sigc++/functors/slot.h>
 
 #include <engine/GameObject.h>
+
 #include <map>
 #include <string>
 #include "GameObjectProxy.h"
 
+/*
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+*/
 
 #include "ServerProxy.h"
-#include "Socket.h"
-#include "Mutex.h"
+#include <common/Socket.h>
+#include <common/Mutex.h>
 
 /**
  * A functor object complying to void functor().
