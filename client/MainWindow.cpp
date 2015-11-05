@@ -42,6 +42,7 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   join_game_screen_.hide();
 
   connected_ = this->server_proxy_->connect();
+  this->server_proxy_->init_game();
   std::cout << ((connected_) ?"OK" : "NO") << std::endl;
 }
 

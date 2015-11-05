@@ -5,8 +5,8 @@
 #include <list>
 
 #include "ClientProxy.h"
-#include "Socket.h"
-#include "Thread.h"
+#include <common/Socket.h>
+#include <common/Thread.h>
 
 class ClientProxyAcceptor : public Thread {
  public:

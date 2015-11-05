@@ -12,5 +12,9 @@
 #define DOWN 0x3
 #define UP 0x4
 
+#define CANT_BYTES 1
+
+class Constants {
+};
 
 #endif /* BLUESJACKRABBIT_SERVER_CONSTANTS_H */

@@ -2,7 +2,17 @@
 #include "GameObject.h"
 #include "RigidBody.h"
 
+#include <iostream>
+
+GameObject::GameObject() {
+  std::cout << "Game object construido\n";
+}
+
 const ::Transform &GameObject::transform() const {
+  return transform_;
+}
+
+::Transform& GameObject::transform_noconst() {
   return transform_;
 }
 
