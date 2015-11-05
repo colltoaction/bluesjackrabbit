@@ -11,12 +11,8 @@ set(SOURCES
         GameObjectProxy.h
         LocalServerProxy.cpp
         LocalServerProxy.h
-        Lock.cpp
-        Lock.h
         MainWindow.cpp
         MainWindow.h
-        Mutex.cpp
-        Mutex.h
         RemoteServerProxy.cpp
         RemoteServerProxy.h
         Renderer.cpp
@@ -24,12 +20,8 @@ set(SOURCES
         SceneRenderer.cpp
         SceneRenderer.h
         ServerProxy.h
-        Socket.cpp
-        Socket.h
         Stopwatch.cpp
         Stopwatch.h
-        Thread.cpp
-        Thread.h
 )
 include(CppLint)
 
