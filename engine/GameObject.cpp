@@ -1,12 +1,21 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Body *body, Collider *collider)
-  : alive_(true), body_(body), collider_(collider) {
+#include <iostream>
+
+GameObject::GameObject() {
+  std::cout << "Game object construido\n";
 }
 
-GameObject::~GameObject() {
-  delete body_;
-  delete collider_;
+const ::Transform &GameObject::transform() const {
+  return transform_;
+}
+
+::Transform& GameObject::transform_noconst() {
+  return transform_;
+}
+
+std::string GameObject::type() const {
+  return "circulo";
 }
 
 bool GameObject::will_collide(const GameObject &other) const {

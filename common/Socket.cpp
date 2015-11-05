@@ -110,14 +110,14 @@ Socket* Socket::accept_connection() {
 bool Socket::send_buffer(const char *buffer, ssize_t tamanio) {
   ssize_t bytesEnviados = 0;
   bool error = false, socketCerrado = false;
-  while (bytesEnviados < tamanio && !closed) {
+  while (bytesEnviados < tamanio && !error && !socketCerrado) {
     ssize_t envioParcial = send(this->socketFD, buffer + bytesEnviados,
         tamanio - bytesEnviados, MSG_NOSIGNAL);
-    if (envioParcial < 0 && !closed) {
+    if (envioParcial < 0) {
       std::cerr << "Error al enviar mensaje: " << std::string(buffer) << std::endl;
       std::cerr << "Error: " << gai_strerror(static_cast<int>(envioParcial)) << std::endl;
       error = true;
-    } else if (envioParcial == 0 && !closed) {
+    } else if (envioParcial == 0) {
       std::cerr << "SOCKET CERRADO DESDE EL OTRO PUNTO. " << std::endl;
       socketCerrado = true;
     } else {
@@ -129,15 +129,15 @@ bool Socket::send_buffer(const char *buffer, ssize_t tamanio) {
     close(this->socketFD);
     return false;
   }
-  return !closed;
+  return true;
 }
 
 bool Socket::read_buffer(char *buffer, ssize_t tamanio) {
   bool error = false, socketCerrado = false;
   memset(buffer, 0, tamanio);
   ssize_t recibidoParcial = 0;
-  while (recibidoParcial < tamanio && !closed) {
-    ssize_t r = recv(this->socketFD, buffer + recibidoParcial, tamanio - recibidoParcial, MSG_NOSIGNAL);
+  while (recibidoParcial < tamanio) {
+    ssize_t r = recv(this->socketFD, buffer + recibidoParcial, MAX_RECIBIR - recibidoParcial, MSG_NOSIGNAL);
     if (r < 0 && !closed) {
       std::cerr << "Error al recibir mensaje: "
           << gai_strerror(static_cast<int>(r)) << std::endl;
@@ -148,12 +148,12 @@ bool Socket::read_buffer(char *buffer, ssize_t tamanio) {
       recibidoParcial += r;
     }
     if (error || socketCerrado) {
-      this->close_connection();
-      close(this->socketFD);
+      /*this->cerrar();
+      close(this->socketFD);*/
       return false;
     }
   }
-  return !closed;
+  return true;
 }
 
 /* Envia un string hacia la otra punta, utiliza el enviar buffer, tamanio */
@@ -194,12 +194,11 @@ std::string Socket::read_string() {
 bool Socket::close_connection() {
   this->closed = true;
   shutdown(this->socketFD, SHUT_RDWR);
-  close(socketFD);
   return true;
 }
 
 /* Cierra el FD del socket */
 Socket::~Socket() {
-  // close(this->socketFD);
+  close(this->socketFD);
 }
 

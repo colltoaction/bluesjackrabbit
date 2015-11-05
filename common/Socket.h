@@ -3,14 +3,22 @@
 
 #include <string>
 #include <sys/types.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <string.h>
 
 
 class Socket {
+ private:
+  int socketFD;
+  socklen_t ai_addrlen;
+  struct sockaddr ai_addr;
+  bool closed;
+
+
  public:
   Socket(std::string ip, std::string puerto, int flags);
+  explicit Socket(int nuevoSocketFD);
   ~Socket();
   bool bind_socket();
   bool listen_socket();
@@ -21,12 +29,6 @@ class Socket {
   bool send_buffer(const char *buffer, ssize_t tamanio);
   bool read_buffer(char *buffer, ssize_t tamanio);
   bool close_connection();
- private:
-  explicit Socket(int nuevoSocketFD);
-  int socketFD;
-  socklen_t ai_addrlen;
-  struct sockaddr ai_addr;
-  bool closed;
 };
 
 #endif /* BLUESJACKRABBIT_COMMON_SOCKET_H */

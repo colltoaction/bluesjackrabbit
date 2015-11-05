@@ -28,6 +28,9 @@ const Transform &LocalServerProxy::character_transform() {
   return engine_.game_objects().front().transform();
 }
 
+void LocalServerProxy::init_game() {
+}
+
 LocalServerProxy::LocalServerProxy() {
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();

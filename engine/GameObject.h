@@ -11,44 +11,12 @@
  */
 class GameObject {
  public:
-  GameObject(Body *body, Collider *collider);
-
-  virtual ~GameObject();
-
-  /**
-   * The body will be responsible for holding things like the size of an object and simluating rigid body physics.
-   */
-  Body &body();
-
-  /**
-   * This method should be called in each step of the engine to perform routine operations.
-   */
-  virtual void update_fixed(Vector gravity);
-
-  /**
-   * Returns true if this object's will collide with another after moving to its next position.
-   */
-  bool will_collide(const GameObject &other) const;
-
-  /**
-   * Returns game object type according if it is a player, turtle or floor.
-   */
-  virtual char game_object_type();
-
-  /**
-   * Returns a list of points the client will use to render the object
-   */
-  virtual std::list<Vector> characteristic_points();
-
-  virtual void impact(GameObject *other);
-
-  virtual bool alive();
-
- protected:
-  bool alive_;
-  Body *body_;
-  Collider *collider_;
-
+  GameObject();
+  const ::Transform &transform() const;
+  ::Transform &transform_noconst();
+  ::RigidBody &rigid_body();
+  std::string type() const;
+  void update_fixed();
  private:
 };
 
