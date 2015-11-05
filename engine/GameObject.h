@@ -8,7 +8,9 @@
 
 class GameObject {
  public:
+  GameObject();
   const ::Transform &transform() const;
+  ::Transform &transform_noconst();
   ::RigidBody &rigid_body();
   std::string type() const;
   void update_fixed();

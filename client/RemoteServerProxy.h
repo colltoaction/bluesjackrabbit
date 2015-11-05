@@ -3,7 +3,7 @@
 
 
 #include <sigc++/functors/slot.h>
-#include <engine/Engine.h>
+
 #include <engine/GameObject.h>
 #include <map>
 #include <string>
@@ -35,14 +35,17 @@ class RemoteServerProxy : public ServerProxy {
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual bool start_game(size_t map_id);
+  virtual void init_game();
+  void read_object_position(double *x, double *y);
 
  private:
   static const double step;
-  Engine engine_;
+  // Engine engine_;
   std::vector<Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
   Mutex mutex_;
+  std::vector<GameObject*> game_objects_;
 };
 
 
