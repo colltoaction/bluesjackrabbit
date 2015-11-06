@@ -15,6 +15,8 @@ set(SOURCES
         RigidBody.h
         StaticBody.cpp
         StaticBody.h
+        Transform.cpp
+        Transform.h
         Vector.cpp
         Vector.h)
 

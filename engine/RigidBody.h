@@ -9,11 +9,11 @@
 class RigidBody : public Body {
  public:
   explicit RigidBody(Transform *transform);
-  const Vector &velocity() const;
-  void apply_force(const Vector &vector);
-  Vector next_position(const Vector &position) const;
-  void update_fixed();
-  void stop();
+  virtual const Vector &velocity() const;
+  virtual void apply_force(const Vector &vector);
+  virtual Vector next_position() const;
+  virtual void update_fixed();
+  virtual void stop();
 
  private:
   static const double friction_magnitude_;

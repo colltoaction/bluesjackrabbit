@@ -17,7 +17,7 @@ const Vector &RigidBody::velocity() const {
 }
 
 void RigidBody::update_fixed() {
-  transform_->update_position(next_position(transform_->position()));
+  transform_->update_position(next_position());
 
   if (force_ == Vector::zero()) {
     Vector friction = velocity_.direction() * -friction_magnitude_;
@@ -36,6 +36,6 @@ void RigidBody::stop() {
   velocity_ = Vector::zero();
 }
 
-Vector RigidBody::next_position(const Vector &position) const {
-  return position + velocity();
+Vector RigidBody::next_position() const {
+  return transform_->position() + velocity();
 }
