@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "RigidBody.h"
+#include "StaticBody.h"
 
 
 template<class BodyType>
@@ -29,6 +30,7 @@ class GameObjectTemplate : public GameObject {
 };
 
 template class GameObjectTemplate<RigidBody>;
+template class GameObjectTemplate<StaticBody>;
 
 
 #endif  // BLUESJACKRABBIT_ENGINE_GAMEOBJECTTEMPLATE_H
