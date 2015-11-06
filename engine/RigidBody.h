@@ -3,12 +3,9 @@
 
 
 #include "Body.h"
-#include "Vector.h"
 #include "Transform.h"
+#include "Vector.h"
 
-/**
- * Actual implementation of the Body class. Provides rigid body physics, like gravity.
- */
 class RigidBody : public Body {
  public:
   explicit RigidBody(Transform *transform);
