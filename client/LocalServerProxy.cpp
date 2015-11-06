@@ -9,33 +9,34 @@
 const double LocalServerProxy::step = 0.003;
 
 void LocalServerProxy::MoveUp() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
+  engine_.apply_force(engine_.game_objects().front(), Vector(0, -step));
 }
 
 void LocalServerProxy::MoveDown() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
+  engine_.apply_force(engine_.game_objects().front(), Vector(0, step));
 }
 
 void LocalServerProxy::MoveLeft() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
+  engine_.apply_force(engine_.game_objects().front(), Vector(-step, 0));
 }
 
 void LocalServerProxy::MoveRight() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
+  engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
 }
 
 const Transform &LocalServerProxy::character_transform() {
-  return engine_.game_objects().front().transform();
+  return engine_.game_objects().front()->transform();
 }
 
 void LocalServerProxy::init_game() {
 }
 
 LocalServerProxy::LocalServerProxy() {
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
+  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()));
+  for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(Renderer(&(*game_object)));
+    renderers_.push_back(new Renderer(*game_object));
   }
 }
 
