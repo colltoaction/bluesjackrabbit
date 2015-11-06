@@ -2,7 +2,8 @@
 
 GameObject::GameObject(const Vector &position)
     : transform_(position)
-    , collider_(transform_) {
+    , rigid_body_(&transform_)
+    , collider_(transform_, rigid_body_) {
 }
 
 const ::Transform &GameObject::transform() const {
@@ -22,30 +23,9 @@ bool GameObject::will_collide(const GameObject &other) const {
   return other.collider_->will_collide(*collider_);
 }
 
-Body &GameObject::body() {
-  return *body_;
+void GameObject::update_fixed() {
 }
 
-void GameObject::update_fixed(Vector gravity) {
-  (void) gravity;
-}
-
-char GameObject::game_object_type() {
-  return 'g';
-}
-
-std::list<Vector> GameObject::characteristic_points() {
-  return collider_->characteristic_points();
-}
-
-void GameObject::impact(GameObject *other) {
-  (void)other;
-}
-
-bool GameObject::alive() {
-  return true;
-}
-
-bool GameObject::collides(const GameObject &other) const {
-  return collider_.collides(other.collider_);
+bool GameObject::will_collide(const GameObject &other) const {
+  return collider_.will_collide(other.collider_);
 }

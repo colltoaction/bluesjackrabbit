@@ -78,6 +78,7 @@ class Engine {
   static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
   std::vector<GameObject*> game_objects_;
   bool collides(const std::vector<GameObject*>::iterator &game_object);
+  bool will_collide(const std::vector<GameObject*>::iterator &game_object);
 };
 
 

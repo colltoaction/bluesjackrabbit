@@ -18,7 +18,7 @@ class GameObject {
   ::RigidBody &rigid_body();
   std::string type() const;
   void update_fixed();
-  bool collides(const GameObject &other) const;
+  bool will_collide(const GameObject &other) const;
 
  private:
   ::Transform transform_;

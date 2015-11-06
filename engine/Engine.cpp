@@ -29,22 +29,21 @@ void Engine::FixedUpdate() {
   for (std::vector<GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
+    if (will_collide(game_object)) {
+      (*game_object)->rigid_body().stop();
+    }
+
     (*game_object)->rigid_body().update_fixed();
     (*game_object)->update_fixed();
-    if (collides(game_object)) {
-      (*game_object)->rigid_body().bounce();
-      // TODO(tinchou): don't call this twice
-      (*game_object)->update_fixed();
-    }
   }
 }
 
-bool Engine::collides(const std::vector<GameObject*>::iterator &game_object) {
+bool Engine::will_collide(const std::vector<GameObject*>::iterator &game_object) {
   for (std::vector<GameObject*>::iterator other = game_objects_.begin();
        other != game_objects_.end();
        ++other) {
     if (game_object != other) {
-      if ((*game_object)->collides(**other)) {
+      if ((*game_object)->will_collide(**other)) {
         return true;
       }
     }
