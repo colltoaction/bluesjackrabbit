@@ -1,4 +1,3 @@
-#include <engine/GameObject.h>
 #include "SceneRenderer.h"
 
 void SceneRenderer::update() {

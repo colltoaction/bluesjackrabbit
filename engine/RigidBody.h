@@ -2,10 +2,11 @@
 #define BLUESJACKRABBIT_ENGINE_RIGIDBODY_H
 
 
-#include "Vector.h"
+#include "Body.h"
 #include "Transform.h"
+#include "Vector.h"
 
-class RigidBody {
+class RigidBody : public Body {
  public:
   explicit RigidBody(Transform *transform);
   const Vector &velocity() const;

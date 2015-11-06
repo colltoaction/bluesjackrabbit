@@ -33,7 +33,6 @@ void RigidBody::update_fixed() {
 }
 
 void RigidBody::stop() {
-  force_ = Vector::zero();
   velocity_ = Vector::zero();
 }
 

@@ -3,24 +3,20 @@
 
 
 #include <string>
-#include "Transform.h"
-#include "RigidBody.h"
+#include "Body.h"
 #include "Collider.h"
+#include "Transform.h"
 
 class GameObject {
  public:
-  explicit GameObject(const Vector &position);
-  const ::Transform &transform() const;
-  ::Transform &transform_noconst();
-  ::RigidBody &rigid_body();
-  std::string type() const;
-  void update_fixed();
-  bool will_collide(const GameObject &other) const;
+  virtual const ::Transform &transform() const = 0;
+  virtual Body &rigid_body() = 0;
+  virtual std::string type() const = 0;
+  virtual void update_fixed() = 0;
+  virtual bool will_collide(const GameObject &other) const;
 
- private:
-  ::Transform transform_;
-  ::RigidBody rigid_body_;
-  ::Collider collider_;
+ protected:
+  virtual const Collider &collider() const = 0;
 };
 
 
