@@ -2,18 +2,21 @@ cmake_minimum_required(VERSION 2.6)
 project(engine)
 
 set(SOURCES
+        Body.h
+        Collider.cpp
+        Collider.h
         Engine.cpp
         Engine.h
         GameObject.cpp
         GameObject.h
+        GameObjectTemplate.cpp
+        GameObjectTemplate.h
         RigidBody.cpp
         RigidBody.h
         Transform.cpp
         Transform.h
         Vector.cpp
-        Vector.h
-        Collider.cpp Collider.h)
-include(CppLint)
+        Vector.h)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")

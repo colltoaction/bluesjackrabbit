@@ -4,6 +4,7 @@
 #include <sigc++/functors/slot.h>
 #include <engine/Transform.h>
 #include <engine/GameObject.h>
+#include <engine/Engine.h>
 #include <map>
 #include <string>
 #include "GameObjectProxy.h"

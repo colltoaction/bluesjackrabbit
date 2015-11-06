@@ -2,9 +2,9 @@
 #define BLUESJACKRABBIT_CLIENT_GAMEOBJECTPROXY_H
 
 
-#include <engine/GameObject.h>
 #include <map>
 #include <string>
+#include <engine/GameObject.h>
 #include "Renderer.h"
 
 class GameObjectProxy : public GameObject {

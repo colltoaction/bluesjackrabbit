@@ -3,7 +3,7 @@
 
 
 #include <sigc++/functors/slot.h>
-#include "GameObject.h"
+#include "GameObjectTemplate.h"
 
 /**
  * A functor object complying to void functor().
@@ -19,6 +19,7 @@ class Engine {
 
  private:
   static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
+  static const Vector gravity_;
   std::vector<GameObject*> game_objects_;
   bool collides(const std::vector<GameObject*>::iterator &game_object);
   bool will_collide(const std::vector<GameObject*>::iterator &game_object);
