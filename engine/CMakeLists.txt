@@ -13,6 +13,8 @@ set(SOURCES
         GameObjectTemplate.h
         RigidBody.cpp
         RigidBody.h
+        StaticBody.cpp
+        StaticBody.h
         Transform.cpp
         Transform.h
         Vector.cpp

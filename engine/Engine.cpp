@@ -1,15 +1,16 @@
 #include <glibmm/main.h>
 #include <vector>
 #include "Engine.h"
-#include "RigidBody.h"
 #include "GameObjectTemplate.h"
+#include "RigidBody.h"
+#include "StaticBody.h"
 
-const Vector Engine::gravity_ = Vector(0, -9.8);
+const Vector Engine::gravity_ = Vector(0, 0.001);
 
 Engine::Engine() {
   game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector::zero()));
-  game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector(20, 0)));
-  game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector(0, 20)));
+  game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(20, 0)));
+  game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(0, 20)));
   Glib::signal_timeout().connect(
       sigc::bind_return(sigc::mem_fun(*this, &Engine::FixedUpdate), true),
       fixedUpdateStep);

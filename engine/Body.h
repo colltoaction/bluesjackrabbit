@@ -7,7 +7,7 @@ class Body {
  public:
   virtual const Vector &velocity() const = 0;
   virtual void apply_force(const Vector &vector) = 0;
-  virtual Vector next_position(const Vector &position) const = 0;
+  virtual Vector next_position() const = 0;
   virtual void update_fixed() = 0;
   virtual void stop() = 0;
 };
