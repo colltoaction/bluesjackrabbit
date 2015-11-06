@@ -25,7 +25,6 @@ set(SOURCES
         Stopwatch.cpp
         Stopwatch.h
 )
-include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")

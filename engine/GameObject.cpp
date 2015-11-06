@@ -4,7 +4,8 @@
 
 GameObject::GameObject(const Vector &position)
     : transform_(position)
-    , collider_(transform_) {
+    , rigid_body_(&transform_)
+    , collider_(transform_, rigid_body_) {
 }
 
 const ::Transform &GameObject::transform() const {
@@ -24,10 +25,8 @@ std::string GameObject::type() const {
 }
 
 void GameObject::update_fixed() {
-  transform_.update_position(transform_.position().x() + rigid_body_.velocity().x(),
-                             transform_.position().y() + rigid_body_.velocity().y());
 }
 
-bool GameObject::collides(const GameObject &other) const {
-  return collider_.collides(other.collider_);
+bool GameObject::will_collide(const GameObject &other) const {
+  return collider_.will_collide(other.collider_);
 }
