@@ -18,56 +18,34 @@ const double RemoteServerProxy::step = 0.003;
 
 void RemoteServerProxy::MoveUp() {
   Lock l(&mutex_);
-<<<<<<< 1641b1b241bd698bfae7ac93508efd60b1e55b64
-=======
-  engine_.apply_force(engine_.game_objects().front(), Vector(0, -step));
->>>>>>> Más fixes después del merge.
   char move = UP;
   socket_->send_buffer(&move, 1);
 }
 
 void RemoteServerProxy::MoveDown() {
   Lock l(&mutex_);
-<<<<<<< 1641b1b241bd698bfae7ac93508efd60b1e55b64
-=======
-  engine_.apply_force(engine_.game_objects().front(), Vector(0, step));
->>>>>>> Más fixes después del merge.
   char move = DOWN;
   socket_->send_buffer(&move, 1);
 }
 
 void RemoteServerProxy::MoveLeft() {
   Lock l(&mutex_);
-<<<<<<< 1641b1b241bd698bfae7ac93508efd60b1e55b64
-=======
-  engine_.apply_force(engine_.game_objects().front(), Vector(-step, 0));
->>>>>>> Más fixes después del merge.
   char move = LEFT;
   socket_->send_buffer(&move, 1);
 }
 
 void RemoteServerProxy::MoveRight() {
   Lock l(&mutex_);
-<<<<<<< 1641b1b241bd698bfae7ac93508efd60b1e55b64
-=======
-  engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
->>>>>>> Más fixes después del merge.
   char move = RIGHT;
   socket_->send_buffer(&move, 1);
 }
 
 // Socket_ read_buffer. This should be done after start game (not in constructor)
-<<<<<<< 1641b1b241bd698bfae7ac93508efd60b1e55b64
 RemoteServerProxy::RemoteServerProxy() :
     socket_(NULL),
     updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)) {
   /*renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
-=======
-RemoteServerProxy::RemoteServerProxy() : socket_(NULL) {
-  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()));
-  for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
->>>>>>> Más fixes después del merge.
        game_object != engine_.game_objects().end();
        ++game_object) {
     renderers_.push_back(new Renderer(&(*game_object)));
