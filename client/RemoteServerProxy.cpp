@@ -102,7 +102,6 @@ void RemoteServerProxy::init_game() {
     } else {
       renderers_.push_back(new Renderer(object));
     }
-    sleep(2);
   }
 }
 
@@ -141,11 +140,14 @@ std::map<size_t, std::string> RemoteServerProxy::list_maps() {
 }
 
 std::map<size_t, std::string> RemoteServerProxy::list_games() {
+  std::cout << "Comienzo listado games\n";
   std::map<size_t, std::string> map;
   char option = LIST_GAMES;
   socket_->send_buffer(&option, 1);
   socket_->read_buffer(&option, CANT_BYTES);
+  std::cout << "Son " << static_cast<int>(option) << " juegos\n";
   for (char i = 0; i < option; i++) {
+    std::cout << "Juego: " << static_cast<int>(i) << std::endl;
     char game_number;
     socket_->read_buffer(&game_number, CANT_BYTES);
     std::stringstream ss("Juego ");
