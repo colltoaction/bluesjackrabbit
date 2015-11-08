@@ -8,6 +8,7 @@
 #include <common/Socket.h>
 #include <common/Mutex.h>
 #include <engine/GameObject.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 
