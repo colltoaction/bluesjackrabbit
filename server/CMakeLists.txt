@@ -11,6 +11,8 @@ set(SOURCES
         Game.h
         GameMonitor.cpp
         GameMonitor.h
+        GameRunner.cpp
+        GameRunner.h
         Map.cpp
         Map.h
         Server.cpp

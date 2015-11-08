@@ -1,22 +1,24 @@
 #ifndef BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXY_H
 #define BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXY_H
 
-#include <sigc++/functors/slot.h>
-
-#include <engine/GameObject.h>
-
 #include <map>
 #include <string>
-#include "GameObjectProxy.h"
+#include <sigc++/functors/slot.h>
 
-#include "ServerProxy.h"
 #include <common/Socket.h>
 #include <common/Mutex.h>
+#include <engine/GameObject.h>
+
+#include "GameObjectProxy.h"
+#include "ServerProxy.h"
+#include "RemoteServerProxyUpdater.h"
+
 
 /**
  * A functor object complying to void functor().
  */
 typedef sigc::slot<void> Subscriber;
+
 
 class RemoteServerProxy : public ServerProxy {
  public:
@@ -42,8 +44,11 @@ class RemoteServerProxy : public ServerProxy {
   std::vector<Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
+  RemoteServerProxyUpdater updater_;
   Mutex mutex_;
   std::vector<GameObject*> game_objects_;
+
+  void update_object(double x, double y);
 };
 
 

@@ -15,6 +15,8 @@ set(SOURCES
         MainWindow.h
         RemoteServerProxy.cpp
         RemoteServerProxy.h
+        RemoteServerProxyUpdater.cpp
+        RemoteServerProxyUpdater.h
         Renderer.cpp
         Renderer.h
         SceneRenderer.cpp
