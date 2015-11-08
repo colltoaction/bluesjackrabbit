@@ -4,9 +4,11 @@
 #include <string>
 
 #include "ClientProxyAcceptor.h"
+#include "GameMonitor.h"
 
 class Server {
  private:
+  GameMonitor game_monitor_;
   ClientProxyAcceptor proxy_;
  public:
   explicit Server(std::string port);

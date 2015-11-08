@@ -7,6 +7,12 @@ set(SOURCES
         ClientProxy.h
         ClientProxyAcceptor.cpp
         ClientProxyAcceptor.h
+        Game.cpp
+        Game.h
+        GameMonitor.cpp
+        GameMonitor.h
+        Map.cpp
+        Map.h
         Server.cpp
         Server.h
         main.cpp
