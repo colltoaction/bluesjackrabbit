@@ -34,7 +34,6 @@ void ClientProxy::notify() {
 void ClientProxy::say_hello() {
   char message = 1;
   socket_->send_buffer(&message, 1);
-  sleep(1);
   std::cout << "ENVIADO EL HEADER\n";
   char c = 'A';
   socket_->send_buffer(&c, 1);
@@ -133,7 +132,6 @@ void ClientProxy::init_game() {
     engine_.FixedUpdate();
   }
   char dir = 3;
-  sleep(5);
   socket_->send_buffer(&dir, CANT_BYTES);
   char acknowledge;
   socket_->read_buffer(&acknowledge, 1);
@@ -143,7 +141,6 @@ void ClientProxy::init_game() {
        game_object != engine_.game_objects().end();
        ++game_object) {
     send_object_position(&(*game_object));
-    sleep(2);
   }
 }
 
