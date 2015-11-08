@@ -1,12 +1,7 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.4)
 project(BluesJackrabbit)
 
-# Workaround for gtkmm. Should still write c++98 and check in Linux for compatibility.
-IF(WIN32)
-    set(CMAKE_CXX_STANDARD 11)
-ELSE(WIN32)
-    set(CMAKE_CXX_STANDARD 98)
-ENDIF(WIN32)
+set(CMAKE_CXX_STANDARD 98)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     # Errors and warnings.

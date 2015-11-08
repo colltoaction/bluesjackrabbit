@@ -2,9 +2,9 @@ project(client)
 
 set(SOURCES
         main.cpp
-        Constants.h
         CharacterRenderer.cpp
         CharacterRenderer.h
+        Constants.h
         Event.cpp
         Event.h
         EventBus.cpp
@@ -24,6 +24,8 @@ set(SOURCES
         SceneRenderer.cpp
         SceneRenderer.h
         ServerProxy.h
+        Socket.cpp
+        Socket.h
         Stopwatch.cpp
         Stopwatch.h
 )
