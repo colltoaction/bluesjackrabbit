@@ -2,7 +2,6 @@
 #define BLUESJACKRABBIT_ENGINE_TRANSFORM_H
 
 
-#include <sigc++/functors/slot.h>
 #include <vector>
 #include "Vector.h"
 
