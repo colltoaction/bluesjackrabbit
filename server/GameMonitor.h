@@ -16,17 +16,17 @@ class GameMonitor {
  public:
   GameMonitor();
   virtual ~GameMonitor();
-  char create_game(char map_id, const std::string &game_name, ClientProxy *player);
+  char create_game(char map_id, ClientProxy *player);
   void join_game(char game_id, ClientProxy *player);
-  std::map<char, std::string> list_games();
+  std::list<char> list_games();
   std::list<char> list_maps();
-  void finalize();
 
  private:
   char game_index_;
   std::vector<Game*> games_;
   std::vector<Map> maps_;
   Mutex game_admin_mutex_;
+
   Map mapa;
 };
 

@@ -4,9 +4,9 @@
 
 #define MESSAGE_HEADER_LENGTH 0xFFFFFFFF  // 4 bytes
 
+#define OK 0xFF
 
-#define HELLO_MSG_LENGTH 0xFF  // 1 byte hello message
-
+// GAME PROTOCOL CONSTANTS
 #define LEFT 0x1
 #define RIGHT 0x2
 #define DOWN 0x3
@@ -14,7 +14,13 @@
 
 #define CANT_BYTES 1
 
-class Constants {
-};
+// MENU PROTOCOL CONSTANTS
+#define NEW_GAME 0x20
+#define JOIN_GAME 0x21
+#define LIST_GAMES 0x22
+#define LIST_MAPS 0x23
+
+#define MAP_ID_LENGTH 1
+
 
 #endif /* BLUESJACKRABBIT_SERVER_CONSTANTS_H */

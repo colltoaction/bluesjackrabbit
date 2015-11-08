@@ -4,10 +4,11 @@
 #include <string>
 #include <list>
 
-ClientProxyAcceptor::ClientProxyAcceptor(std::string puerto)
+ClientProxyAcceptor::ClientProxyAcceptor(std::string puerto, GameMonitor *game_monitor)
   : socket_("localhost", puerto, AI_PASSIVE),
   keep_going_(true),
-  clients_eliminated_(false) {
+  clients_eliminated_(false),
+  game_monitor_(game_monitor) {
   socket_.bind_socket();
 }
 
@@ -24,8 +25,11 @@ void ClientProxyAcceptor::listen_connections() {
   while (keep_going_) {
     Socket *new_connection = socket_.accept_connection();
     if (keep_going_) {
-      std::cout << "NUEVA\n";
-      ClientProxy *proxy = new ClientProxy(new_connection);
+      ClientProxy *proxy = new ClientProxy(new_connection,
+          sigc::mem_fun(*game_monitor_, &GameMonitor::create_game),
+          sigc::mem_fun(*game_monitor_, &GameMonitor::join_game),
+          sigc::mem_fun(*game_monitor_, &GameMonitor::list_games),
+          sigc::mem_fun(*game_monitor_, &GameMonitor::list_maps));
       threads_.push_back(proxy);
       proxy->start();
     } else {
@@ -44,6 +48,7 @@ void ClientProxyAcceptor::eliminate_clients() {
   if (!clients_eliminated_) {
     for (std::list<ClientProxy*>::iterator it = threads_.begin();
         it != threads_.end(); it++) {
+      (*it)->finalize();
       (*it)->join();
       delete (*it);
     }

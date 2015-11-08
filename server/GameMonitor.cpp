@@ -2,49 +2,55 @@
 
 #include <iostream>
 
-GameMonitor::GameMonitor()
-    : game_index_(0)
-    , game_admin_mutex_() {
+GameMonitor::GameMonitor() : game_index_(0),
+  game_admin_mutex_() {
+  std::cout << "Construyendo game monitor\n";
   maps_.push_back(mapa);
 }
 
 GameMonitor::~GameMonitor() {
-  Lock lock(&game_admin_mutex_);
   for (char index = 0; index < game_index_; index++) {
+    games_[index]->ping();
     delete games_[index];
   }
 }
 
 // TODO(tomas) Ver como garcha manejar los map_ids y crear nuevo juego con
 // mapa correspondiente
-char GameMonitor::create_game(char map_id, const std::string &game_name,
-    ClientProxy *player) {
-  std::cout << "GameMonitor:: CREADO GAME CON MAP ID: " << static_cast<int>(map_id) << "\n";
-  (void)map_id;
+char GameMonitor::create_game(char map_id, ClientProxy *player) {
   Lock lock(&game_admin_mutex_);
-  Game *new_game = new Game(player, game_name);
-  // No se si esto estara bien. Revisar cuando haya mas de un juego
+  std::cout << "GameMonitor:: LLEGA MAP ID: " << static_cast<int>(map_id) << std::endl;
+  (void)player;
+  Game *new_game = new Game(player);
+  std::cout << "Por hacer sarasa\n";
+  // games_[game_index_] = new_game;
   games_.push_back(new_game);
   char game_id = game_index_;
   game_index_++;
+  std::cout << "endddddddddd\n";
   return game_id;
 }
 
 void GameMonitor::join_game(char game_id, ClientProxy *player) {
   Lock lock(&game_admin_mutex_);
   std::cout << "GameMonitor:: SE UNE JUGADOR A GAME_ID" << static_cast<int>(game_id) << "\n";
+  // TODO(tomas) MUY PELIGROSO!!!
   games_[game_id]->add_player(player);
 }
 
 
-std::map<char, std::string> GameMonitor::list_games() {
+std::list<char> GameMonitor::list_games() {
   Lock lock(&game_admin_mutex_);
-  std::map<char, std::string> games;
+  std::cout << "GameMonitor:: LISTANDO GAME IDS\n";
+  std::list<char> games;
   for (char index = 0; index < game_index_; index++) {
-    if (games_[index]->can_join()) {
-      games[index] = games_[index]->name();
+    games_[index]->ping();
+    if (games_[index]->is_active()) {
+      games.push_back(index);
     }
   }
+  std::cout << "GAMES SIZE: " << games_.size() << std::endl;
+  std::cout << "RETURN SIZE: " << games.size() << std::endl;
   return games;
 }
 
@@ -56,11 +62,4 @@ std::list<char> GameMonitor::list_maps() {
     maps.push_back(static_cast<char>(i));
   }
   return maps;
-}
-
-void GameMonitor::finalize() {
-  Lock lock(&game_admin_mutex_);
-  for (char index = 0; index < game_index_; index++) {
-    games_[index]->finalize();
-  }
 }

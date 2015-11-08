@@ -61,6 +61,14 @@ std::map<size_t, std::string> LocalServerProxy::list_maps() {
   return map;
 }
 
+std::map<size_t, std::string> LocalServerProxy::list_games() {
+  std::map<size_t, std::string> map;
+  map[1] = "Juego 1";
+  map[2] = "Juego 2";
+  map[3] = "Juego 3";
+  return map;
+}
+
 // Write... and recibir only to check game started.
 bool LocalServerProxy::start_game(size_t map_id) {
   // Dummy but cpplint does not compile if map_id is not used
@@ -68,4 +76,8 @@ bool LocalServerProxy::start_game(size_t map_id) {
     return true;
   }
   return true;
+}
+
+void LocalServerProxy::join_game(size_t game_id) {
+  (void)game_id;
 }

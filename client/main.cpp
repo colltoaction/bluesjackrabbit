@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
   if (argc > 1) {
     server_proxy = new RemoteServerProxy();
   } else {
-    server_proxy = new RemoteServerProxy();
+    server_proxy = new LocalServerProxy();
   }
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
   RemoteServerProxy server_proxy;
