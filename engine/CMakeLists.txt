@@ -18,7 +18,8 @@ set(SOURCES
         Transform.cpp
         Transform.h
         Vector.cpp
-        Vector.h)
+        Vector.h
+)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
