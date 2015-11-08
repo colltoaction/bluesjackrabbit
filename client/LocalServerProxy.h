@@ -22,8 +22,10 @@ class LocalServerProxy : public ServerProxy {
   virtual const Transform &character_transform();
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
+  virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id);
   virtual void init_game();
+  virtual void join_game(size_t game_id);
 
  private:
   static const double step;

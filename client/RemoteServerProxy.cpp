@@ -16,35 +16,26 @@
 
 const double RemoteServerProxy::step = 0.003;
 
-// Socket_ write IN GAME
 void RemoteServerProxy::MoveUp() {
   Lock l(&mutex_);
-  // engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
   char move = UP;
   socket_->send_buffer(&move, 1);
 }
 
-// Socket_ write IN GAME
 void RemoteServerProxy::MoveDown() {
   Lock l(&mutex_);
-  // engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
   char move = DOWN;
   socket_->send_buffer(&move, 1);
 }
 
-
-// Socket_ write IN GAME
 void RemoteServerProxy::MoveLeft() {
   Lock l(&mutex_);
-  // engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
   char move = LEFT;
   socket_->send_buffer(&move, 1);
 }
 
-// Socket_ write IN GAME
 void RemoteServerProxy::MoveRight() {
   Lock l(&mutex_);
-  // engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
   char move = RIGHT;
   socket_->send_buffer(&move, 1);
 }
@@ -87,13 +78,6 @@ std::vector<Renderer*> &RemoteServerProxy::renderers() {
 bool RemoteServerProxy::connect() {
   socket_ = new Socket("localhost", "socks", 0);
   socket_->connect_socket();
-
-  char caa[10];
-  caa[0] = 'h';
-  caa[1] = 'a';
-  caa[2] = 'b';
-  socket_->send_buffer(caa, 1);
-
   char message_size;
   socket_->read_buffer(&message_size, 1);
   char c;
@@ -122,6 +106,11 @@ void RemoteServerProxy::init_game() {
   }
 }
 
+void RemoteServerProxy::join_game(size_t game_id) {
+  char game = static_cast<char>(game_id);
+  socket_->send_buffer(&game, MAP_ID_LENGTH);
+}
+
 void RemoteServerProxy::read_object_position(double *x, double *y) {
   size_t double_size = sizeof(double);
   void *dir_x = static_cast<void*>(x);
@@ -137,15 +126,45 @@ void RemoteServerProxy::read_object_position(double *x, double *y) {
 
 // recibir and write
 std::map<size_t, std::string> RemoteServerProxy::list_maps() {
+  std::cout << "Comienza listado\n";
   std::map<size_t, std::string> map;
-  map[1] = "Mapa 1";
-  map[2] = "Mapa 2";
-  map[3] = "Mapa 3";
+  char option = LIST_MAPS;
+  socket_->send_buffer(&option, 1);
+  socket_->read_buffer(&option, CANT_BYTES);
+  for (char i = 0; i < option; i++) {
+    char map_number;
+    socket_->read_buffer(&map_number, CANT_BYTES);
+    map[map_number] = "Mapa algo...";
+  }
+  std::cout << "Fin listado\n";
   return map;
 }
 
-// Write... and recibir only to check game started.
+std::map<size_t, std::string> RemoteServerProxy::list_games() {
+  std::map<size_t, std::string> map;
+  char option = LIST_GAMES;
+  socket_->send_buffer(&option, 1);
+  socket_->read_buffer(&option, CANT_BYTES);
+  for (char i = 0; i < option; i++) {
+    char game_number;
+    socket_->read_buffer(&game_number, CANT_BYTES);
+    std::stringstream ss("Juego ");
+    ss << game_number;
+    std::string final;
+    ss >> final;
+    map[game_number] = final;
+  }
+  std::cout << "Fin listado\n";
+  return map;
+}
+
 bool RemoteServerProxy::start_game(size_t map_id) {
   std::cout << "Start game with map id: " << map_id << std::endl;
+  char option = NEW_GAME;
+  socket_->send_buffer(&option, OPTION_LENGTH);
+  std::cout << "Send 1 hecho\n";
+  option = static_cast<char>(map_id);
+  socket_->send_buffer(&option, MAP_ID_LENGTH);
+  std::cout << "Send 2 hecho\n";
   return true;
 }
