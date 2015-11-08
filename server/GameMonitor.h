@@ -20,6 +20,7 @@ class GameMonitor {
   void join_game(char game_id, ClientProxy *player);
   std::list<char> list_games();
   std::list<char> list_maps();
+  void move(size_t player_id, char code);
 
  private:
   char game_index_;

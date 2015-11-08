@@ -22,14 +22,13 @@ ClientProxy::ClientProxy(Socket *socket,
     join_game_functor_(jg_callback),
     list_games_functor_(lg_callback),
     list_maps_functor_(lm_callback),
-    game_id_(0) {
+    game_id_(0),
+    player_id_(0) {
 }
 
 ClientProxy::~ClientProxy() {
 }
 
-void ClientProxy::notify() {
-}
 
 void ClientProxy::say_hello() {
   char message = 1;
@@ -65,15 +64,7 @@ void ClientProxy::in_game_protocol() {
   std::cout << "Llego algo\n";
   if (keep_reading_) {
     // GAME OPTIONS
-    if (option == LEFT) {
-      std::cout << "LEFT\n";
-    } else if (option == RIGHT) {
-      std::cout << "RIGHT\n";
-    } else if (option == DOWN) {
-      std::cout << "DOWN\n";
-    } else if (option == UP) {
-      std::cout << "UP\n";
-    } else if (option == NEW_GAME) {
+    if (option == NEW_GAME) {
       new_game_call();
     } else if (option == JOIN_GAME) {
       join_game_call();
@@ -81,8 +72,19 @@ void ClientProxy::in_game_protocol() {
       list_games_call();
     } else if (option == LIST_MAPS) {
       list_maps_call();
+    } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
+      std::cout << "llamando action\n";
+      move_functor_(player_id_, option);
     }
   }
+}
+
+void ClientProxy::add_move_functor(action_callback mv_callback) {
+  move_functor_ = mv_callback;
+}
+
+void ClientProxy::add_player_id(char player_id) {
+  player_id_ = player_id;
 }
 
 void ClientProxy::new_game_call() {

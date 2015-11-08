@@ -1,9 +1,12 @@
 #ifndef BLUESJACKRABBIT_SERVER_GAME_H
 #define BLUESJACKRABBIT_SERVER_GAME_H
 
-#include <vector>
+#include <map>
+
+#include <engine/Engine.h>
 
 #include "ClientProxy.h"
+#include "GameRunner.h"
 
 class Game {
  public:
@@ -11,9 +14,13 @@ class Game {
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool is_active();
-  void ping();
+  void action(char player_id, char option);
  private:
-  std::vector<ClientProxy*> players_;
+  static const double step;
+  Engine engine_;
+  std::map<char, ClientProxy*> players_;
+  GameRunner runner_;
+  char player_index_;
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAME_H */

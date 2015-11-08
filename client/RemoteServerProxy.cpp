@@ -41,7 +41,9 @@ void RemoteServerProxy::MoveRight() {
 }
 
 // Socket_ read_buffer. This should be done after start game (not in constructor)
-RemoteServerProxy::RemoteServerProxy() : socket_(NULL) {
+RemoteServerProxy::RemoteServerProxy() :
+    socket_(NULL),
+    updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)) {
   /*renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
@@ -62,6 +64,7 @@ RemoteServerProxy::~RemoteServerProxy() {
     delete *game_object;
   }
   socket_->close_connection();
+  updater_.join();
   delete socket_;
 }
 
@@ -77,6 +80,7 @@ std::vector<Renderer*> &RemoteServerProxy::renderers() {
 // recibir and write.
 bool RemoteServerProxy::connect() {
   socket_ = new Socket("localhost", "socks", 0);
+  updater_.set_socket(socket_);
   socket_->connect_socket();
   char message_size;
   socket_->read_buffer(&message_size, 1);
@@ -105,6 +109,10 @@ void RemoteServerProxy::init_game() {
   }
 }
 
+void RemoteServerProxy::update_object(double x, double y) {
+  game_objects_.front()->transform_noconst().update_position(x, y);
+}
+
 void RemoteServerProxy::join_game(size_t game_id) {
   char game = static_cast<char>(game_id);
   socket_->send_buffer(&game, MAP_ID_LENGTH);
@@ -116,7 +124,7 @@ void RemoteServerProxy::read_object_position(double *x, double *y) {
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(y);
   char *dir_y_posta = static_cast<char*>(dir_y);
-  std::cout << "ESPERANDO SERVER FOR POSITION\n";
+  std::cout << "OBSOLETO server for position\n";
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
   char c = 'R';
@@ -168,5 +176,6 @@ bool RemoteServerProxy::start_game(size_t map_id) {
   option = static_cast<char>(map_id);
   socket_->send_buffer(&option, MAP_ID_LENGTH);
   std::cout << "Send 2 hecho\n";
+  updater_.start();
   return true;
 }
