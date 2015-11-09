@@ -7,14 +7,12 @@ GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
   : engine_(engine),
     players_(players),
     keep_running_(true) {
-  std::cout << "Runner construido\n";
 }
 
 GameRunner::~GameRunner() {
 }
 
 void GameRunner::run() {
-  std::cout << "Iterando\n";
   while (keep_running_) {
     clock_t begin = clock();
     (void) begin;
@@ -26,7 +24,7 @@ void GameRunner::run() {
 
 void GameRunner::engine_stuff() {
   // Lock l(mutex);
-  // engine_->update();
+  engine_->FixedUpdate();
   // engine_->get_diffs();
 }
 
