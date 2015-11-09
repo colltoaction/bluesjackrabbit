@@ -19,6 +19,7 @@ void RemoteServerProxyUpdater::run() {
   while (keep_going_) {
     double x, y;
     read_object_position(&x, &y);
+    update_functor_(x, y);
   }
 }
 
@@ -37,4 +38,5 @@ void RemoteServerProxyUpdater::read_object_position(double *x, double *y) {
   socket_->read_buffer(dir_y_posta, double_size);
   char c = 'R';
   socket_->send_buffer(&c, 1);
+  std::cout << "POSITION DESDE SERVER: (" << (*x) << ", " << (*y) << ")\n";
 }
