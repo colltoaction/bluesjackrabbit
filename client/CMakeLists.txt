@@ -24,8 +24,6 @@ set(SOURCES
         SceneRenderer.cpp
         SceneRenderer.h
         ServerProxy.h
-        Socket.cpp
-        Socket.h
         Stopwatch.cpp
         Stopwatch.h
 )
