@@ -18,7 +18,8 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   // both scales should be the same to maintain proportions
   cr->scale(scale_factor,
             scale_factor);
-  // move the canvas so it's centered on the camera
+  // move the camera so it's centered on the main character
+  camera_position_ = server_proxy_->character_position();
   cr->translate(-camera_position_.x(),
                 -camera_position_.y());
   for (std::vector<Renderer *>::iterator renderer = server_proxy_->renderers().begin();
@@ -30,11 +31,11 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   }
 
   // center the camera in the main character
-  const Vector &character_position = server_proxy_->character_position();
-  Vector new_position = Vector::lerp(camera_position_, character_position, 0.1);
-  if (new_position.magnitude() > 0.3) {
-    camera_position_ = new_position;
-  }
+//  const Vector &character_position = server_proxy_->character_position();
+//  Vector new_position = Vector::lerp(camera_position_, character_position, 0.1);
+//  if (new_position.magnitude() > 0.3) {
+//    camera_position_ = new_position;
+//  }
 
   return true;
 }

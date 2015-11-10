@@ -9,6 +9,7 @@
 const int render_step = 16;
 
 int main(int argc, char *argv[]) {
+  (void)argv;  // UNUSED
   ServerProxy *server_proxy = NULL;
   if (argc > 1) {
     server_proxy = new RemoteServerProxy();
@@ -16,10 +17,9 @@ int main(int argc, char *argv[]) {
     server_proxy = new LocalServerProxy();
   }
 
-  Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
-  RemoteServerProxy server_proxy;
-  SceneRenderer scene(&server_proxy);
-  MainWindow window(&scene, &server_proxy);
+  Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("org.fiuba.bluesjackrabbit");
+  SceneRenderer scene(server_proxy);
+  MainWindow window(&scene, server_proxy);
   EventBus eventBus(&window);
   eventBus.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveUp)));
   eventBus.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveDown)));
