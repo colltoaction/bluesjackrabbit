@@ -15,11 +15,11 @@ class Engine {
   Engine();
   std::vector<GameObject> &game_objects();
   void apply_force(GameObject *game_object, Vector force);
+  void FixedUpdate();
 
  private:
   static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
   std::vector<GameObject> game_objects_;
-  void FixedUpdate();
 };
 
 

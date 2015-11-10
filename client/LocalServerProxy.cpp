@@ -29,6 +29,9 @@ const Transform &LocalServerProxy::character_transform() {
   return engine_.game_objects().front().transform();
 }
 
+void LocalServerProxy::init_game() {
+}
+
 LocalServerProxy::LocalServerProxy() {
   renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
   for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
@@ -51,12 +54,10 @@ std::vector<Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
 }
 
-// recibir and write.
 bool LocalServerProxy::connect() {
   return true;
 }
 
-// recibir and write
 std::map<size_t, std::string> LocalServerProxy::list_maps() {
   std::map<size_t, std::string> map;
   map[1] = "Mapa 1";
@@ -65,11 +66,19 @@ std::map<size_t, std::string> LocalServerProxy::list_maps() {
   return map;
 }
 
-// Write... and recibir only to check game started.
+std::map<size_t, std::string> LocalServerProxy::list_games() {
+  std::map<size_t, std::string> map;
+  map[1] = "Juego 1";
+  map[2] = "Juego 2";
+  map[3] = "Juego 3";
+  return map;
+}
+
 bool LocalServerProxy::start_game(size_t map_id) {
-  // Dummy but cpplint does not compile if map_id is not used
-  if (map_id) {
-    return true;
-  }
+  (void)map_id;  // UNUSED
   return true;
+}
+
+void LocalServerProxy::join_game(size_t game_id) {
+  (void)game_id;  // UNUSED
 }

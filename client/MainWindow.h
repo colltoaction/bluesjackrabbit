@@ -27,15 +27,18 @@ class MainWindow: public Gtk::Window {
   bool connected_;
   ServerProxy *server_proxy_;
   size_t map_id_;
+  size_t game_id_;
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();
   void init_new_game_screen();
   void init_join_game_screen();
 
+  void main_game_view();
   void new_game_click();
   void init_click();
   void join_game_click();
+  void join_once_for_all();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {
@@ -50,12 +53,15 @@ class MainWindow: public Gtk::Window {
   };
 
   ModelColumns columns;
-  Glib::RefPtr<Gtk::ListStore> combo_model;
+  Glib::RefPtr<Gtk::ListStore> map_combo_model;
+  Glib::RefPtr<Gtk::ListStore> game_combo_model;
 
   SceneRenderer *scene_;
   Gtk::ComboBox *map_combo;
+  Gtk::ComboBox *game_combo;
   void combo_map_changed();
-  void load_combo(const std::map<size_t, std::string> &names);
+  void combo_game_changed();
+  void load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names);
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_MAINWINDOW_H

@@ -2,7 +2,9 @@
 #include <iostream>
 #include "Server.h"
 
-Server::Server(std::string port) :proxy_(port) {
+Server::Server(std::string port)
+    : game_monitor_()
+    , proxy_(port, &game_monitor_) {
 }
 
 Server::~Server() {
