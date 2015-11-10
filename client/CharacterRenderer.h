@@ -7,11 +7,9 @@
 
 class CharacterRenderer : public Renderer {
  public:
-  explicit CharacterRenderer(const GameObject *game_object);
-  virtual void Render(const Cairo::RefPtr<Cairo::Context> &cr);
-
- private:
-  const GameObject *game_object_;
+  explicit CharacterRenderer(const Vector &position);
+  virtual ~CharacterRenderer();
+  virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
 };
 
 
