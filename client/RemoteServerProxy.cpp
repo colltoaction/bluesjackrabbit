@@ -1,4 +1,3 @@
-
 #include <glibmm/main.h>
 #include <vector>
 #include <stdlib.h>
@@ -8,6 +7,7 @@
 #include <unistd.h>
 
 #include <common/Lock.h>
+#include <engine/GameObjectTemplate.h>
 
 #include "RemoteServerProxy.h"
 #include "CharacterRenderer.h"
