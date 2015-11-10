@@ -29,6 +29,7 @@ class LocalServerProxy : public ServerProxy {
 
  private:
   static const double step;
+  static const double jump_force;
   Engine engine_;
   std::vector<Renderer*> renderers_;
 };
