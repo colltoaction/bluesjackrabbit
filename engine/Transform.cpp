@@ -1,12 +1,12 @@
 #include "Transform.h"
 
-Transform::Transform()
-    : position_(0, 0) {
+Transform::Transform(Vector position)
+    : position_(position) {
 }
 
-void Transform::update_position(double x, double y) {
-  position_.set_x(x);
-  position_.set_y(y);
+void Transform::update_position(const Vector &position) {
+  position_.set_x(position.x());
+  position_.set_y(position.y());
 }
 
 const Vector &Transform::position() const {

@@ -2,15 +2,13 @@ project(client)
 
 set(SOURCES
         main.cpp
-        Constants.h
         CharacterRenderer.cpp
         CharacterRenderer.h
+        Constants.h
         Event.cpp
         Event.h
         EventBus.cpp
         EventBus.h
-        GameObjectProxy.cpp
-        GameObjectProxy.h
         LocalServerProxy.cpp
         LocalServerProxy.h
         MainWindow.cpp
@@ -26,8 +24,9 @@ set(SOURCES
         ServerProxy.h
         Stopwatch.cpp
         Stopwatch.h
+        TurtleRenderer.cpp
+        TurtleRenderer.h
 )
-include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")

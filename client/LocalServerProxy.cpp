@@ -5,40 +5,23 @@
 
 #include "LocalServerProxy.h"
 #include "CharacterRenderer.h"
+#include "TurtleRenderer.h"
 
 
 const double LocalServerProxy::step = 0.003;
-
-void LocalServerProxy::MoveUp() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
-}
-
-void LocalServerProxy::MoveDown() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
-}
-
-void LocalServerProxy::MoveLeft() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
-}
-
-void LocalServerProxy::MoveRight() {
-  engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
-}
-
-const Transform &LocalServerProxy::character_transform() {
-  return engine_.game_objects().front().transform();
-}
-
-void LocalServerProxy::init_game() {
-}
+const double LocalServerProxy::jump_force = 0.003;  // should take into account the physics step
 
 LocalServerProxy::LocalServerProxy() {
-  renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
+  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()->transform().position()));
+  for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(new Renderer(&(*game_object)));
+    renderers_.push_back(new TurtleRenderer((*game_object)->transform().position()));
   }
+
+  Glib::signal_timeout().connect(
+      sigc::mem_fun(*this, &LocalServerProxy::engine_step),
+      Engine::fixed_update_step);
 }
 
 LocalServerProxy::~LocalServerProxy() {
@@ -47,6 +30,35 @@ LocalServerProxy::~LocalServerProxy() {
        ++game_object) {
     delete *game_object;
   }
+}
+
+bool LocalServerProxy::engine_step() {
+  engine_.FixedUpdate();
+  renderers_.front()->update_position(engine_.game_objects().front()->transform().position());
+  return true;
+}
+
+void LocalServerProxy::MoveUp() {
+  engine_.apply_force(engine_.game_objects().front(), Vector(0, -jump_force));
+}
+
+void LocalServerProxy::MoveDown() {
+  engine_.apply_force(engine_.game_objects().front(), Vector(0, step));
+}
+
+void LocalServerProxy::MoveLeft() {
+  engine_.apply_force(engine_.game_objects().front(), Vector(-step, 0));
+}
+
+void LocalServerProxy::MoveRight() {
+  engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
+}
+
+const Vector &LocalServerProxy::character_position() {
+  return engine_.game_objects().front()->transform().position();
+}
+
+void LocalServerProxy::init_game() {
 }
 
 // Nothing, it will be updated from other place

@@ -1,4 +1,3 @@
-
 #include <glibmm/main.h>
 #include <vector>
 #include <stdlib.h>
@@ -8,10 +7,12 @@
 #include <unistd.h>
 
 #include <common/Lock.h>
+#include <engine/GameObjectTemplate.h>
 
 #include "RemoteServerProxy.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
+#include "TurtleRenderer.h"
 
 
 const double RemoteServerProxy::step = 0.003;
@@ -58,18 +59,13 @@ RemoteServerProxy::~RemoteServerProxy() {
        ++game_object) {
     delete *game_object;
   }
-  for (std::vector<GameObject*>::iterator game_object = game_objects_.begin();
-       game_object != game_objects_.end();
-       ++game_object) {
-    delete *game_object;
-  }
   socket_->close_connection();
   updater_.join();
   delete socket_;
 }
 
-const Transform &RemoteServerProxy::character_transform() {
-  return game_objects_.front()->transform();
+const Vector &RemoteServerProxy::character_position() {
+  return renderers_.front()->position();
 }
 
 // Nothing, it will be updated from other place
@@ -97,20 +93,17 @@ void RemoteServerProxy::init_game() {
   for (char i = 0; i < objects_size; i++) {
     double x, y;
     read_object_position(&x, &y);
-    GameObject *object = new GameObject();
-    game_objects_.push_back(object);
     std::cout << "llega objeto en: (" << x << ", " << y << ")\n";
-    object->transform_noconst().update_position(x, y);
     if (i == 0) {
-      renderers_.push_back(new CharacterRenderer(object));
+      renderers_.push_back(new CharacterRenderer(Vector(x, y)));
     } else {
-      renderers_.push_back(new Renderer(object));
+      renderers_.push_back(new TurtleRenderer(Vector(x, y)));
     }
   }
 }
 
 void RemoteServerProxy::update_object(double x, double y) {
-  game_objects_.front()->transform_noconst().update_position(x, y);
+  renderers_.front()->update_position(Vector(x, y));
 }
 
 void RemoteServerProxy::join_game(size_t game_id) {

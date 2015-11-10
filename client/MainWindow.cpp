@@ -24,7 +24,6 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
     map_combo(NULL),
     game_combo(NULL) {
   set_title("Blues Jackrabbit");
-  set_resizable(false);
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
 

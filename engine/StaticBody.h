@@ -1,14 +1,14 @@
-#ifndef BLUESJACKRABBIT_ENGINE_RIGIDBODY_H
-#define BLUESJACKRABBIT_ENGINE_RIGIDBODY_H
+#ifndef BLUESJACKRABBIT_STATICBODY_H
+#define BLUESJACKRABBIT_STATICBODY_H
 
 
 #include "Body.h"
 #include "Transform.h"
 #include "Vector.h"
 
-class RigidBody : public Body {
+class StaticBody : public Body {
  public:
-  explicit RigidBody(Transform *transform);
+  explicit StaticBody(Transform *transform);
   virtual const Vector &velocity() const;
   virtual void apply_force(const Vector &vector);
   virtual Vector next_position() const;
@@ -16,11 +16,9 @@ class RigidBody : public Body {
   virtual void stop();
 
  private:
-  static const double friction_magnitude_;
+  static const Vector velocity_;
   Transform *transform_;
-  Vector force_;
-  Vector velocity_;
 };
 
 
-#endif  // BLUESJACKRABBIT_ENGINE_RIGIDBODY_H
+#endif  // BLUESJACKRABBIT_STATICBODY_H

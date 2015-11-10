@@ -33,7 +33,7 @@ void GameRunner::notify_clients() {
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
       it != players_->end();
       it++) {
-    it->second->send_object_position(&engine_->game_objects().front());
+    it->second->send_object_position(engine_->game_objects().front());
   }
 }
 

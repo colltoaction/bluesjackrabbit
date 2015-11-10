@@ -4,9 +4,10 @@
 #include <sigc++/functors/slot.h>
 #include <engine/Transform.h>
 #include <engine/GameObject.h>
+#include <engine/Engine.h>
 #include <map>
 #include <string>
-#include "GameObjectProxy.h"
+#include "Renderer.h"
 
 /**
  * A functor object complying to void functor().
@@ -21,7 +22,7 @@ class ServerProxy {
   virtual void MoveLeft() = 0;
   virtual void MoveRight() = 0;
   virtual std::vector<Renderer*> &renderers() = 0;
-  virtual const Transform &character_transform() = 0;
+  virtual const Vector &character_position() = 0;
 
   virtual bool connect() = 0;
   virtual std::map<size_t, std::string> list_maps() = 0;
