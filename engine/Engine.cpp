@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "StaticBody.h"
 
-const Vector Engine::gravity_ = Vector(0, 0.001);
+const Vector Engine::gravity_ = Vector(0, 0.0000098) * fixedUpdateStep * fixedUpdateStep;  // in m/ms²
 
 Engine::Engine() {
   game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector::zero()));
