@@ -16,14 +16,7 @@ typedef sigc::slot<void> Subscriber;
  */
 class Engine {
  public:
-  /*
-   * This is the time in milliseconds the physics engine will advance time each time FixedUpdate is called.
-   * For various reasons (like reproducibility), this is better than letting the engine run as fast as it can.
-   * We assume the computer will run the physics simluation in less than 20 milliseconds, otherwise it'll fail.
-   * For reference, it's the same as Unity3D's step.
-   */
-  static const unsigned int fixed_update_step = 20;
-
+  static const unsigned int fixed_update_step = 20;  // Same as Unity's physics step
   Engine();
   std::vector<GameObject*> &game_objects();
   void apply_force(GameObject *game_object, Vector force);
@@ -72,10 +65,8 @@ class Engine {
   void update_player_direction(uint32_t object_id, bool right);
 
  private:
-  static const unsigned int fixedUpdateStep = 20;  // Same as Unity's physics step
   static const Vector gravity_;
   std::vector<GameObject*> game_objects_;
-  bool collides(const std::vector<GameObject*>::iterator &game_object);
   bool will_collide(const std::vector<GameObject*>::iterator &game_object);
 };
 
