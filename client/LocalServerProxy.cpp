@@ -8,6 +8,7 @@
 
 
 const double LocalServerProxy::step = 0.003;
+const double LocalServerProxy::jump_force = 0.0002;  // should take into account the physics step
 
 void LocalServerProxy::MoveUp() {
   engine_.apply_force(engine_.game_objects().front(), Vector(0, -step));
