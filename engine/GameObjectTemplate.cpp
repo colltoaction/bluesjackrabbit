@@ -31,3 +31,7 @@ std::string GameObjectTemplate<BodyType>::type() const {
 template<class BodyType>
 void GameObjectTemplate<BodyType>::update_fixed() {
 }
+
+// See: http://stackoverflow.com/q/8752837
+template class GameObjectTemplate<RigidBody>;
+template class GameObjectTemplate<StaticBody>;
