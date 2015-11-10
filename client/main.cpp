@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
   } else {
     server_proxy = new LocalServerProxy();
   }
+
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
   SceneRenderer scene(server_proxy);
   MainWindow window(&scene, server_proxy);
