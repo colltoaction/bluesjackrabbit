@@ -97,7 +97,7 @@ void RemoteServerProxy::init_game() {
   for (char i = 0; i < objects_size; i++) {
     double x, y;
     read_object_position(&x, &y);
-    GameObject *object = new GameObject();
+    GameObject *object = new GameObjectTemplate<StaticBody>(Vector::zero());
     game_objects_.push_back(object);
     std::cout << "llega objeto en: (" << x << ", " << y << ")\n";
     object->transform_noconst().update_position(x, y);
