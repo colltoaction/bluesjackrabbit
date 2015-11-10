@@ -3,10 +3,12 @@ cmake_minimum_required(VERSION 2.6)
 project(server)
 
 set(SOURCES
+        main.cpp
         ClientProxy.cpp
         ClientProxy.h
         ClientProxyAcceptor.cpp
         ClientProxyAcceptor.h
+        Constants.h
         Game.cpp
         Game.h
         GameMonitor.cpp
@@ -17,7 +19,6 @@ set(SOURCES
         Map.h
         Server.cpp
         Server.h
-        main.cpp
 )
 include(CppLint)
 

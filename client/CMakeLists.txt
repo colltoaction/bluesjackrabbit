@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.6)
 project(client)
 
 set(SOURCES
@@ -40,9 +39,5 @@ target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} engine)
 target_link_libraries(${PROJECT_NAME} common)
 
-file(COPY static/main_frame.glade
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY static/new_game.glade
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY static/join_game.glade
+file(COPY static
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

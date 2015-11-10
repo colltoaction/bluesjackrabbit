@@ -1,5 +1,5 @@
-#ifndef REMOTESERVERPROXYUPDATER_H_
-#define REMOTESERVERPROXYUPDATER_H_
+#ifndef BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H
+#define BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H
 
 #include <sigc++/functors/slot.h>
 
@@ -14,6 +14,7 @@ class RemoteServerProxyUpdater : public Thread {
   virtual ~RemoteServerProxyUpdater();
   virtual void run();
   void set_socket(Socket *socket);
+
  private:
   Socket *socket_;
   bool keep_going_;
@@ -22,4 +23,4 @@ class RemoteServerProxyUpdater : public Thread {
   void read_object_position(double *x, double *y);
 };
 
-#endif /* REMOTESERVERPROXYUPDATER_H_ */
+#endif /* BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H */

@@ -15,6 +15,7 @@ class Game {
   void add_player(ClientProxy *player);
   bool is_active();
   void action(char player_id, char option);
+
  private:
   static const double step;
   Engine engine_;
