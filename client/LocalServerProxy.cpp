@@ -4,13 +4,15 @@
 #include <stdlib.h>
 
 #include "LocalServerProxy.h"
+#include "CharacterRenderer.h"
+#include "TurtleRenderer.h"
 
 
 const double LocalServerProxy::step = 0.003;
 const double LocalServerProxy::jump_force = 0.0002;  // should take into account the physics step
 
 void LocalServerProxy::MoveUp() {
-  engine_.apply_force(engine_.game_objects().front(), Vector(0, -step));
+  engine_.apply_force(engine_.game_objects().front(), Vector(0, -jump_force));
 }
 
 void LocalServerProxy::MoveDown() {
@@ -25,19 +27,19 @@ void LocalServerProxy::MoveRight() {
   engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
 }
 
-const Transform &LocalServerProxy::character_transform() {
-  return engine_.game_objects().front()->transform();
+const Vector &LocalServerProxy::character_position() {
+  return engine_.game_objects().front()->transform().position();
 }
 
 void LocalServerProxy::init_game() {
 }
 
 LocalServerProxy::LocalServerProxy() {
-  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()));
+  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()->transform().position()));
   for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(new Renderer(*game_object));
+    renderers_.push_back(new TurtleRenderer((*game_object)->transform().position()));
   }
 }
 

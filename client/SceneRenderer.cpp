@@ -25,13 +25,13 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
        renderer != server_proxy_->renderers().end();
            ++renderer) {
     cr->save();
-    (*renderer)->Render(cr);
+    (*renderer)->render(cr);
     cr->restore();
   }
 
   // center the camera in the main character
-  const Transform &main_transform = server_proxy_->character_transform();
-  Vector new_position = Vector::lerp(camera_position_, main_transform.position(), 0.1);
+  const Vector &character_position = server_proxy_->character_position();
+  Vector new_position = Vector::lerp(camera_position_, character_position, 0.1);
   if (new_position.magnitude() > 0.3) {
     camera_position_ = new_position;
   }

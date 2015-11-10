@@ -28,16 +28,16 @@ void Game::add_player(ClientProxy *player) {
 void Game::action(char player_id, char option) {
   (void)player_id;
   if (option == LEFT) {
-    engine_.apply_force(&engine_.game_objects().front(), Vector(-step, 0));
+    engine_.apply_force(engine_.game_objects().front(), Vector(-step, 0));
     std::cout << "LEFT\n";
   } else if (option == RIGHT) {
-    engine_.apply_force(&engine_.game_objects().front(), Vector(step, 0));
+    engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
     std::cout << "RIGHT\n";
   } else if (option == DOWN) {
-    engine_.apply_force(&engine_.game_objects().front(), Vector(0, step));
+    engine_.apply_force(engine_.game_objects().front(), Vector(0, step));
     std::cout << "DOWN\n";
   } else if (option == UP) {
-    engine_.apply_force(&engine_.game_objects().front(), Vector(0, -step));
+    engine_.apply_force(engine_.game_objects().front(), Vector(0, -step));
     std::cout << "UP\n";
   }
 }
