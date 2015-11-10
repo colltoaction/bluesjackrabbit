@@ -54,12 +54,10 @@ std::vector<Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
 }
 
-// recibir and write.
 bool LocalServerProxy::connect() {
   return true;
 }
 
-// recibir and write
 std::map<size_t, std::string> LocalServerProxy::list_maps() {
   std::map<size_t, std::string> map;
   map[1] = "Mapa 1";
@@ -76,15 +74,11 @@ std::map<size_t, std::string> LocalServerProxy::list_games() {
   return map;
 }
 
-// Write... and recibir only to check game started.
 bool LocalServerProxy::start_game(size_t map_id) {
-  // Dummy but cpplint does not compile if map_id is not used
-  if (map_id) {
-    return true;
-  }
+  (void)map_id;  // UNUSED
   return true;
 }
 
 void LocalServerProxy::join_game(size_t game_id) {
-  (void)game_id;
+  (void)game_id;  // UNUSED
 }

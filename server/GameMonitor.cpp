@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-GameMonitor::GameMonitor() : game_index_(0),
-  game_admin_mutex_() {
+GameMonitor::GameMonitor()
+    : game_index_(0)
+    , game_admin_mutex_() {
   maps_.push_back(mapa);
 }
 
