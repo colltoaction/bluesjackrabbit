@@ -14,6 +14,7 @@ class GameRunner: public Thread {
   virtual ~GameRunner();
   virtual void run();
   void finalize();
+
  private:
   Engine *engine_;
   std::map<char, ClientProxy*> *players_;
