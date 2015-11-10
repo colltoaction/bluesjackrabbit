@@ -29,8 +29,5 @@ class GameObjectTemplate : public GameObject {
   Collider collider_;
 };
 
-template class GameObjectTemplate<RigidBody>;
-template class GameObjectTemplate<StaticBody>;
-
 
 #endif  // BLUESJACKRABBIT_ENGINE_GAMEOBJECTTEMPLATE_H
