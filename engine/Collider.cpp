@@ -1,7 +1,7 @@
 #include "Collider.h"
 
 Collider::Collider(const Transform &transform, const Body &body)
-    : radius_(4), transform_(transform), body_(body) {
+    : radius_(0.5), transform_(transform), body_(body) {
 }
 
 bool Collider::will_collide(const Collider &other) const {
