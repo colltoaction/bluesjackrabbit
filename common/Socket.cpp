@@ -137,7 +137,7 @@ bool Socket::read_buffer(char *buffer, ssize_t tamanio) {
   memset(buffer, 0, tamanio);
   ssize_t recibidoParcial = 0;
   while (recibidoParcial < tamanio) {
-    ssize_t r = recv(this->socketFD, buffer + recibidoParcial, MAX_RECIBIR - recibidoParcial, MSG_NOSIGNAL);
+    ssize_t r = recv(this->socketFD, buffer + recibidoParcial, tamanio - recibidoParcial, MSG_NOSIGNAL);
     if (r < 0 && !closed) {
       std::cerr << "Error al recibir mensaje: "
           << gai_strerror(static_cast<int>(r)) << std::endl;
