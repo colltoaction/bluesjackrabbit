@@ -139,10 +139,10 @@ void ClientProxy::init_game() {
   socket_->read_buffer(&acknowledge, 1);
   std::cout << "acknowledge: " << ((acknowledge == 'R') ? "OK" : "ERROR") << std::endl;
 
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin();
+  for (std::vector<GameObject *>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
-    send_object_position(&(*game_object));
+    send_object_position(*game_object);
   }
 }
 

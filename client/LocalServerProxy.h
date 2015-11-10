@@ -7,7 +7,6 @@
 #include <engine/GameObject.h>
 #include <map>
 #include <string>
-#include "GameObjectProxy.h"
 #include "ServerProxy.h"
 
 class LocalServerProxy : public ServerProxy {
@@ -18,8 +17,8 @@ class LocalServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual std::vector<Renderer> &renderers();
-
+  virtual std::vector<Renderer*> &renderers();
+  virtual const Vector &character_position();
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();

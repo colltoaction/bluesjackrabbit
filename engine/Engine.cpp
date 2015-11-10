@@ -11,9 +11,6 @@ Engine::Engine() {
   game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector::zero()));
   game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(5, 0)));
   game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(0, 5)));
-  Glib::signal_timeout().connect(
-      sigc::bind_return(sigc::mem_fun(*this, &Engine::FixedUpdate), true),
-      fixedUpdateStep);
 }
 
 std::vector<GameObject*> &Engine::game_objects() {

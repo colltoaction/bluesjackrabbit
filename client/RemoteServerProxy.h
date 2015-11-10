@@ -12,9 +12,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-#include "GameObjectProxy.h"
 #include "ServerProxy.h"
 #include "RemoteServerProxyUpdater.h"
+#include "Renderer.h"
 
 
 /**
@@ -31,7 +31,8 @@ class RemoteServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual std::vector<Renderer> &renderers();
+  virtual std::vector<Renderer*> &renderers();
+  virtual const Vector &character_position();
 
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
@@ -49,7 +50,6 @@ class RemoteServerProxy : public ServerProxy {
   Socket *socket_;
   RemoteServerProxyUpdater updater_;
   Mutex mutex_;
-  std::vector<GameObject*> game_objects_;
 
   void update_object(double x, double y);
 };

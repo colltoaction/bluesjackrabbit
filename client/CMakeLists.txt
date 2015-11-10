@@ -9,8 +9,6 @@ set(SOURCES
         Event.h
         EventBus.cpp
         EventBus.h
-        GameObjectProxy.cpp
-        GameObjectProxy.h
         LocalServerProxy.cpp
         LocalServerProxy.h
         MainWindow.cpp
@@ -26,6 +24,8 @@ set(SOURCES
         ServerProxy.h
         Stopwatch.cpp
         Stopwatch.h
+        TurtleRenderer.cpp
+        TurtleRenderer.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
