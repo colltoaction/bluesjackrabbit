@@ -12,6 +12,7 @@
  */
 class GameObject {
  public:
+  virtual ~GameObject();
   virtual const ::Transform &transform() const = 0;
   virtual Body &rigid_body() = 0;
   virtual std::string type() const = 0;
