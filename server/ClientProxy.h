@@ -49,8 +49,7 @@ class ClientProxy : public Thread {
   char game_id_;
   char object_id_;
 
-  void menu_protocol();
-  void in_game_protocol();
+  void read_protocol();
   void new_game_call();
   void join_game_call();
   void list_games_call();

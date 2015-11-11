@@ -5,9 +5,12 @@
 #include "RigidBody.h"
 #include "StaticBody.h"
 
+#include <iostream>
+
 const Vector Engine::gravity_ = Vector(0, 0.0000098) * fixed_update_step * fixed_update_step;  // in m/ms²
 
 Engine::Engine() {
+  std::cout << "Construyendo engine\n";
 }
 
 std::vector<GameObject*> &Engine::game_objects() {
@@ -58,4 +61,8 @@ void Engine::add_game_object(bool is_static, bool circle_collider, const Vector 
   } else {
     game_objects_.push_back(new GameObjectTemplate<RigidBody>(position));
   }
+}
+
+char Engine::objects_size() {
+  return static_cast<char>(game_objects_.size());
 }

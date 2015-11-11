@@ -13,6 +13,7 @@ GameRunner::~GameRunner() {
 }
 
 void GameRunner::run() {
+  std::cout << "Runner start running\n";
   while (keep_running_) {
     clock_t begin = clock();
     (void) begin;
@@ -29,11 +30,21 @@ void GameRunner::engine_stuff() {
 }
 
 void GameRunner::notify_clients() {
-  std::cout << "Notificando\n";
+  std::cout << "Runner notificando\n";
+  int i = 0;
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
       it != players_->end();
       it++) {
-    it->second->send_object_position(engine_->game_objects().front());
+    std::cout << "obteniendo game object\n";
+    GameObject *object = NULL;
+    if (i == 0) {
+      object = engine_->game_objects().front();
+    } else {
+      object = engine_->game_objects().back();
+    }
+    std::cout << "Enviando game object position\n";
+    it->second->send_object_position(object);
+    i++;
   }
 }
 
