@@ -35,7 +35,7 @@ void Game::add_player(ClientProxy *player) {
 
 void Game::start_game() {
   std::cout << "GAME: STARTGAME\n";
-  if (player_index_ == 2) {
+  if (player_index_ == 3) {
     for (std::map<char, ClientProxy*>::iterator it = players_.begin();
         it != players_.end();
         it++) {
@@ -60,6 +60,7 @@ void Game::place_player(char object_id) {
   } else {
     engine_.add_game_object(false, true, Vector(5, -5));
   }
+  even++;
 }
 
 void Game::action(char player_id, char option) {
