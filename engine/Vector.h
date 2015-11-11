@@ -33,10 +33,28 @@ class Vector {
   double y() const;
 
   /**
+   * Update the x coordinate of this vector.
+   */
+  void set_x(double d);
+
+  /**
+   * Update the y coordinate of this vector.
+   */
+  void set_y(double d);
+
+  /**
    * The magnitude of this vector, calculated using Pythagoras' theorem.
    */
   double magnitude() const;
+
+  /**
+   * The (positive) distance between this and another vector.
+   */
   double distance(const Vector &other) const;
+
+  /**
+   * The unitary vector pointing in the same direction as this vector.
+   */
   Vector direction();
 
   /**
