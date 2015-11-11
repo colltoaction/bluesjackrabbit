@@ -6,6 +6,9 @@
 #include "Transform.h"
 #include "Vector.h"
 
+/**
+ * Actual implementation of the Body class. Provides static body physics, useful for objects like walls and floors.
+ */
 class StaticBody : public Body {
  public:
   explicit StaticBody(Transform *transform);
