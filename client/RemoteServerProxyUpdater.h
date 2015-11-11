@@ -20,6 +20,7 @@ class RemoteServerProxyUpdater : public Thread {
   bool keep_going_;
   RendererUpdate update_functor_;
 
+  void init_game_objects();
   void read_object_position(double *x, double *y);
 };
 

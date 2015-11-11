@@ -50,6 +50,7 @@ class RemoteServerProxy : public ServerProxy {
   Socket *socket_;
   RemoteServerProxyUpdater updater_;
   Mutex mutex_;
+  char object_id_;
 
   void update_object(double x, double y);
 };

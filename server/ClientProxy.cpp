@@ -23,7 +23,7 @@ ClientProxy::ClientProxy(Socket *socket,
     list_games_functor_(lg_callback),
     list_maps_functor_(lm_callback),
     game_id_(0),
-    player_id_(0) {
+    object_id_(0) {
 }
 
 ClientProxy::~ClientProxy() {
@@ -31,12 +31,8 @@ ClientProxy::~ClientProxy() {
 
 
 void ClientProxy::say_hello() {
-  char message = 1;
-  socket_->send_buffer(&message, 1);
-  std::cout << "ENVIADO EL HEADER\n";
   char c = 'A';
-  socket_->send_buffer(&c, 1);
-  std::cout << "EL TRUE\n";
+  socket_->send_buffer(&c, CANT_BYTES);
 }
 
 
@@ -74,7 +70,7 @@ void ClientProxy::in_game_protocol() {
       list_maps_call();
     } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
       std::cout << "llamando action\n";
-      move_functor_(player_id_, option);
+      move_functor_(object_id_, option);
     }
   }
 }
@@ -84,7 +80,7 @@ void ClientProxy::add_move_functor(action_callback mv_callback) {
 }
 
 void ClientProxy::add_player_id(char player_id) {
-  player_id_ = player_id;
+  object_id_ = player_id;
 }
 
 void ClientProxy::new_game_call() {
@@ -93,6 +89,7 @@ void ClientProxy::new_game_call() {
   socket_->read_buffer(&map_id, MAP_ID_LENGTH);
   char game_id = create_new_game_functor_(map_id, this);
   game_id_ = game_id;
+  socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
 void ClientProxy::join_game_call() {
@@ -130,15 +127,8 @@ void ClientProxy::list_maps_call() {
 }
 
 void ClientProxy::init_game() {
-  for (int i = 0; i < 100; i++) {
-    engine_.FixedUpdate();
-  }
   char dir = 3;
   socket_->send_buffer(&dir, CANT_BYTES);
-  char acknowledge;
-  socket_->read_buffer(&acknowledge, 1);
-  std::cout << "acknowledge: " << ((acknowledge == 'R') ? "OK" : "ERROR") << std::endl;
-
   for (std::vector<GameObject *>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
@@ -157,10 +147,6 @@ void ClientProxy::send_object_position(GameObject *object) {
   char *dir_y_posta = static_cast<char*>(dir_y);
   socket_->send_buffer(dir_x_posta, double_size);
   socket_->send_buffer(dir_y_posta, double_size);
-  char acknowledge;
-  socket_->read_buffer(&acknowledge, 1);
-  std::cout << "acknowledge: " << ((acknowledge == 'R') ? "OK" : "ERROR") << std::endl;
-  std::cout << "Object enviado\n";
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

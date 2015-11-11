@@ -47,7 +47,7 @@ class ClientProxy : public Thread {
   action_callback move_functor_;
 
   char game_id_;
-  char player_id_;
+  char object_id_;
 
   void menu_protocol();
   void in_game_protocol();
