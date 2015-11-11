@@ -18,6 +18,7 @@ void Server::init() {
     getline(std::cin, incomming);
     if (incomming == "q") {
       keep_going = false;
+      game_monitor_.finalize();
       proxy_.finalize();
     }
   }

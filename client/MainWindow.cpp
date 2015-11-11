@@ -40,14 +40,13 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   add(main_frame_);
   main_game_view();
 
-  connected_ = this->server_proxy_->connect();
+  connected_ = server_proxy_->connect();
   if (!connected_) {
     Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
-    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que se ejecuto.");
+    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
     dialog.run();
     hide();
   }
-  server_proxy_->init_game();
 }
 
 MainWindow::~MainWindow() {

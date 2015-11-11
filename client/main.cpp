@@ -7,6 +7,9 @@
 #include "RemoteServerProxy.h"
 #include "LocalServerProxy.h"
 
+#include <stdlib.h>
+#include <sstream>
+
 const int render_step = 16;
 
 int main(int argc, char *argv[]) {
@@ -17,8 +20,12 @@ int main(int argc, char *argv[]) {
   } else {
     server_proxy = new RemoteServerProxy();
   }
-
-  Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, "org.fiuba.bluesjackrabbit");
+  std::stringstream ss("org.fiuba.bluesjackrabbit");
+  unsigned int v1 = 10000;
+  ss << (rand_r(&v1) % 10000);
+  std::string app_name;
+  ss >> app_name;
+  Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, app_name);
   SceneRenderer scene(server_proxy);
   MainWindow window(&scene, server_proxy);
   EventBus eventBus(&window);

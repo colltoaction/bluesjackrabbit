@@ -42,6 +42,7 @@ class Engine {
    */
   void FixedUpdate();
   void add_game_object(bool is_static, bool circle_collider, const Vector &position);
+  char objects_size();
 
  private:
   static const Vector gravity_;

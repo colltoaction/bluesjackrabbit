@@ -61,7 +61,6 @@ const Vector &RemoteServerProxy::character_position() {
   return renderers_.front()->position();
 }
 
-// Nothing, it will be updated from other place
 std::vector<Renderer*> &RemoteServerProxy::renderers() {
   return renderers_;
 }
@@ -76,7 +75,32 @@ bool RemoteServerProxy::connect() {
   return c == 'A';
 }
 
+
+bool RemoteServerProxy::start_game(size_t map_id) {
+  std::cout << "Start game with map id: " << map_id << std::endl;
+  char option = NEW_GAME;
+  socket_->send_buffer(&option, OPTION_LENGTH);
+  option = static_cast<char>(map_id);
+  socket_->send_buffer(&option, MAP_ID_LENGTH);
+  socket_->read_buffer(&object_id_, CANT_BYTES);
+  init_game();
+  updater_.start();
+  return true;
+}
+
+
+void RemoteServerProxy::join_game(size_t game_id) {
+  std::cout << "Join game with game id: " << game_id << std::endl;
+  char option = JOIN_GAME;
+  socket_->send_buffer(&option, OPTION_LENGTH);
+  char game = static_cast<char>(game_id);
+  socket_->send_buffer(&game, MAP_ID_LENGTH);
+  init_game();
+  updater_.start();
+}
+
 void RemoteServerProxy::init_game() {
+  std::cout << "INIT GAME\n";
   char objects_size;
   socket_->read_buffer(&objects_size, 1);
   for (char i = 0; i < objects_size; i++) {
@@ -89,17 +113,7 @@ void RemoteServerProxy::init_game() {
       renderers_.push_back(new TurtleRenderer(Vector(x, y)));
     }
   }
-}
-
-bool RemoteServerProxy::start_game(size_t map_id) {
-  std::cout << "Start game with map id: " << map_id << std::endl;
-  char option = NEW_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  option = static_cast<char>(map_id);
-  socket_->send_buffer(&option, MAP_ID_LENGTH);
-  socket_->read_buffer(&object_id_, CANT_BYTES);
-  updater_.start();
-  return true;
+  std::cout << "FIN INIT GAME\n";
 }
 
 void RemoteServerProxy::update_object(double x, double y) {
@@ -155,7 +169,3 @@ std::map<size_t, std::string> RemoteServerProxy::list_games() {
   return map;
 }
 
-void RemoteServerProxy::join_game(size_t game_id) {
-  char game = static_cast<char>(game_id);
-  socket_->send_buffer(&game, MAP_ID_LENGTH);
-}
