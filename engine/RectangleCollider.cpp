@@ -2,7 +2,7 @@
 #include "CircleCollider.h"
 
 RectangleCollider::RectangleCollider(const Transform &transform, const Body &body)
-    : radius_(0.5), transform_(transform), body_(body) {
+    : width_(10), height_(1), transform_(transform), body_(body) {
 }
 
 // double-dispatching
@@ -11,11 +11,23 @@ bool RectangleCollider::will_collide(const Collider &other) const {
 }
 
 bool RectangleCollider::will_collide(const CircleCollider &other) const {
-  (void)other;  // UNUSED
-  return false;
+  // Implemented in CircleCollider
+  return other.will_collide(*this);
 }
 
 bool RectangleCollider::will_collide(const RectangleCollider &other) const {
   (void)other;  // UNUSED
   return false;
+}
+
+const Vector &RectangleCollider::center() const {
+  return transform_.position();
+}
+
+double RectangleCollider::width() const {
+  return width_;
+}
+
+double RectangleCollider::height() const {
+  return height_;
 }

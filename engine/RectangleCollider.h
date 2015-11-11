@@ -15,9 +15,13 @@ class RectangleCollider : public Collider {
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;
+  virtual const Vector &center() const;
+  double width() const;
+  double height() const;
 
  private:
-  double radius_;
+  double width_;
+  double height_;
   const Transform &transform_;
   const Body &body_;
 };

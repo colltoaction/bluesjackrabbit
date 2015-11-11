@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_ENGINE_COLLIDER_H
 
 
+#include "Vector.h"
 class CircleCollider;  // Circular reference
 class RectangleCollider;  // Circular reference
 
@@ -27,6 +28,11 @@ class Collider {
    * Actual implementation.
    */
   virtual bool will_collide(const RectangleCollider &other) const = 0;
+
+  /**
+   * Returns the position of the center of this collider.
+   */
+  virtual const Vector &center() const = 0;
 };
 
 

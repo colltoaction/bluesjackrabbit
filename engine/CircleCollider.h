@@ -15,6 +15,7 @@ class CircleCollider : public Collider {
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;
+  virtual const Vector &center() const;
 
  private:
   double radius_;
