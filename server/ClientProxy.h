@@ -19,6 +19,7 @@ typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
 typedef sigc::slot<ObjectList> list_games_callback;
 typedef sigc::slot<ObjectList> list_maps_callback;
 typedef sigc::slot<void, char, char> action_callback;
+typedef sigc::slot<void> start_callback;
 
 class ClientProxy : public Thread {
  public:
@@ -29,15 +30,16 @@ class ClientProxy : public Thread {
   std::string imprimir();
   void say_hello();
   void init_game();
+  void send_object_size(char object_size);
   void send_object_position(GameObject *object);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
+  void add_start_functor(start_callback start_cb);
   void add_player_id(char player_id);
 
  private:
   Socket *socket_;
   bool finalized_;
-  Engine engine_;
   bool in_game;
   bool keep_reading_;
   new_game_callback create_new_game_functor_;
@@ -45,6 +47,7 @@ class ClientProxy : public Thread {
   list_games_callback list_games_functor_;
   list_games_callback list_maps_functor_;
   action_callback move_functor_;
+  start_callback start_functor_;
 
   char game_id_;
   char object_id_;

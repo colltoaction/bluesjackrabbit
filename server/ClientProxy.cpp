@@ -15,7 +15,6 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_callback lm_callback) :
     socket_(socket),
     finalized_(false),
-    engine_(),
     in_game(false),
     keep_reading_(true),
     create_new_game_functor_(ng_callback),
@@ -58,8 +57,10 @@ void ClientProxy::read_protocol() {
     // GAME OPTIONS
     if (option == NEW_GAME) {
       new_game_call();
+      start_functor_();
     } else if (option == JOIN_GAME) {
       join_game_call();
+      start_functor_();
     } else if (option == LIST_GAMES) {
       list_games_call();
     } else if (option == LIST_MAPS) {
@@ -72,6 +73,10 @@ void ClientProxy::read_protocol() {
 
 void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
+}
+
+void ClientProxy::add_start_functor(start_callback start_cb){
+  start_functor_ = start_cb;
 }
 
 void ClientProxy::add_player_id(char player_id) {
@@ -123,6 +128,10 @@ void ClientProxy::list_maps_call() {
 }
 
 void ClientProxy::init_game() {
+}
+
+void ClientProxy::send_object_size(char object_size){
+  socket_->send_buffer(&object_size, CANT_BYTES);
 }
 
 void ClientProxy::send_object_position(GameObject *object) {
