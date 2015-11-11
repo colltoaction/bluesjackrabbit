@@ -14,7 +14,6 @@
 #include "Constants.h"
 #include "TurtleRenderer.h"
 
-
 const double RemoteServerProxy::step = 0.003;
 
 void RemoteServerProxy::MoveUp() {
@@ -41,16 +40,10 @@ void RemoteServerProxy::MoveRight() {
   socket_->send_buffer(&move, 1);
 }
 
-// Socket_ read_buffer. This should be done after start game (not in constructor)
 RemoteServerProxy::RemoteServerProxy() :
     socket_(NULL),
-    updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)) {
-  /*renderers_.push_back(new CharacterRenderer(&engine_.game_objects().front()));
-  for (std::vector<GameObject>::iterator game_object = engine_.game_objects().begin() + 1;
-       game_object != engine_.game_objects().end();
-       ++game_object) {
-    renderers_.push_back(new Renderer(&(*game_object)));
-  }*/
+    updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)),
+    object_id_(0) {
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
@@ -78,18 +71,14 @@ bool RemoteServerProxy::connect() {
   socket_ = new Socket("localhost", "socks", 0);
   updater_.set_socket(socket_);
   socket_->connect_socket();
-  char message_size;
-  socket_->read_buffer(&message_size, 1);
   char c;
-  socket_->read_buffer(&c, message_size);
+  socket_->read_buffer(&c, CANT_BYTES);
   return c == 'A';
 }
 
 void RemoteServerProxy::init_game() {
   char objects_size;
   socket_->read_buffer(&objects_size, 1);
-  char c = 'R';
-  socket_->send_buffer(&c, 1);
   for (char i = 0; i < objects_size; i++) {
     double x, y;
     read_object_position(&x, &y);
@@ -102,14 +91,22 @@ void RemoteServerProxy::init_game() {
   }
 }
 
+bool RemoteServerProxy::start_game(size_t map_id) {
+  std::cout << "Start game with map id: " << map_id << std::endl;
+  char option = NEW_GAME;
+  socket_->send_buffer(&option, OPTION_LENGTH);
+  option = static_cast<char>(map_id);
+  socket_->send_buffer(&option, MAP_ID_LENGTH);
+  socket_->read_buffer(&object_id_, CANT_BYTES);
+  updater_.start();
+  return true;
+}
+
 void RemoteServerProxy::update_object(double x, double y) {
   renderers_.front()->update_position(Vector(x, y));
 }
 
-void RemoteServerProxy::join_game(size_t game_id) {
-  char game = static_cast<char>(game_id);
-  socket_->send_buffer(&game, MAP_ID_LENGTH);
-}
+
 
 void RemoteServerProxy::read_object_position(double *x, double *y) {
   size_t double_size = sizeof(double);
@@ -117,11 +114,8 @@ void RemoteServerProxy::read_object_position(double *x, double *y) {
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(y);
   char *dir_y_posta = static_cast<char*>(dir_y);
-  std::cout << "OBSOLETO server for position\n";
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
-  char c = 'R';
-  socket_->send_buffer(&c, 1);
 }
 
 // recibir and write
@@ -161,14 +155,7 @@ std::map<size_t, std::string> RemoteServerProxy::list_games() {
   return map;
 }
 
-bool RemoteServerProxy::start_game(size_t map_id) {
-  std::cout << "Start game with map id: " << map_id << std::endl;
-  char option = NEW_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  std::cout << "Send 1 hecho\n";
-  option = static_cast<char>(map_id);
-  socket_->send_buffer(&option, MAP_ID_LENGTH);
-  std::cout << "Send 2 hecho\n";
-  updater_.start();
-  return true;
+void RemoteServerProxy::join_game(size_t game_id) {
+  char game = static_cast<char>(game_id);
+  socket_->send_buffer(&game, MAP_ID_LENGTH);
 }
