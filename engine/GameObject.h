@@ -13,10 +13,25 @@
 class GameObject {
  public:
   virtual ~GameObject();
-  virtual const ::Transform &transform() const = 0;
+
+  /**
+   * The transform property contains information like the position in the world.
+   */
+  virtual const Transform &transform() const = 0;
+
+  /**
+   * The body will be responsible for holding things like the size of an object and simluating rigid body physics.
+   */
   virtual Body &rigid_body() = 0;
-  virtual std::string type() const = 0;
+
+  /**
+   * This method should be called in each step of the engine to perform routine operations.
+   */
   virtual void update_fixed() = 0;
+
+  /**
+   * Returns true if this object's will collide with another after moving to its next position.
+   */
   virtual bool will_collide(const GameObject &other) const;
 
  protected:

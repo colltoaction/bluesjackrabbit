@@ -24,11 +24,6 @@ const Collider &GameObjectTemplate<BodyType>::collider() const {
 }
 
 template<class BodyType>
-std::string GameObjectTemplate<BodyType>::type() const {
-  return "circulo";
-}
-
-template<class BodyType>
 void GameObjectTemplate<BodyType>::update_fixed() {
 }
 
