@@ -1,32 +1,36 @@
 #include <string>
 #include "GameObjectTemplate.h"
+#include "CircleCollider.h"
+#include "RectangleCollider.h"
 
-template<class BodyType>
-GameObjectTemplate<BodyType>::GameObjectTemplate(const Vector &position)
+template<class BodyType, class ColliderType>
+GameObjectTemplate<BodyType, ColliderType>::GameObjectTemplate(const Vector &position)
     : transform_(position)
     , rigid_body_(&transform_)
     , collider_(transform_, rigid_body_) {
 }
 
-template<class BodyType>
-const ::Transform &GameObjectTemplate<BodyType>::transform() const {
+template<class BodyType, class ColliderType>
+const ::Transform &GameObjectTemplate<BodyType, ColliderType>::transform() const {
   return transform_;
 }
 
-template<class BodyType>
-Body &GameObjectTemplate<BodyType>::rigid_body() {
+template<class BodyType, class ColliderType>
+Body &GameObjectTemplate<BodyType, ColliderType>::rigid_body() {
   return rigid_body_;
 }
 
-template<class BodyType>
-const Collider &GameObjectTemplate<BodyType>::collider() const {
+template<class BodyType, class ColliderType>
+const Collider &GameObjectTemplate<BodyType, ColliderType>::collider() const {
   return collider_;
 }
 
-template<class BodyType>
-void GameObjectTemplate<BodyType>::update_fixed() {
+template<class BodyType, class ColliderType>
+void GameObjectTemplate<BodyType, ColliderType>::update_fixed() {
 }
 
 // See: http://stackoverflow.com/q/8752837
-template class GameObjectTemplate<RigidBody>;
-template class GameObjectTemplate<StaticBody>;
+template class GameObjectTemplate<RigidBody, CircleCollider>;
+template class GameObjectTemplate<RigidBody, RectangleCollider>;
+template class GameObjectTemplate<StaticBody, CircleCollider>;
+template class GameObjectTemplate<StaticBody, RectangleCollider>;

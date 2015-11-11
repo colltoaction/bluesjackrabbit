@@ -14,7 +14,7 @@
  * Actual implementation of the abstract GameObject class.
  * The template parameters indicate the actual types of properties like the body.
  */
-template<class BodyType>
+template<class BodyType, class ColliderType>
 class GameObjectTemplate : public GameObject {
  public:
   explicit GameObjectTemplate(const Vector &position);
@@ -28,7 +28,7 @@ class GameObjectTemplate : public GameObject {
  private:
   Transform transform_;
   BodyType rigid_body_;
-  Collider collider_;
+  ColliderType collider_;
 };
 
 

@@ -4,6 +4,7 @@
 #include "GameObjectTemplate.h"
 #include "RigidBody.h"
 #include "StaticBody.h"
+#include "CircleCollider.h"
 
 #include <iostream>
 
@@ -66,9 +67,17 @@ void Engine::apply_force_(char object_id, Vector force) {
 char Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
   (void) circle_collider;
   if (is_static) {
-    game_objects_[object_index_] = new GameObjectTemplate<StaticBody>(position);
+    if (circle_collider) {
+      game_objects_[object_index_] = new GameObjectTemplate<StaticBody, CircleCollider>(position);
+    } else {
+      game_objects_[object_index_] = new GameObjectTemplate<StaticBody, RectangleCollider>(position);
+    }
   } else {
-    game_objects_[object_index_] = new GameObjectTemplate<RigidBody>(position);
+    if (circle_collider) {
+      game_objects_[object_index_] = new GameObjectTemplate<RigidBody, CircleCollider>(position);
+    } else {
+      game_objects_[object_index_] = new GameObjectTemplate<RigidBody, RectangleCollider>(position);
+    }
   }
   char to_return = object_index_;
   object_index_++;

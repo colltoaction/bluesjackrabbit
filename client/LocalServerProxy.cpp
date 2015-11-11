@@ -15,6 +15,7 @@ LocalServerProxy::LocalServerProxy() {
   engine_.add_game_object(false, true, Vector::zero());
   engine_.add_game_object(true, true, Vector(0, 5));
   engine_.add_game_object(true, true, Vector(5, 0));
+  engine_.add_game_object(true, false, Vector(0, 5));
   engine_.game_objects()[0]->transform().position();
   renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->transform().position());
   char i = 0;

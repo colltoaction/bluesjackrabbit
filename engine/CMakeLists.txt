@@ -3,6 +3,8 @@ project(engine)
 
 set(SOURCES
         Body.h
+        CircleCollider.cpp
+        CircleCollider.h
         Collider.cpp
         Collider.h
         Engine.cpp
@@ -11,6 +13,8 @@ set(SOURCES
         GameObject.h
         GameObjectTemplate.cpp
         GameObjectTemplate.h
+        RectangleCollider.cpp
+        RectangleCollider.h
         RigidBody.cpp
         RigidBody.h
         StaticBody.cpp
