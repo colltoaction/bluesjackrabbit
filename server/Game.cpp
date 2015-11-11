@@ -28,27 +28,29 @@ void Game::add_player(ClientProxy *player) {
   players_[player_index_] = player;
   player->add_player_id(player_index_);
   player->add_move_functor(sigc::mem_fun(*this, &Game::action));
+  player->add_start_functor(sigc::mem_fun(*this, &Game::start_game));
   place_player(player_index_);
   player_index_++;
-  if (player_index_ == 2) {
-    start_game();
-  }
 }
 
 void Game::start_game() {
   std::cout << "GAME: STARTGAME\n";
-  for (std::map<char, ClientProxy*>::iterator it = players_.begin();
-      it != players_.end();
-      it++) {
-    for (std::vector<GameObject*>::iterator game_it = engine_.game_objects().begin();
-        game_it != engine_.game_objects().end();
-        game_it++) {
-      it->second->send_object_position(*game_it);
+  if (player_index_ == 2) {
+    for (std::map<char, ClientProxy*>::iterator it = players_.begin();
+        it != players_.end();
+        it++) {
+      char object_size = static_cast<char>(engine_.game_objects().size());
+      it->second->send_object_size(object_size);
+      for (std::vector<GameObject*>::iterator game_it = engine_.game_objects().begin();
+          game_it != engine_.game_objects().end();
+          game_it++) {
+        it->second->send_object_position(*game_it);
+      }
     }
+    sleep(30);
+    std::cout << "RUNNER START\n";
+    runner_.start();
   }
-  sleep(30);
-  std::cout << "RUNNER START\n";
-  runner_.start();
 }
 
 void Game::place_player(char object_id) {
