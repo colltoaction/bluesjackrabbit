@@ -41,23 +41,19 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
-  init_game();
+  // init_game();
   in_game = true;
   while (keep_reading_ && !finalized_) {
-    in_game_protocol();
+    read_protocol();
   }
   socket_->close_connection();
   delete socket_;
 }
 
 
-void ClientProxy::menu_protocol() {
-}
-
-void ClientProxy::in_game_protocol() {
+void ClientProxy::read_protocol() {
   char option;
   keep_reading_ = socket_->read_buffer(&option, 1);
-  std::cout << "Llego algo\n";
   if (keep_reading_) {
     // GAME OPTIONS
     if (option == NEW_GAME) {
@@ -69,7 +65,6 @@ void ClientProxy::in_game_protocol() {
     } else if (option == LIST_MAPS) {
       list_maps_call();
     } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
-      std::cout << "llamando action\n";
       move_functor_(object_id_, option);
     }
   }
@@ -89,6 +84,7 @@ void ClientProxy::new_game_call() {
   socket_->read_buffer(&map_id, MAP_ID_LENGTH);
   char game_id = create_new_game_functor_(map_id, this);
   game_id_ = game_id;
+  std::cout << "Finaliza new game call\n";
   socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
@@ -127,13 +123,6 @@ void ClientProxy::list_maps_call() {
 }
 
 void ClientProxy::init_game() {
-  char dir = 3;
-  socket_->send_buffer(&dir, CANT_BYTES);
-  for (std::vector<GameObject *>::iterator game_object = engine_.game_objects().begin();
-       game_object != engine_.game_objects().end();
-       ++game_object) {
-    send_object_position(*game_object);
-  }
 }
 
 void ClientProxy::send_object_position(GameObject *object) {
