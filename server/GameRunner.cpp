@@ -18,7 +18,7 @@ void GameRunner::run() {
     (void) begin;
     engine_stuff();
     notify_clients();
-    usleep(1000);
+    usleep(20000);
   }
 }
 

@@ -16,11 +16,15 @@ RemoteServerProxyUpdater::~RemoteServerProxyUpdater() {
 }
 
 void RemoteServerProxyUpdater::run() {
+  init_game_objects();
   while (keep_going_) {
     double x, y;
     read_object_position(&x, &y);
     update_functor_(x, y);
   }
+}
+
+void RemoteServerProxyUpdater::init_game_objects() {
 }
 
 
