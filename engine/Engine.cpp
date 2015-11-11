@@ -8,9 +8,6 @@
 const Vector Engine::gravity_ = Vector(0, 0.0000098) * fixed_update_step * fixed_update_step;  // in m/ms²
 
 Engine::Engine() {
-  game_objects_.push_back(new GameObjectTemplate<RigidBody>(Vector::zero()));
-  game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(5, 0)));
-  game_objects_.push_back(new GameObjectTemplate<StaticBody>(Vector(0, 5)));
 }
 
 std::vector<GameObject*> &Engine::game_objects() {
@@ -48,4 +45,14 @@ bool Engine::will_collide(const std::vector<GameObject*>::iterator &game_object)
 
 void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->rigid_body().apply_force(force);
+}
+
+
+void Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
+  (void) circle_collider;
+  if (is_static) {
+    game_objects_.push_back(new GameObjectTemplate<StaticBody>(position));
+  } else {
+    game_objects_.push_back(new GameObjectTemplate<RigidBody>(position));
+  }
 }
