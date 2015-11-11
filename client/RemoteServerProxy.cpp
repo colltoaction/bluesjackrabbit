@@ -100,9 +100,10 @@ void RemoteServerProxy::join_game(size_t game_id) {
 }
 
 void RemoteServerProxy::init_game() {
-  std::cout << "INIT GAME\n";
+  std::cout << "RemoteServerProxy::init_game\n";
   char objects_size;
   socket_->read_buffer(&objects_size, 1);
+  std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
   for (char i = 0; i < objects_size; i++) {
     double x, y;
     read_object_position(&x, &y);
