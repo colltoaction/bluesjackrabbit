@@ -12,10 +12,10 @@ const double LocalServerProxy::step = 0.003;
 const double LocalServerProxy::jump_force = 0.003;  // should take into account the physics step
 
 LocalServerProxy::LocalServerProxy() {
-  engine_.add_game_object(false, true, Vector::zero());
-  engine_.add_game_object(true, true, Vector(0, 5));
-  engine_.add_game_object(true, true, Vector(5, 0));
-  engine_.add_game_object(true, false, Vector(0, 5));
+  engine_.add_game_object<RigidBody, CircleCollider>(Vector::zero());
+  engine_.add_game_object<StaticBody, CircleCollider>(Vector(0, 5));
+  engine_.add_game_object<StaticBody, CircleCollider>(Vector(5, 0));
+  engine_.add_game_object<StaticBody, RectangleCollider>(Vector(0, 5));
   engine_.game_objects()[0]->transform().position();
   renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->transform().position());
   char i = 0;

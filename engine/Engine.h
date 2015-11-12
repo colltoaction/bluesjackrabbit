@@ -57,7 +57,8 @@ class Engine {
    * @param circle_collider if it uses a circle collider or a square collider
    * @param position initial position of game object 
    */
-  char add_game_object(bool is_static, bool circle_collider, const Vector &position);
+  template<class BodyType, class ColliderType>
+  char add_game_object(const Vector &position);
 
   /**
    * Number of objects in game.

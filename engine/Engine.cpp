@@ -63,22 +63,9 @@ void Engine::apply_force_(char object_id, Vector force) {
   game_objects_[object_id]->rigid_body().apply_force(force);
 }
 
-
-char Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
-  (void) circle_collider;
-  if (is_static) {
-    if (circle_collider) {
-      game_objects_[object_index_] = new GameObjectTemplate<StaticBody, CircleCollider>(position);
-    } else {
-      game_objects_[object_index_] = new GameObjectTemplate<StaticBody, RectangleCollider>(position);
-    }
-  } else {
-    if (circle_collider) {
-      game_objects_[object_index_] = new GameObjectTemplate<RigidBody, CircleCollider>(position);
-    } else {
-      game_objects_[object_index_] = new GameObjectTemplate<RigidBody, RectangleCollider>(position);
-    }
-  }
+template<class BodyType, class ColliderType>
+char Engine::add_game_object(const Vector &position) {
+  game_objects_[object_index_] = new GameObjectTemplate<BodyType, ColliderType>(position);
   char to_return = object_index_;
   object_index_++;
   return to_return;
@@ -87,3 +74,8 @@ char Engine::add_game_object(bool is_static, bool circle_collider, const Vector 
 char Engine::objects_size() {
   return static_cast<char>(game_objects_.size());
 }
+
+template char Engine::add_game_object<RigidBody, CircleCollider>(const Vector &position);
+template char Engine::add_game_object<RigidBody, RectangleCollider>(const Vector &position);
+template char Engine::add_game_object<StaticBody, CircleCollider>(const Vector &position);
+template char Engine::add_game_object<StaticBody, RectangleCollider>(const Vector &position);
