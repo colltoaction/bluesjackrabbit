@@ -58,7 +58,7 @@ bool MainWindow::on_close_window(GdkEventAny* any_event) {
   (void)any_event;
   server_proxy_->shutdown();
   hide();
-  close();
+  // close(); // No se por que esta funcion no se reconoce como de GTK
   exit(0);
   return true;  // Propagate event
 }
