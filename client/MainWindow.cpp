@@ -66,7 +66,9 @@ MainWindow::MainWindow()
 }
 
 MainWindow::~MainWindow() {
-  delete server_proxy_;
+  if (server_proxy_ != NULL) {
+    delete server_proxy_;
+  }
 }
 
 // TODO(tomas) No puede ser que no se pueda cerrar sin exit
@@ -139,6 +141,7 @@ void MainWindow::init_server_proxy() {
     dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
     dialog.run();
     hide();
+    return;
   }
   bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
   bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
