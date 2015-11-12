@@ -75,7 +75,7 @@ void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
 }
 
-void ClientProxy::add_start_functor(start_callback start_cb){
+void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
 
@@ -130,7 +130,7 @@ void ClientProxy::list_maps_call() {
 void ClientProxy::init_game() {
 }
 
-void ClientProxy::send_object_size(char object_size){
+void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
 }
 

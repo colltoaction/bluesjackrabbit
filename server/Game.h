@@ -27,7 +27,7 @@ class Game {
 
   void start_game();
   int even;
-  void place_player(char object_id);
+  void place_player(ClientProxy *player);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAME_H */

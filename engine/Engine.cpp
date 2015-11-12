@@ -9,11 +9,19 @@
 
 const Vector Engine::gravity_ = Vector(0, 0.0000098) * fixed_update_step * fixed_update_step;  // in m/ms²
 
-Engine::Engine() {
+Engine::Engine() : object_index_(0) {
   std::cout << "Construyendo engine\n";
 }
 
-std::vector<GameObject*> &Engine::game_objects() {
+Engine::~Engine() {
+  for (std::map<char, GameObject*>::iterator game_object = game_objects_.begin();
+         game_object != game_objects_.end();
+         ++game_object) {
+    delete game_object->second;
+  }
+}
+
+std::map<char, GameObject*> &Engine::game_objects() {
   return game_objects_;
 }
 
@@ -22,25 +30,25 @@ std::map<uint32_t, GameObject*> &Engine::game_objects() {
 }
 void Engine::FixedUpdate() {
 //    double step = static_cast<double>(event.TimeDelta()) / 1000000000;
-  for (std::vector<GameObject*>::iterator game_object = game_objects_.begin();
+  for (std::map<char, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
-    apply_force(*game_object, gravity_);
+    apply_force(game_object->second, gravity_);
     if (will_collide(game_object)) {
-      (*game_object)->rigid_body().stop();
+      game_object->second->rigid_body().stop();
     }
 
-    (*game_object)->rigid_body().update_fixed();
-    (*game_object)->update_fixed();
+    game_object->second->rigid_body().update_fixed();
+    game_object->second->update_fixed();
   }
 }
 
-bool Engine::will_collide(const std::vector<GameObject*>::iterator &game_object) {
-  for (std::vector<GameObject*>::iterator other = game_objects_.begin();
+bool Engine::will_collide(const std::map<char, GameObject*>::iterator &game_object) {
+  for (std::map<char, GameObject*>::iterator other = game_objects_.begin();
        other != game_objects_.end();
        ++other) {
     if (game_object != other) {
-      if ((*game_object)->will_collide(**other)) {
+      if (game_object->second->will_collide(*other->second)) {
         return true;
       }
     }
@@ -53,14 +61,21 @@ void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->rigid_body().apply_force(force);
 }
 
+void Engine::apply_force_(char object_id, Vector force) {
+  game_objects_[object_id]->rigid_body().apply_force(force);
+}
 
-void Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
+
+char Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
   (void) circle_collider;
   if (is_static) {
-    game_objects_.push_back(new GameObjectTemplate<StaticBody>(position));
+    game_objects_[object_index_] = new GameObjectTemplate<StaticBody>(position);
   } else {
-    game_objects_.push_back(new GameObjectTemplate<RigidBody>(position));
+    game_objects_[object_index_] = new GameObjectTemplate<RigidBody>(position);
   }
+  char to_return = object_index_;
+  object_index_++;
+  return to_return;
 }
 
 char Engine::objects_size() {
