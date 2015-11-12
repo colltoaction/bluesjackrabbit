@@ -35,12 +35,12 @@ void GameRunner::notify_clients() {
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
       it != players_->end();
       it++) {
-    // TODO(tomas) Aca tengo que enviar todos los objects con sus ids.
-    std::cout << "obteniendo game object\n";
-    GameObject *object = engine_->game_objects()[0];
-    std::cout << "Enviando game object position\n";
-    it->second->send_object_position(object);
-    i++;
+    for (std::map<char, GameObject*>::iterator game_it = engine_->game_objects().begin();
+              game_it != engine_->game_objects().end();
+              game_it++) {
+      it->second->send_object_position(game_it->first, game_it->second);
+      i++;
+    }
   }
 }
 

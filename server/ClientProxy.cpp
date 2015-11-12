@@ -80,6 +80,7 @@ void ClientProxy::add_start_functor(start_callback start_cb) {
 }
 
 void ClientProxy::add_player_id(char player_id) {
+  std::cout << "Agregando object_id " << static_cast<int>(player_id) << std::endl;
   object_id_ = player_id;
 }
 
@@ -134,7 +135,7 @@ void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
 }
 
-void ClientProxy::send_object_position(GameObject *object) {
+void ClientProxy::send_object_position(char object_id, GameObject *object) {
   size_t double_size = sizeof(double);
   double x = object->transform().position().x();
   double y = object->transform().position().y();
@@ -143,6 +144,7 @@ void ClientProxy::send_object_position(GameObject *object) {
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(&y);
   char *dir_y_posta = static_cast<char*>(dir_y);
+  socket_->send_buffer(&object_id, CANT_BYTES);
   socket_->send_buffer(dir_x_posta, double_size);
   socket_->send_buffer(dir_y_posta, double_size);
 }
