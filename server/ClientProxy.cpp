@@ -100,6 +100,7 @@ void ClientProxy::join_game_call() {
   socket_->read_buffer(&game_id, MAP_ID_LENGTH);
   join_game_functor_(game_id, this);
   std::cout << "Finaliza join game call\n";
+  socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
 void ClientProxy::list_games_call() {
