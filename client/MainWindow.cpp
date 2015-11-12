@@ -50,6 +50,7 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
     dialog.run();
     hide();
   }
+  signal_delete_event().connect(sigc::mem_fun(*this, &MainWindow::on_close_window));
 }
 
 MainWindow::~MainWindow() {
@@ -75,6 +76,16 @@ void MainWindow::main_game_view() {
   scene_.hide();
   new_game_screen_.hide();
   join_game_screen_.hide();
+}
+
+// TODO(tomas) No puede ser que no se pueda cerrar sin exit
+bool MainWindow::on_close_window(GdkEventAny* any_event) {
+  (void)any_event;
+  server_proxy_->shutdown();
+  hide();
+  close();
+  exit(0);
+  return true;  // Propagate event
 }
 
 void MainWindow::main_game_view() {

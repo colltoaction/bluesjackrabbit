@@ -17,7 +17,7 @@
 
 class MainWindow: public Gtk::Window {
  public:
-  explicit MainWindow(SceneRenderer *scene, ServerProxy *sever_proxy);
+  MainWindow(SceneRenderer *scene, ServerProxy *sever_proxy);
   virtual ~MainWindow();
 
  private:
@@ -30,6 +30,8 @@ class MainWindow: public Gtk::Window {
   ServerProxy *server_proxy_;
   size_t map_id_;
   size_t game_id_;
+
+  bool on_close_window(GdkEventAny* any_event);
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();

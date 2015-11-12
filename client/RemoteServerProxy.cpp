@@ -120,12 +120,18 @@ void RemoteServerProxy::init_game() {
   std::cout << "FIN INIT GAME\n";
 }
 
+void RemoteServerProxy::shutdown() {
+  std::cout << "Shutdown de updater..\n";
+  updater_.shutdown();
+  updater_.join();
+}
+
 // TODO(tomas) Ver como devolver el object_id desde el cliente.
 void RemoteServerProxy::update_object(char object_id, double x, double y) {
-  std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
-      << " (" << x << ", " << y << ")\n";
+  // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
+     // << " (" << x << ", " << y << ")\n";
   renderers_[object_id]->update_position(Vector(x, y));
-  std::cout << "Fin RemoteServerProxy::update_object\n";
+  // std::cout << "Fin RemoteServerProxy::update_object\n";
 }
 
 

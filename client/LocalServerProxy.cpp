@@ -114,3 +114,6 @@ bool LocalServerProxy::start_game(size_t map_id) {
 void LocalServerProxy::join_game(size_t game_id) {
   (void)game_id;  // UNUSED
 }
+
+void LocalServerProxy::shutdown() {
+}
