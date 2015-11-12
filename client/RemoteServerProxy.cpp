@@ -105,8 +105,9 @@ void RemoteServerProxy::init_game() {
   socket_->read_buffer(&objects_size, 1);
   std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
   for (char i = 0; i < objects_size; i++) {
+    char object_id;
     double x, y;
-    read_object_position(&x, &y);
+    read_object_position(&object_id, &x, &y);
     std::cout << "llega objeto en: (" << x << ", " << y << ")\n";
     if (i == 0) {
       renderers_.push_back(new CharacterRenderer(Vector(x, y)));
@@ -122,13 +123,13 @@ void RemoteServerProxy::update_object(double x, double y) {
 }
 
 
-
-void RemoteServerProxy::read_object_position(double *x, double *y) {
+void RemoteServerProxy::read_object_position(char *object_id, double *x, double *y) {
   size_t double_size = sizeof(double);
   void *dir_x = static_cast<void*>(x);
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(y);
   char *dir_y_posta = static_cast<char*>(dir_y);
+  socket_->read_buffer(object_id, CANT_BYTES);
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
 }

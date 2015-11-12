@@ -21,7 +21,7 @@ class RemoteServerProxyUpdater : public Thread {
   RendererUpdate update_functor_;
 
   void init_game_objects();
-  void read_object_position(double *x, double *y);
+  void read_object_position(char *object_id,  double *x, double *y);
 };
 
 #endif /* BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H */
