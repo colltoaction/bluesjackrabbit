@@ -14,13 +14,12 @@ class RemoteServerProxyUpdater : public Thread {
   virtual ~RemoteServerProxyUpdater();
   virtual void run();
   void set_socket(Socket *socket);
+  void shutdown();
 
  private:
   Socket *socket_;
   bool keep_going_;
   RendererUpdate update_functor_;
-
-  void init_game_objects();
   void read_object_position(char *object_id,  double *x, double *y);
 };
 

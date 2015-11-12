@@ -30,6 +30,7 @@ class ServerProxy {
   virtual bool start_game(size_t map_id) = 0;
   virtual void join_game(size_t game_id) = 0;
   virtual void init_game() = 0;
+  virtual void shutdown() = 0;
 };
 
 
