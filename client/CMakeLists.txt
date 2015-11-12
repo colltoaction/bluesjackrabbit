@@ -27,6 +27,7 @@ set(SOURCES
         TurtleRenderer.cpp
         TurtleRenderer.h
 )
+include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
@@ -36,7 +37,7 @@ add_dependencies(${PROJECT_NAME} common)
 
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
-target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(${PROJECT_NAME} engine)
 target_link_libraries(${PROJECT_NAME} common)
 
