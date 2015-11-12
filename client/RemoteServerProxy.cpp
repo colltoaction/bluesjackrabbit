@@ -95,6 +95,7 @@ void RemoteServerProxy::join_game(size_t game_id) {
   socket_->send_buffer(&option, OPTION_LENGTH);
   char game = static_cast<char>(game_id);
   socket_->send_buffer(&game, MAP_ID_LENGTH);
+  socket_->read_buffer(&object_id_, CANT_BYTES);
   init_game();
   updater_.start();
 }
