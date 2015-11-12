@@ -15,11 +15,17 @@ LocalServerProxy::LocalServerProxy() {
   engine_.add_game_object(false, true, Vector::zero());
   engine_.add_game_object(true, true, Vector(0, 5));
   engine_.add_game_object(true, true, Vector(5, 0));
-  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()->transform().position()));
-  for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
+  engine_.game_objects()[0]->transform().position();
+  renderers_.push_back(new CharacterRenderer(engine_.game_objects()[0]->transform().position()));
+  bool first = true;
+  for (std::map<char, GameObject*>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
-    renderers_.push_back(new TurtleRenderer((*game_object)->transform().position()));
+    if (!first) {
+      renderers_.push_back(new TurtleRenderer(game_object->second->transform().position()));
+    } else {
+      first = false;
+    }
   }
 
   Glib::signal_timeout().connect(
@@ -37,28 +43,28 @@ LocalServerProxy::~LocalServerProxy() {
 
 bool LocalServerProxy::engine_step() {
   engine_.FixedUpdate();
-  renderers_.front()->update_position(engine_.game_objects().front()->transform().position());
+  renderers_.front()->update_position(engine_.game_objects()[0]->transform().position());
   return true;
 }
 
 void LocalServerProxy::MoveUp() {
-  engine_.apply_force(engine_.game_objects().front(), Vector(0, -jump_force));
+  engine_.apply_force_(0, Vector(0, -jump_force));
 }
 
 void LocalServerProxy::MoveDown() {
-  engine_.apply_force(engine_.game_objects().front(), Vector(0, step));
+  engine_.apply_force_(0, Vector(0, step));
 }
 
 void LocalServerProxy::MoveLeft() {
-  engine_.apply_force(engine_.game_objects().front(), Vector(-step, 0));
+  engine_.apply_force_(0, Vector(-step, 0));
 }
 
 void LocalServerProxy::MoveRight() {
-  engine_.apply_force(engine_.game_objects().front(), Vector(step, 0));
+  engine_.apply_force_(0, Vector(step, 0));
 }
 
 const Vector &LocalServerProxy::character_position() {
-  return engine_.game_objects().front()->transform().position();
+  return engine_.game_objects()[0]->transform().position();
 }
 
 void LocalServerProxy::init_game() {
