@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
   (void)argv;  // UNUSED
   ServerProxy *server_proxy = NULL;
   if (argc > 1) {
-    server_proxy = new RemoteServerProxy();
+    server_proxy = new LocalServerProxy();
   } else {
     server_proxy = new RemoteServerProxy();
   }
-  std::stringstream ss("org.fiuba.bluesjackrabbit");
+  std::stringstream ss("org.fiuba.bluesjackrabbit.");
   unsigned int v1 = 10000;
   ss << (rand_r(&v1) % 10000);
   std::string app_name;
