@@ -16,13 +16,14 @@
 
 class MainWindow: public Gtk::Window {
  public:
-  explicit MainWindow(ServerProxy *sever_proxy);
+  MainWindow();
   virtual ~MainWindow();
 
  private:
   SceneRenderer scene_;
   EventBus bus_;
   Gtk::Box main_frame_;
+  Gtk::Box connection_screen_;
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;
   Gtk::Box join_game_screen_;
@@ -46,6 +47,9 @@ class MainWindow: public Gtk::Window {
   void init_click();
   void join_game_click();
   void join_once_for_all();
+  void singleplayer_click();
+  void multiplayer_click();
+  void init_server_proxy();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {
