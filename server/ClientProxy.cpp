@@ -2,7 +2,6 @@
 #include <string>
 
 #include <sstream>
-
 #include <unistd.h>
 
 #include "ClientProxy.h"
@@ -15,7 +14,6 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_callback lm_callback) :
     socket_(socket),
     finalized_(false),
-    engine_(),
     in_game(false),
     keep_reading_(true),
     create_new_game_functor_(ng_callback),
@@ -23,58 +21,51 @@ ClientProxy::ClientProxy(Socket *socket,
     list_games_functor_(lg_callback),
     list_maps_functor_(lm_callback),
     game_id_(0),
-    player_id_(0) {
+    object_id_(0) {
 }
 
 ClientProxy::~ClientProxy() {
-}
-
-
-void ClientProxy::say_hello() {
-  char message = 1;
-  socket_->send_buffer(&message, 1);
-  std::cout << "ENVIADO EL HEADER\n";
-  char c = 'A';
-  socket_->send_buffer(&c, 1);
-  std::cout << "EL TRUE\n";
-}
-
-
-/* Se ejecuta en un hilo separado al del Socket que acepta socketes,
- * por eso tiene su propio Socket peer y el mapa que hay que actualizar.
- * */
-void ClientProxy::run() {
-  say_hello();
-  init_game();
-  in_game = true;
-  while (keep_reading_ && !finalized_) {
-    in_game_protocol();
-  }
-  socket_->close_connection();
   delete socket_;
 }
 
 
-void ClientProxy::menu_protocol() {
+void ClientProxy::say_hello() {
+  char c = 'A';
+  socket_->send_buffer(&c, CANT_BYTES);
 }
 
-void ClientProxy::in_game_protocol() {
+
+/* Se ejecuta en un hilo separado al del Socket que acepta socketes,
+ * por eso tiene su propio Socket peer y referencias a Game para actualizar estados.
+ * */
+void ClientProxy::run() {
+  say_hello();
+  // init_game();
+  in_game = true;
+  while (keep_reading_ && !finalized_) {
+    read_protocol();
+  }
+  socket_->close_connection();
+}
+
+
+void ClientProxy::read_protocol() {
   char option;
   keep_reading_ = socket_->read_buffer(&option, 1);
-  std::cout << "Llego algo\n";
   if (keep_reading_) {
     // GAME OPTIONS
     if (option == NEW_GAME) {
       new_game_call();
+      start_functor_();
     } else if (option == JOIN_GAME) {
       join_game_call();
+      start_functor_();
     } else if (option == LIST_GAMES) {
       list_games_call();
     } else if (option == LIST_MAPS) {
       list_maps_call();
     } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
-      std::cout << "llamando action\n";
-      move_functor_(player_id_, option);
+      move_functor_(object_id_, option);
     }
   }
 }
@@ -83,8 +74,13 @@ void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
 }
 
-void ClientProxy::add_player_id(char player_id) {
-  player_id_ = player_id;
+void ClientProxy::add_start_functor(start_callback start_cb) {
+  start_functor_ = start_cb;
+}
+
+void ClientProxy::add_object_id(char object_id) {
+  std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
+  object_id_ = object_id;
 }
 
 void ClientProxy::new_game_call() {
@@ -93,6 +89,8 @@ void ClientProxy::new_game_call() {
   socket_->read_buffer(&map_id, MAP_ID_LENGTH);
   char game_id = create_new_game_functor_(map_id, this);
   game_id_ = game_id;
+  std::cout << "Finaliza new game call\n";
+  socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
 void ClientProxy::join_game_call() {
@@ -101,6 +99,7 @@ void ClientProxy::join_game_call() {
   socket_->read_buffer(&game_id, MAP_ID_LENGTH);
   join_game_functor_(game_id, this);
   std::cout << "Finaliza join game call\n";
+  socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
 void ClientProxy::list_games_call() {
@@ -129,38 +128,21 @@ void ClientProxy::list_maps_call() {
   std::cout << "ClientProxy:: Finaliza listar maps\n";
 }
 
-void ClientProxy::init_game() {
-  for (int i = 0; i < 100; i++) {
-    engine_.FixedUpdate();
-  }
-  char dir = 3;
-  socket_->send_buffer(&dir, CANT_BYTES);
-  char acknowledge;
-  socket_->read_buffer(&acknowledge, 1);
-  std::cout << "acknowledge: " << ((acknowledge == 'R') ? "OK" : "ERROR") << std::endl;
-
-  for (std::vector<GameObject *>::iterator game_object = engine_.game_objects().begin();
-       game_object != engine_.game_objects().end();
-       ++game_object) {
-    send_object_position(*game_object);
-  }
+void ClientProxy::send_object_size(char object_size) {
+  socket_->send_buffer(&object_size, CANT_BYTES);
 }
 
-void ClientProxy::send_object_position(GameObject *object) {
+void ClientProxy::send_object_position(char object_id, GameObject *object) {
   size_t double_size = sizeof(double);
   double x = object->transform().position().x();
   double y = object->transform().position().y();
-  std::cout << "Enviando posicion (" << x << ", " << y << ")\n";
-  void *dir_x = static_cast<void*>(&x);
-  char *dir_x_posta = static_cast<char*>(dir_x);
-  void *dir_y = static_cast<void*>(&y);
-  char *dir_y_posta = static_cast<char*>(dir_y);
-  socket_->send_buffer(dir_x_posta, double_size);
-  socket_->send_buffer(dir_y_posta, double_size);
-  char acknowledge;
-  socket_->read_buffer(&acknowledge, 1);
-  std::cout << "acknowledge: " << ((acknowledge == 'R') ? "OK" : "ERROR") << std::endl;
-  std::cout << "Object enviado\n";
+  std::cout << "Enviando posicion id: " << static_cast<int>(object_id)
+      << "(" << x << ", " << y << ")\n";
+  char *x_address = static_cast<char*>(static_cast<void*>(&x));
+  char *y_address = static_cast<char*>(static_cast<void*>(&y));
+  socket_->send_buffer(&object_id, CANT_BYTES);
+  socket_->send_buffer(x_address, double_size);
+  socket_->send_buffer(y_address, double_size);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

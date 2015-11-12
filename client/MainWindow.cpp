@@ -7,6 +7,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/paned.h>
+#include <gtkmm/messagedialog.h>
 
 #include "EventBus.h"
 #include "MainWindow.h"
@@ -39,12 +40,27 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   add(main_frame_);
   main_game_view();
 
-  connected_ = this->server_proxy_->connect();
-  this->server_proxy_->init_game();
-  std::cout << ((connected_) ?"OK" : "NO") << std::endl;
+  connected_ = server_proxy_->connect();
+  if (!connected_) {
+    Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
+    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
+    dialog.run();
+    hide();
+  }
+  signal_delete_event().connect(sigc::mem_fun(*this, &MainWindow::on_close_window));
 }
 
 MainWindow::~MainWindow() {
+}
+
+// TODO(tomas) No puede ser que no se pueda cerrar sin exit
+bool MainWindow::on_close_window(GdkEventAny* any_event) {
+  (void)any_event;
+  server_proxy_->shutdown();
+  hide();
+  // close(); // No se por que esta funcion no se reconoce como de GTK
+  exit(0);
+  return true;  // Propagate event
 }
 
 void MainWindow::main_game_view() {

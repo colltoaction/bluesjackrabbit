@@ -21,7 +21,7 @@ class ServerProxy {
   virtual void MoveDown() = 0;
   virtual void MoveLeft() = 0;
   virtual void MoveRight() = 0;
-  virtual std::vector<Renderer*> &renderers() = 0;
+  virtual std::map<char, Renderer*> &renderers() = 0;
   virtual const Vector &character_position() = 0;
 
   virtual bool connect() = 0;
@@ -30,6 +30,7 @@ class ServerProxy {
   virtual bool start_game(size_t map_id) = 0;
   virtual void join_game(size_t game_id) = 0;
   virtual void init_game() = 0;
+  virtual void shutdown() = 0;
 };
 
 
