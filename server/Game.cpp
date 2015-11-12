@@ -47,7 +47,6 @@ void Game::start_game() {
         it->second->send_object_position(*game_it);
       }
     }
-    sleep(30);
     std::cout << "RUNNER START\n";
     runner_.start();
   }
