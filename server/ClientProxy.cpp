@@ -2,7 +2,6 @@
 #include <string>
 
 #include <sstream>
-
 #include <unistd.h>
 
 #include "ClientProxy.h"
@@ -26,6 +25,7 @@ ClientProxy::ClientProxy(Socket *socket,
 }
 
 ClientProxy::~ClientProxy() {
+  delete socket_;
 }
 
 
@@ -36,7 +36,7 @@ void ClientProxy::say_hello() {
 
 
 /* Se ejecuta en un hilo separado al del Socket que acepta socketes,
- * por eso tiene su propio Socket peer y el mapa que hay que actualizar.
+ * por eso tiene su propio Socket peer y referencias a Game para actualizar estados.
  * */
 void ClientProxy::run() {
   say_hello();
@@ -46,7 +46,6 @@ void ClientProxy::run() {
     read_protocol();
   }
   socket_->close_connection();
-  delete socket_;
 }
 
 
@@ -79,9 +78,9 @@ void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
 
-void ClientProxy::add_player_id(char player_id) {
-  std::cout << "Agregando object_id " << static_cast<int>(player_id) << std::endl;
-  object_id_ = player_id;
+void ClientProxy::add_object_id(char object_id) {
+  std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
+  object_id_ = object_id;
 }
 
 void ClientProxy::new_game_call() {
@@ -129,9 +128,6 @@ void ClientProxy::list_maps_call() {
   std::cout << "ClientProxy:: Finaliza listar maps\n";
 }
 
-void ClientProxy::init_game() {
-}
-
 void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
 }
@@ -142,13 +138,11 @@ void ClientProxy::send_object_position(char object_id, GameObject *object) {
   double y = object->transform().position().y();
   std::cout << "Enviando posicion id: " << static_cast<int>(object_id)
       << "(" << x << ", " << y << ")\n";
-  void *dir_x = static_cast<void*>(&x);
-  char *dir_x_posta = static_cast<char*>(dir_x);
-  void *dir_y = static_cast<void*>(&y);
-  char *dir_y_posta = static_cast<char*>(dir_y);
+  char *x_address = static_cast<char*>(static_cast<void*>(&x));
+  char *y_address = static_cast<char*>(static_cast<void*>(&y));
   socket_->send_buffer(&object_id, CANT_BYTES);
-  socket_->send_buffer(dir_x_posta, double_size);
-  socket_->send_buffer(dir_y_posta, double_size);
+  socket_->send_buffer(x_address, double_size);
+  socket_->send_buffer(y_address, double_size);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar
