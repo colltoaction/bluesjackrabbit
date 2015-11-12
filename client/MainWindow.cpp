@@ -53,6 +53,16 @@ MainWindow::MainWindow(ServerProxy *server_proxy)
   Glib::signal_timeout().connect(
         sigc::bind_return(sigc::mem_fun(&scene_, &SceneRenderer::update), true),
         render_step);
+
+  add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
+  signal_key_press_event().connect(
+      sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
+  signal_key_release_event().connect(
+      sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
+  bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
+  bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
+  bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
+  bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
 }
 
 MainWindow::~MainWindow() {

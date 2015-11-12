@@ -14,7 +14,7 @@ typedef sigc::slot<void, Event const &> Handler;
 
 class EventBus {
  public:
-  explicit EventBus(Gtk::Window *window);
+  EventBus();
   bool keyPressEvent(GdkEventKey *event);
   bool keyReleaseEvent(GdkEventKey *event);
   bool main();
