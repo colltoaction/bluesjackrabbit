@@ -9,6 +9,7 @@ GameMonitor::GameMonitor()
 }
 
 GameMonitor::~GameMonitor() {
+  Lock lock(&game_admin_mutex_);
   for (char index = 0; index < game_index_; index++) {
     delete games_[index];
   }
@@ -31,7 +32,6 @@ char GameMonitor::create_game(char map_id, ClientProxy *player) {
 void GameMonitor::join_game(char game_id, ClientProxy *player) {
   Lock lock(&game_admin_mutex_);
   std::cout << "GameMonitor:: SE UNE JUGADOR A GAME_ID" << static_cast<int>(game_id) << "\n";
-  // TODO(tomas) MUY PELIGROSO!!!
   games_[game_id]->add_player(player);
 }
 
@@ -61,6 +61,6 @@ void GameMonitor::finalize() {
   Lock lock(&game_admin_mutex_);
   for (char index = 0; index < game_index_; index++) {
     games_[index]->finalize();
-    delete games_[index];
+    // delete games_[index];
   }
 }
