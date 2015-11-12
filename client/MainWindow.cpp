@@ -11,16 +11,19 @@
 #include <gtkmm/messagedialog.h>
 
 #include "EventBus.h"
+#include "LocalServerProxy.h"
 #include "MainWindow.h"
+#include "RemoteServerProxy.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow(ServerProxy *server_proxy)
-  : scene_(server_proxy),
-  main_frame_(),
+MainWindow::MainWindow()
+  : scene_(),
+    main_frame_(),
+    connection_screen_(),
     initial_screen_(),
     new_game_screen_(),
     join_game_screen_(),
-    server_proxy_(server_proxy),
+    server_proxy_(NULL),
     map_id_(0),
     game_id_(0),
     map_combo(NULL),
@@ -29,11 +32,13 @@ MainWindow::MainWindow(ServerProxy *server_proxy)
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
 
+  init_connect_screen();
   init_main_game_screen();
   init_new_game_screen();
   init_join_game_screen();
 
   main_frame_.pack_start(scene_);
+  main_frame_.pack_start(connection_screen_);
   main_frame_.pack_start(initial_screen_);
   main_frame_.pack_start(new_game_screen_);
   main_frame_.pack_start(join_game_screen_);
@@ -41,13 +46,6 @@ MainWindow::MainWindow(ServerProxy *server_proxy)
   add(main_frame_);
   main_game_view();
 
-  connected_ = server_proxy_->connect();
-  if (!connected_) {
-    Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
-    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
-    dialog.run();
-    hide();
-  }
   signal_delete_event().connect(sigc::mem_fun(*this, &MainWindow::on_close_window));
 
   Glib::signal_timeout().connect(
@@ -59,13 +57,16 @@ MainWindow::MainWindow(ServerProxy *server_proxy)
       sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
   signal_key_release_event().connect(
       sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
-  bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
-  bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
-  bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
-  bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
+
+  show_all();
+  scene_.hide();
+  initial_screen_.hide();
+  new_game_screen_.hide();
+  join_game_screen_.hide();
 }
 
 MainWindow::~MainWindow() {
+  delete server_proxy_;
 }
 
 // TODO(tomas) No puede ser que no se pueda cerrar sin exit
@@ -73,7 +74,6 @@ bool MainWindow::on_close_window(GdkEventAny* any_event) {
   (void)any_event;
   server_proxy_->shutdown();
   hide();
-  // close(); // No se por que esta funcion no se reconoce como de GTK
   exit(0);
   return true;  // Propagate event
 }
@@ -82,6 +82,7 @@ void MainWindow::main_game_view() {
   map_combo_model->clear();
   game_combo_model->clear();
   show_all();
+  connection_screen_.hide();
   scene_.hide();
   new_game_screen_.hide();
   join_game_screen_.hide();
@@ -117,6 +118,33 @@ void MainWindow::init_click() {
   server_proxy_->start_game(map_id_);
   new_game_screen_.hide();
   scene_.show();
+}
+
+void MainWindow::singleplayer_click() {
+  server_proxy_ = new LocalServerProxy();
+  init_server_proxy();
+  main_game_view();
+}
+
+void MainWindow::multiplayer_click() {
+  server_proxy_ = new RemoteServerProxy();
+  init_server_proxy();
+  main_game_view();
+}
+
+void MainWindow::init_server_proxy() {
+  connected_ = server_proxy_->connect();
+  if (!connected_) {
+    Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
+    dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
+    dialog.run();
+    hide();
+  }
+  bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
+  bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
+  bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
+  bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
+  scene_.set_server_proxy(server_proxy_);
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Box *parent) {
@@ -156,6 +184,21 @@ void MainWindow::init_main_game_screen() {
   }
 }
 
+void MainWindow::init_connect_screen() {
+  Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/connect.glade", &connection_screen_);
+  Gtk::Button *button = NULL;
+  builder->get_widget("button_singleplayer", button);
+  if (button) {
+    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::singleplayer_click));
+  }
+  button = NULL;
+  builder->get_widget("button_multiplayer", button);
+  if (button) {
+      button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::multiplayer_click));
+  }
+}
+
+
 void MainWindow::init_new_game_screen() {
   Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/new_game.glade", &new_game_screen_);
   Gtk::Button *button = NULL;
@@ -179,12 +222,10 @@ void MainWindow::init_new_game_screen() {
 }
 
 void MainWindow::combo_map_changed() {
-  // std::cout << ((*map_combo->get_active())[columns.id]) << std::endl;
   map_id_ = ((*map_combo->get_active())[columns.id]);
 }
 
 void MainWindow::combo_game_changed() {
-  // std::cout << ((*map_combo->get_active())[columns.id]) << std::endl;
   game_id_ = ((*game_combo->get_active())[columns.id]);
 }
 
