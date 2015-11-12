@@ -24,7 +24,7 @@ void RemoteServerProxyUpdater::run() {
     char object_id;
     double x, y;
     read_object_position(&object_id, &x, &y);
-    update_functor_(x, y);
+    update_functor_(object_id, x, y);
   }
 }
 

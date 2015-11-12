@@ -35,6 +35,7 @@ void Game::add_player(ClientProxy *player) {
 
 void Game::start_game() {
   std::cout << "GAME: STARTGAME\n";
+  // TODO(tomas) MAGIC! CON ESTE NUMERO ES LA CANTIDAD DE JUGADORES QUE SE CONECTAN
   if (player_index_ == 3) {
     for (std::map<char, ClientProxy*>::iterator it = players_.begin();
         it != players_.end();
@@ -44,7 +45,7 @@ void Game::start_game() {
       for (std::map<char, GameObject*>::iterator game_it = engine_.game_objects().begin();
           game_it != engine_.game_objects().end();
           game_it++) {
-        it->second->send_object_position(it->first, game_it->second);
+        it->second->send_object_position(game_it->first, game_it->second);
       }
     }
     std::cout << "RUNNER START\n";
@@ -57,7 +58,7 @@ void Game::place_player(ClientProxy *player) {
   if (even % 2 == 0) {
     object_id = engine_.add_game_object(false, true, Vector::zero());
   } else {
-    object_id = engine_.add_game_object(false, true, Vector(5, -5));
+    object_id = engine_.add_game_object(false, true, Vector(5, -15));
   }
   player->add_player_id(object_id);
   even++;
