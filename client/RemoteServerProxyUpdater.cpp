@@ -1,6 +1,7 @@
 #include "RemoteServerProxyUpdater.h"
 
 #include <iostream>
+#include "Constants.h"
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(RendererUpdate update) :
@@ -20,8 +21,9 @@ void RemoteServerProxyUpdater::run() {
   init_game_objects();
   while (keep_going_) {
     std::cout << "Running... esperando position\n";
+    char object_id;
     double x, y;
-    read_object_position(&x, &y);
+    read_object_position(&object_id, &x, &y);
     update_functor_(x, y);
   }
 }
@@ -30,7 +32,7 @@ void RemoteServerProxyUpdater::init_game_objects() {
 }
 
 
-void RemoteServerProxyUpdater::read_object_position(double *x, double *y) {
+void RemoteServerProxyUpdater::read_object_position(char *object_id, double *x, double *y) {
   size_t double_size = sizeof(double);
   void *dir_x = static_cast<void*>(x);
   char *dir_x_posta = static_cast<char*>(dir_x);
@@ -40,6 +42,7 @@ void RemoteServerProxyUpdater::read_object_position(double *x, double *y) {
   if (socket_ == NULL) {
     std::cout << "obvio que se viene el sigsev\n";
   }
+  socket_->read_buffer(object_id, CANT_BYTES);
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
   std::cout << "POSITION DESDE SERVER: (" << (*x) << ", " << (*y) << ")\n";

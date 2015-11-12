@@ -40,7 +40,7 @@ class RemoteServerProxy : public ServerProxy {
   virtual bool start_game(size_t map_id);
   virtual void init_game();
   virtual void join_game(size_t game_id);
-  void read_object_position(double *x, double *y);
+  void read_object_position(char *object_id, double *x, double *y);
 
  private:
   static const double step;

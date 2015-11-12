@@ -44,7 +44,7 @@ void Game::start_game() {
       for (std::map<char, GameObject*>::iterator game_it = engine_.game_objects().begin();
           game_it != engine_.game_objects().end();
           game_it++) {
-        it->second->send_object_position(game_it->second);
+        it->second->send_object_position(it->first, game_it->second);
       }
     }
     std::cout << "RUNNER START\n";
