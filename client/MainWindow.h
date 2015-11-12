@@ -9,6 +9,8 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
+
+#include "EventBus.h"
 #include "SceneRenderer.h"
 #include "ServerProxy.h"
 
@@ -19,6 +21,7 @@ class MainWindow: public Gtk::Window {
 
  private:
   SceneRenderer scene_;
+  EventBus bus_;
   Gtk::Box main_frame_;
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;

@@ -26,11 +26,6 @@ int main(int argc, char *argv[]) {
   ss >> app_name;
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv, app_name);
   MainWindow window(server_proxy);
-  EventBus eventBus(&window);
-  eventBus.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveUp)));
-  eventBus.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveDown)));
-  eventBus.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveLeft)));
-  eventBus.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy, &ServerProxy::MoveRight)));
 
   int result = app->run(window);
   delete server_proxy;
