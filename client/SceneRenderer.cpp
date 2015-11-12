@@ -1,7 +1,18 @@
 #include "SceneRenderer.h"
 
+
+SceneRenderer::SceneRenderer()
+  : server_proxy_(NULL),
+    camera_position_(0, 0) {
+}
+
+
 void SceneRenderer::update() {
   queue_draw();
+}
+
+void SceneRenderer::set_server_proxy(ServerProxy *server_proxy) {
+  server_proxy_ = server_proxy;
 }
 
 // TODO(tinchou): avoid redrawing everything
@@ -38,8 +49,4 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
 //  }
 
   return true;
-}
-
-SceneRenderer::SceneRenderer(ServerProxy *server_proxy)
-    : server_proxy_(server_proxy), camera_position_(0, 0) {
 }
