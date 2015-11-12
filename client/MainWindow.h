@@ -1,7 +1,6 @@
 #ifndef BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 #define BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 
-
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/combobox.h>
@@ -15,10 +14,11 @@
 
 class MainWindow: public Gtk::Window {
  public:
-  MainWindow(SceneRenderer *scene, ServerProxy *sever_proxy);
+  explicit MainWindow(ServerProxy *sever_proxy);
   virtual ~MainWindow();
 
  private:
+  SceneRenderer scene_;
   Gtk::Box main_frame_;
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;
@@ -28,6 +28,7 @@ class MainWindow: public Gtk::Window {
   ServerProxy *server_proxy_;
   size_t map_id_;
   size_t game_id_;
+  static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);
 
@@ -58,7 +59,6 @@ class MainWindow: public Gtk::Window {
   Glib::RefPtr<Gtk::ListStore> map_combo_model;
   Glib::RefPtr<Gtk::ListStore> game_combo_model;
 
-  SceneRenderer *scene_;
   Gtk::ComboBox *map_combo;
   Gtk::ComboBox *game_combo;
   void combo_map_changed();
