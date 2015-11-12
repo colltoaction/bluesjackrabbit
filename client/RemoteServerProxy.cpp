@@ -47,10 +47,10 @@ RemoteServerProxy::RemoteServerProxy() :
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
-  for (std::vector<Renderer*>::iterator game_object = renderers_.begin();
+  for (std::map<char, Renderer*>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
-    delete *game_object;
+    delete game_object->second;
   }
   socket_->close_connection();
   updater_.join();
@@ -58,10 +58,10 @@ RemoteServerProxy::~RemoteServerProxy() {
 }
 
 const Vector &RemoteServerProxy::character_position() {
-  return renderers_.front()->position();
+  return renderers_[object_id_]->position();
 }
 
-std::vector<Renderer*> &RemoteServerProxy::renderers() {
+std::map<char, Renderer*> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
@@ -108,18 +108,23 @@ void RemoteServerProxy::init_game() {
     char object_id;
     double x, y;
     read_object_position(&object_id, &x, &y);
-    std::cout << "llega objeto en: (" << x << ", " << y << ")\n";
-    if (i == 0) {
-      renderers_.push_back(new CharacterRenderer(Vector(x, y)));
+    std::cout << "llega objeto id: " << static_cast<int>(object_id)
+        << "(" << x << ", " << y << ")\n";
+    if (object_id == object_id_) {
+      renderers_[object_id] = new CharacterRenderer(Vector(x, y));
     } else {
-      renderers_.push_back(new TurtleRenderer(Vector(x, y)));
+      renderers_[object_id] = new TurtleRenderer(Vector(x, y));
     }
   }
   std::cout << "FIN INIT GAME\n";
 }
 
-void RemoteServerProxy::update_object(double x, double y) {
-  renderers_.front()->update_position(Vector(x, y));
+// TODO(tomas) Ver como devolver el object_id desde el cliente.
+void RemoteServerProxy::update_object(char object_id, double x, double y) {
+  std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
+      << " (" << x << ", " << y << ")\n";
+  renderers_[object_id]->update_position(Vector(x, y));
+  std::cout << "Fin RemoteServerProxy::update_object\n";
 }
 
 

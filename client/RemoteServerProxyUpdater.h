@@ -6,7 +6,7 @@
 #include <common/Socket.h>
 #include <common/Thread.h>
 
-typedef sigc::slot<void, double, double> RendererUpdate;
+typedef sigc::slot<void, char, double, double> RendererUpdate;
 
 class RemoteServerProxyUpdater : public Thread {
  public:
