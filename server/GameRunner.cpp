@@ -30,8 +30,6 @@ void GameRunner::engine_stuff() {
 }
 
 void GameRunner::notify_clients() {
-  std::cout << "Runner notificando\n";
-  int i = 0;
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
       it != players_->end();
       it++) {
@@ -39,7 +37,6 @@ void GameRunner::notify_clients() {
               game_it != engine_->game_objects().end();
               game_it++) {
       it->second->send_object_position(game_it->first, game_it->second);
-      i++;
     }
   }
 }

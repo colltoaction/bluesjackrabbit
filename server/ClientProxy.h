@@ -23,19 +23,17 @@ typedef sigc::slot<void> start_callback;
 
 class ClientProxy : public Thread {
  public:
-  explicit ClientProxy(Socket *socket, new_game_callback ng_callback, join_game_callback jg_callback,
+  ClientProxy(Socket *socket, new_game_callback ng_callback, join_game_callback jg_callback,
     list_games_callback lg_callback, list_maps_callback lm_callback);
   ~ClientProxy();
   void run();
-  std::string imprimir();
   void say_hello();
-  void init_game();
   void send_object_size(char object_size);
   void send_object_position(char object_id, GameObject *object);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
   void add_start_functor(start_callback start_cb);
-  void add_player_id(char player_id);
+  void add_object_id(char player_id);
 
  private:
   Socket *socket_;
