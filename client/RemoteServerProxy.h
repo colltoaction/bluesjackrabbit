@@ -31,7 +31,7 @@ class RemoteServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual std::vector<Renderer*> &renderers();
+  virtual std::map<char, Renderer*> &renderers();
   virtual const Vector &character_position();
 
   virtual bool connect();
@@ -45,14 +45,14 @@ class RemoteServerProxy : public ServerProxy {
  private:
   static const double step;
   // Engine engine_;
-  std::vector<Renderer*> renderers_;
+  std::map<char, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
   RemoteServerProxyUpdater updater_;
   Mutex mutex_;
   char object_id_;
 
-  void update_object(double x, double y);
+  void update_object(char object_id, double x, double y);
 };
 
 
