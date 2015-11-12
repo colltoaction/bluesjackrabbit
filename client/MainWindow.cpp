@@ -15,15 +15,15 @@
 #include "MainWindow.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
-  : main_frame_(),
+MainWindow::MainWindow(ServerProxy *server_proxy)
+  : scene_(server_proxy),
+  main_frame_(),
     initial_screen_(),
     new_game_screen_(),
     join_game_screen_(),
     server_proxy_(server_proxy),
     map_id_(0),
     game_id_(0),
-    scene_(scene),
     map_combo(NULL),
     game_combo(NULL) {
   set_title("Blues Jackrabbit");
@@ -35,7 +35,7 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
   init_new_game_screen();
   init_join_game_screen();
 
-  main_frame_.pack_start(*scene_);
+  main_frame_.pack_start(scene_);
   main_frame_.pack_start(initial_screen_);
   main_frame_.pack_start(new_game_screen_);
   main_frame_.pack_start(join_game_screen_);
@@ -51,6 +51,10 @@ MainWindow::MainWindow(SceneRenderer *scene, ServerProxy *server_proxy)
     hide();
   }
   signal_delete_event().connect(sigc::mem_fun(*this, &MainWindow::on_close_window));
+
+  Glib::signal_timeout().connect(
+        sigc::bind_return(sigc::mem_fun(&scene_, &SceneRenderer::update), true),
+        render_step);
 }
 
 MainWindow::~MainWindow() {
@@ -92,7 +96,7 @@ void MainWindow::main_game_view() {
   map_combo_model->clear();
   game_combo_model->clear();
   show_all();
-  scene_->hide();
+  scene_.hide();
   new_game_screen_.hide();
   join_game_screen_.hide();
 }
@@ -119,14 +123,14 @@ void MainWindow::join_once_for_all() {
   if (connected_) {
     server_proxy_->join_game(game_id_);
     join_game_screen_.hide();
-    scene_->show();
+    scene_.show();
   }
 }
 
 void MainWindow::init_click() {
   server_proxy_->start_game(map_id_);
   new_game_screen_.hide();
-  scene_->show();
+  scene_.show();
 }
 
 Glib::RefPtr<Gtk::Builder> MainWindow::load_from_glade(std::string file_name, Gtk::Box *parent) {
