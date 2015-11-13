@@ -21,8 +21,11 @@ class GameRunner: public Thread {
   Mutex *engine_mutex_;
   std::map<char, ClientProxy*> *players_;
   bool keep_running_;
+  bool game_finished_;
+
+  void game_loop();
   void engine_step();
-  void notify_clients();
+  void notify_clients(bool notify_object_ids);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */

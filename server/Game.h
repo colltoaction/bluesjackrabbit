@@ -14,7 +14,7 @@ class Game {
   explicit Game(ClientProxy *admin);
   virtual ~Game();
   void add_player(ClientProxy *player);
-  bool is_active();
+  bool can_join();
   void action(char player_id, char option);
 
   void finalize();
@@ -26,6 +26,7 @@ class Game {
   std::map<char, ClientProxy*> players_;
   GameRunner runner_;
   char player_index_;
+  bool in_game;
 
   void start_game();
   int even;

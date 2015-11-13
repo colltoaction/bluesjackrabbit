@@ -40,7 +40,7 @@ std::list<char> GameMonitor::list_games() {
   Lock lock(&game_admin_mutex_);
   std::list<char> games;
   for (char index = 0; index < game_index_; index++) {
-    if (games_[index]->is_active()) {
+    if (games_[index]->can_join()) {
       games.push_back(index);
     }
   }
