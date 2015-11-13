@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <common/Lock.h>
 #include <iostream>
 #include "Constants.h"
 
@@ -9,12 +10,14 @@
 
 const double Game::step = 0.003;
 
-Game::Game(ClientProxy *admin) :
+Game::Game(ClientProxy *admin, const std::string &game_name) :
     engine_(),
+    engine_mutex_(),
     players_(),
-    runner_(&engine_, &players_),
+    runner_(&engine_, &players_, &engine_mutex_),
     player_index_(0),
-
+    in_game(false),
+    game_name_(game_name),
 
     even(0) {
   add_player(admin);
@@ -35,20 +38,11 @@ void Game::add_player(ClientProxy *player) {
 }
 
 void Game::start_game() {
+  Lock lock(&engine_mutex_);
   std::cout << "GAME: STARTGAME\n";
   // TODO(tomas) MAGIC! CON ESTE NUMERO ES LA CANTIDAD DE JUGADORES QUE SE CONECTAN
   if (player_index_ == PLAYERS) {
-    for (std::map<char, ClientProxy*>::iterator it = players_.begin();
-        it != players_.end();
-        it++) {
-      char object_size = static_cast<char>(engine_.game_objects().size());
-      it->second->send_object_size(object_size);
-      for (std::map<char, GameObject*>::iterator game_it = engine_.game_objects().begin();
-          game_it != engine_.game_objects().end();
-          game_it++) {
-        it->second->send_object_position(game_it->first, game_it->second);
-      }
-    }
+    in_game = true;
     std::cout << "RUNNER START\n";
     runner_.start();
   }
@@ -66,6 +60,7 @@ void Game::place_player(ClientProxy *player) {
 }
 
 void Game::action(char object_id, char option) {
+  Lock lock(&engine_mutex_);
   std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_.apply_force_(object_id, Vector(-step, 0));
@@ -78,8 +73,12 @@ void Game::action(char object_id, char option) {
   }
 }
 
-bool Game::is_active() {
-  return true;
+bool Game::can_join() {
+  return !in_game;
+}
+
+std::string Game::name() {
+  return game_name_;
 }
 
 void Game::finalize() {

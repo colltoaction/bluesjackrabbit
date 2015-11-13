@@ -14,7 +14,6 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_callback lm_callback) :
     socket_(socket),
     finalized_(false),
-    in_game(false),
     keep_reading_(true),
     create_new_game_functor_(ng_callback),
     join_game_functor_(jg_callback),
@@ -40,8 +39,6 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
-  // init_game();
-  in_game = true;
   while (keep_reading_ && !finalized_) {
     read_protocol();
   }
@@ -87,9 +84,14 @@ void ClientProxy::new_game_call() {
   std::cout << "entra en new_game call\n";
   char map_id;
   socket_->read_buffer(&map_id, MAP_ID_LENGTH);
-  char game_id = create_new_game_functor_(map_id, this);
+  char game_name_length;
+  socket_->read_buffer(&game_name_length, CANT_BYTES);
+  char game_name[MAX_CHAR];
+  socket_->read_buffer(game_name, game_name_length);
+  game_name[static_cast<size_t>(game_name_length)] = '\0';
+  char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
   game_id_ = game_id;
-  std::cout << "Finaliza new game call\n";
+  std::cout << "Finaliza new game call con nombre: " << game_name << "\n";
   socket_->send_buffer(&object_id_, CANT_BYTES);
 }
 
@@ -104,14 +106,17 @@ void ClientProxy::join_game_call() {
 
 void ClientProxy::list_games_call() {
   std::cout << "ClientProxy:: Entra en listar games\n";
-  std::list<char> game_ids = list_games_functor_();
+  std::map<char, std::string> game_ids = list_games_functor_();
   char message_length = static_cast<char>(game_ids.size());
   socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::list<char>::iterator it = game_ids.begin();
+  for (std::map<char, std::string>::iterator it = game_ids.begin();
       it != game_ids.end(); it++) {
-    char send = (*it);
+    char send = it->first;
     std::cout << "ENVIANDO: " << static_cast<int>(send) << std::endl;
     socket_->send_buffer(&send, CANT_BYTES);
+    char game_length = static_cast<char>(it->second.size());
+    socket_->send_buffer(&game_length, CANT_BYTES);
+    socket_->send_buffer(it->second.c_str(), game_length);
   }
   std::cout << "ClientProxy:: Finaliza listar games\n";
 }

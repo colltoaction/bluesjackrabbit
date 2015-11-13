@@ -4,12 +4,12 @@
 
 bool EventBus::keyPressEvent(GdkEventKey *event) {
   pressed[event->keyval] = true;
-  return true;
+  return true;  // Dont propagate
 }
 
 bool EventBus::keyReleaseEvent(GdkEventKey *event) {
   pressed[event->keyval] = false;
-  return true;
+  return true;  // Dont propagate
 }
 
 bool EventBus::main() {

@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
   if (argc == ARGS_SERVER) {
     port = std::string(argv[1]);
   }
-
   Server server(port);
   server.init();
   return 0;

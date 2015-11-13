@@ -14,6 +14,8 @@
 #include "Constants.h"
 #include "TurtleRenderer.h"
 
+
+
 const double RemoteServerProxy::step = 0.003;
 
 void RemoteServerProxy::MoveUp() {
@@ -76,12 +78,15 @@ bool RemoteServerProxy::connect() {
 }
 
 
-bool RemoteServerProxy::start_game(size_t map_id) {
+bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
   std::cout << "Start game with map id: " << map_id << std::endl;
   char option = NEW_GAME;
   socket_->send_buffer(&option, OPTION_LENGTH);
   option = static_cast<char>(map_id);
   socket_->send_buffer(&option, MAP_ID_LENGTH);
+  char game_name_length = static_cast<char>(game_name.size());
+  socket_->send_buffer(&game_name_length, CANT_BYTES);
+  socket_->send_buffer(game_name.c_str(), game_name_length);
   socket_->read_buffer(&object_id_, CANT_BYTES);
   init_game();
   updater_.start();
@@ -173,11 +178,12 @@ std::map<size_t, std::string> RemoteServerProxy::list_games() {
     std::cout << "Juego: " << static_cast<int>(i) << std::endl;
     char game_number;
     socket_->read_buffer(&game_number, CANT_BYTES);
-    std::stringstream ss("Juego ");
-    ss << game_number;
-    std::string final;
-    ss >> final;
-    map[game_number] = final;
+    char game_length;
+    socket_->read_buffer(&game_length, CANT_BYTES);
+    char game_name[MAX_CHAR];
+    socket_->read_buffer(game_name, game_length);
+    game_name[static_cast<size_t>(game_length)] = '\0';
+    map[game_number] = game_name;
   }
   std::cout << "Fin listado\n";
   return map;
