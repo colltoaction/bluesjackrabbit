@@ -78,7 +78,7 @@ bool RemoteServerProxy::connect() {
 }
 
 
-bool RemoteServerProxy::start_game(size_t map_id, Glib::ustring game_name) {
+bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
   std::cout << "Start game with map id: " << map_id << std::endl;
   char option = NEW_GAME;
   socket_->send_buffer(&option, OPTION_LENGTH);

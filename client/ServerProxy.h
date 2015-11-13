@@ -28,7 +28,7 @@ class ServerProxy {
   virtual bool connect() = 0;
   virtual std::map<size_t, std::string> list_maps() = 0;
   virtual std::map<size_t, std::string> list_games() = 0;
-  virtual bool start_game(size_t map_id, Glib::ustring) = 0;
+  virtual bool start_game(size_t map_id, std::string) = 0;
   virtual void join_game(size_t game_id) = 0;
   virtual void init_game() = 0;
   virtual void shutdown() = 0;

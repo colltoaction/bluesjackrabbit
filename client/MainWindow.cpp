@@ -115,7 +115,7 @@ void MainWindow::join_once_for_all() {
 }
 
 void MainWindow::init_click() {
-  Glib::ustring game_name = text_game_name_->get_text();
+  std::string game_name = text_game_name_->get_text();
   server_proxy_->start_game(map_id_, game_name);
   new_game_screen_.hide();
   connect_bus_signals();
