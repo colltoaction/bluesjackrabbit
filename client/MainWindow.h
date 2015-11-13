@@ -1,7 +1,6 @@
 #ifndef BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 #define BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 
-
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/combobox.h>
@@ -10,16 +9,21 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
+
+#include "EventBus.h"
 #include "SceneRenderer.h"
 #include "ServerProxy.h"
 
 class MainWindow: public Gtk::Window {
  public:
-  MainWindow(SceneRenderer *scene, ServerProxy *sever_proxy);
+  MainWindow();
   virtual ~MainWindow();
 
  private:
+  SceneRenderer scene_;
+  EventBus bus_;
   Gtk::Box main_frame_;
+  Gtk::Box connection_screen_;
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;
   Gtk::Box join_game_screen_;
@@ -28,11 +32,13 @@ class MainWindow: public Gtk::Window {
   ServerProxy *server_proxy_;
   size_t map_id_;
   size_t game_id_;
+  static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);
 
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();
+  void init_connect_screen();
   void init_new_game_screen();
   void init_join_game_screen();
 
@@ -41,6 +47,9 @@ class MainWindow: public Gtk::Window {
   void init_click();
   void join_game_click();
   void join_once_for_all();
+  void singleplayer_click();
+  void multiplayer_click();
+  void init_server_proxy();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {
@@ -58,7 +67,6 @@ class MainWindow: public Gtk::Window {
   Glib::RefPtr<Gtk::ListStore> map_combo_model;
   Glib::RefPtr<Gtk::ListStore> game_combo_model;
 
-  SceneRenderer *scene_;
   Gtk::ComboBox *map_combo;
   Gtk::ComboBox *game_combo;
   void combo_map_changed();
