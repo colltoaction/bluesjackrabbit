@@ -10,13 +10,14 @@
 
 const double Game::step = 0.003;
 
-Game::Game(ClientProxy *admin) :
+Game::Game(ClientProxy *admin, const std::string &game_name) :
     engine_(),
     engine_mutex_(),
     players_(),
     runner_(&engine_, &players_, &engine_mutex_),
     player_index_(0),
     in_game(false),
+    game_name_(game_name),
 
     even(0) {
   add_player(admin);
@@ -74,6 +75,10 @@ void Game::action(char object_id, char option) {
 
 bool Game::can_join() {
   return !in_game;
+}
+
+std::string Game::name() {
+  return game_name_;
 }
 
 void Game::finalize() {

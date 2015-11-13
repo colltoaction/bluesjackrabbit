@@ -13,10 +13,11 @@
 class ClientProxy;
 
 typedef std::list<char> ObjectList;
+typedef std::map<char, std::string> GameList;
 
-typedef sigc::slot<char, char, ClientProxy*> new_game_callback;
+typedef sigc::slot<char, char, std::string, ClientProxy*> new_game_callback;
 typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
-typedef sigc::slot<ObjectList> list_games_callback;
+typedef sigc::slot<GameList> list_games_callback;
 typedef sigc::slot<ObjectList> list_maps_callback;
 typedef sigc::slot<void, char, char> action_callback;
 typedef sigc::slot<void> start_callback;
@@ -42,7 +43,7 @@ class ClientProxy : public Thread {
   new_game_callback create_new_game_functor_;
   join_game_callback join_game_functor_;
   list_games_callback list_games_functor_;
-  list_games_callback list_maps_functor_;
+  list_maps_callback list_maps_functor_;
   action_callback move_functor_;
   start_callback start_functor_;
 

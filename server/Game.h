@@ -2,7 +2,7 @@
 #define BLUESJACKRABBIT_SERVER_GAME_H
 
 #include <map>
-
+#include <string>
 #include <common/Mutex.h>
 #include <engine/Engine.h>
 
@@ -11,11 +11,12 @@
 
 class Game {
  public:
-  explicit Game(ClientProxy *admin);
+  explicit Game(ClientProxy *admin, const std::string &game_name);
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();
   void action(char player_id, char option);
+  std::string name();
 
   void finalize();
 
@@ -27,6 +28,7 @@ class Game {
   GameRunner runner_;
   char player_index_;
   bool in_game;
+  std::string game_name_;
 
   void start_game();
   int even;

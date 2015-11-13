@@ -27,6 +27,7 @@ class MainWindow: public Gtk::Window {
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;
   Gtk::Box join_game_screen_;
+  Gtk::Entry *text_game_name_;
 
   bool connected_;
   ServerProxy *server_proxy_;
@@ -50,6 +51,7 @@ class MainWindow: public Gtk::Window {
   void singleplayer_click();
   void multiplayer_click();
   void init_server_proxy();
+  void connect_bus_signals();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {
@@ -58,7 +60,6 @@ class MainWindow: public Gtk::Window {
         add(id);
         add(map_name);
       }
-
       Gtk::TreeModelColumn<size_t> id;
       Gtk::TreeModelColumn<Glib::ustring> map_name;
   };

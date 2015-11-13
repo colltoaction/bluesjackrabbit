@@ -94,8 +94,9 @@ std::map<size_t, std::string> LocalServerProxy::list_games() {
   return map;
 }
 
-bool LocalServerProxy::start_game(size_t map_id) {
+bool LocalServerProxy::start_game(size_t map_id, Glib::ustring game_name) {
   (void)map_id;  // UNUSED
+  (void)game_name;  // UNUSED
   return true;
 }
 
