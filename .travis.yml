@@ -8,6 +8,7 @@ addons:
     packages:
       - libgtkmm-3.0-dev
       - libcppunit-dev
+      - liblog4cpp5-dev
 
 install:
   - mkdir build
