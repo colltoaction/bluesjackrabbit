@@ -7,8 +7,9 @@
 #include <engine/RigidBody.h>
 #include <engine/StaticBody.h>
 
-#include "LocalServerProxy.h"
 #include "CharacterRenderer.h"
+#include "FloorRenderer.h"
+#include "LocalServerProxy.h"
 #include "TurtleRenderer.h"
 
 
@@ -17,17 +18,14 @@ const double LocalServerProxy::jump_force = 0.003;  // should take into account 
 
 LocalServerProxy::LocalServerProxy() {
   // new objects will be managed by the engine
-  RigidBody *b1 = new RigidBody(new Vector(0, 0));
+  RigidBody *b0 = new RigidBody(new Vector(0, 0));
+  engine_.add_game_object(b0, new CircleCollider(*b0));
+
+  StaticBody *b1 = new StaticBody(new Vector(5, 0));
   engine_.add_game_object(b1, new CircleCollider(*b1));
 
   StaticBody *b2 = new StaticBody(new Vector(0, 5));
-  engine_.add_game_object(b2, new CircleCollider(*b2));
-
-  StaticBody *b3 = new StaticBody(new Vector(5, 0));
-  engine_.add_game_object(b3, new CircleCollider(*b3));
-
-  StaticBody *b4 = new StaticBody(new Vector(0, 5));
-  engine_.add_game_object(b4, new RectangleCollider(*b4));
+  engine_.add_game_object(b2, new RectangleCollider(*b2));
 
   engine_.game_objects()[0]->body().position();
   renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position());
@@ -35,7 +33,9 @@ LocalServerProxy::LocalServerProxy() {
   for (std::map<char, GameObject*>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
-    if (i != 0) {
+    if (i == 2) {
+      renderers_[i] = new FloorRenderer(game_object->second->body().position());
+    } else if (i != 0) {
       renderers_[i] = new TurtleRenderer(game_object->second->body().position());
     }
     i++;

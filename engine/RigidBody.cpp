@@ -8,6 +8,10 @@ RigidBody::RigidBody(Vector *position)
     , velocity_(0, 0) {
 }
 
+RigidBody::~RigidBody() {
+  delete position_;
+}
+
 const Vector &RigidBody::velocity() const {
   return velocity_;
 }

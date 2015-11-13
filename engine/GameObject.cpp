@@ -10,7 +10,8 @@ GameObject::~GameObject() {
 }
 
 bool GameObject::will_collide(const GameObject &other) const {
-  return collider_->will_collide(*other.collider_);
+  // Order is important because of double dispatching in Collider
+  return other.collider_->will_collide(*collider_);
 }
 
 Body &GameObject::body() {

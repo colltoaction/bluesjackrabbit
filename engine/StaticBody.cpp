@@ -6,6 +6,10 @@ StaticBody::StaticBody(Vector *position)
     : position_(position) {
 }
 
+StaticBody::~StaticBody() {
+  delete position_;
+}
+
 const Vector &StaticBody::velocity() const {
   return velocity_;
 }

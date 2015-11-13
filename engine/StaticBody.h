@@ -11,6 +11,7 @@
 class StaticBody : public Body {
  public:
   explicit StaticBody(Vector *position);
+  virtual ~StaticBody();
   virtual const Vector &velocity() const;
   virtual void apply_force(const Vector &vector);
   virtual Vector position() const;
