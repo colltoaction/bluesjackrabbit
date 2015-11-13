@@ -1,8 +1,8 @@
 #include "RectangleCollider.h"
 #include "CircleCollider.h"
 
-RectangleCollider::RectangleCollider(const Transform &transform, const Body &body)
-    : width_(10), height_(1), transform_(transform), body_(body) {
+RectangleCollider::RectangleCollider(const Body &body)
+    : width_(10), height_(1), body_(body) {
 }
 
 // double-dispatching
@@ -20,14 +20,14 @@ bool RectangleCollider::will_collide(const RectangleCollider &other) const {
   return false;
 }
 
-const Vector &RectangleCollider::center() const {
-  return transform_.position();
-}
-
 double RectangleCollider::width() const {
   return width_;
 }
 
 double RectangleCollider::height() const {
   return height_;
+}
+
+const Body &RectangleCollider::body() const {
+  return body_;
 }

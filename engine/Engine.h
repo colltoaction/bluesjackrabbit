@@ -4,7 +4,9 @@
 #include <map>
 
 #include <sigc++/functors/slot.h>
-#include "GameObjectTemplate.h"
+#include "Body.h"
+#include "Collider.h"
+#include "GameObject.h"
 
 /**
  * A functor object complying to void functor().
@@ -53,12 +55,8 @@ class Engine {
 
   /**
    * Adds a game object to the Engine.
-   * @param is_static if the object can move or not
-   * @param circle_collider if it uses a circle collider or a square collider
-   * @param position initial position of game object 
    */
-  template<class BodyType, class ColliderType>
-  char add_game_object(const Vector &position);
+  char add_game_object(Body *body, Collider *collider);
 
   /**
    * Number of objects in game.

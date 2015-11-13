@@ -7,13 +7,11 @@
 #include <unistd.h>
 
 #include <common/Lock.h>
-#include <engine/GameObjectTemplate.h>
 
 #include "RemoteServerProxy.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
 #include "TurtleRenderer.h"
-
 
 
 const double RemoteServerProxy::step = 0.003;
@@ -59,7 +57,7 @@ RemoteServerProxy::~RemoteServerProxy() {
   delete socket_;
 }
 
-const Vector &RemoteServerProxy::character_position() {
+Vector RemoteServerProxy::character_position() {
   return renderers_[object_id_]->position();
 }
 

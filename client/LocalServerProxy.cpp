@@ -2,6 +2,10 @@
 #include <glibmm/main.h>
 #include <vector>
 #include <stdlib.h>
+#include <engine/CircleCollider.h>
+#include <engine/RectangleCollider.h>
+#include <engine/RigidBody.h>
+#include <engine/StaticBody.h>
 
 #include "LocalServerProxy.h"
 #include "CharacterRenderer.h"
@@ -12,18 +16,27 @@ const double LocalServerProxy::step = 0.003;
 const double LocalServerProxy::jump_force = 0.003;  // should take into account the physics step
 
 LocalServerProxy::LocalServerProxy() {
-  engine_.add_game_object<RigidBody, CircleCollider>(Vector::zero());
-  engine_.add_game_object<StaticBody, CircleCollider>(Vector(0, 5));
-  engine_.add_game_object<StaticBody, CircleCollider>(Vector(5, 0));
-  engine_.add_game_object<StaticBody, RectangleCollider>(Vector(0, 5));
-  engine_.game_objects()[0]->transform().position();
-  renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->transform().position());
+  // new objects will be managed by the engine
+  RigidBody *b1 = new RigidBody(new Vector(0, 0));
+  engine_.add_game_object(b1, new CircleCollider(*b1));
+
+  StaticBody *b2 = new StaticBody(new Vector(0, 5));
+  engine_.add_game_object(b2, new CircleCollider(*b2));
+
+  StaticBody *b3 = new StaticBody(new Vector(5, 0));
+  engine_.add_game_object(b3, new CircleCollider(*b3));
+
+  StaticBody *b4 = new StaticBody(new Vector(0, 5));
+  engine_.add_game_object(b4, new RectangleCollider(*b4));
+
+  engine_.game_objects()[0]->body().position();
+  renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position());
   char i = 0;
   for (std::map<char, GameObject*>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
     if (i != 0) {
-      renderers_[i] = new TurtleRenderer(game_object->second->transform().position());
+      renderers_[i] = new TurtleRenderer(game_object->second->body().position());
     }
     i++;
   }
@@ -43,7 +56,7 @@ LocalServerProxy::~LocalServerProxy() {
 
 bool LocalServerProxy::engine_step() {
   engine_.FixedUpdate();
-  renderers_[0]->update_position(engine_.game_objects()[0]->transform().position());
+  renderers_[0]->update_position(engine_.game_objects()[0]->body().position());
   return true;
 }
 
@@ -63,8 +76,8 @@ void LocalServerProxy::MoveRight() {
   engine_.apply_force_(0, Vector(step, 0));
 }
 
-const Vector &LocalServerProxy::character_position() {
-  return engine_.game_objects()[0]->transform().position();
+Vector LocalServerProxy::character_position() {
+  return engine_.game_objects()[0]->body().position();
 }
 
 void LocalServerProxy::init_game() {

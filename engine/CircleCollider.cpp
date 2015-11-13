@@ -1,8 +1,8 @@
 #include <cmath>
 #include "CircleCollider.h"
 
-CircleCollider::CircleCollider(const Transform &transform, const Body &body)
-    : radius_(0.5), transform_(transform), body_(body) {
+CircleCollider::CircleCollider(const Body &body)
+    : radius_(0.5), body_(body) {
 }
 
 // double-dispatching
@@ -12,15 +12,15 @@ bool CircleCollider::will_collide(const Collider &other) const {
 
 bool CircleCollider::will_collide(const CircleCollider &other) const {
   Vector next_position = body_.next_position();
-  double distance = next_position.distance(other.transform_.position());
+  double distance = next_position.distance(other.body().position());
   return distance < radius_ + other.radius_;
 }
 
 // Only axis-aligned rectangles
 bool CircleCollider::will_collide(const RectangleCollider &other) const {
   Vector next_position = body_.next_position();
-  Vector circleDistance = Vector(std::abs(next_position.x() - other.center().x()),
-                                 std::abs(next_position.y() - other.center().y()));
+  Vector circleDistance = Vector(std::abs(next_position.x() - other.body().position().x()),
+                                 std::abs(next_position.y() - other.body().position().y()));
 
   if (circleDistance.x() > (other.width() / 2 + radius_)) { return false; }
   if (circleDistance.y() > (other.height() / 2 + radius_)) { return false; }
@@ -32,6 +32,6 @@ bool CircleCollider::will_collide(const RectangleCollider &other) const {
   return cornerDistance <= radius_;
 }
 
-const Vector &CircleCollider::center() const {
-  return transform_.position();
+const Body &CircleCollider::body() const {
+  return body_;
 }

@@ -3,7 +3,6 @@
 
 
 #include "Body.h"
-#include "Transform.h"
 #include "Vector.h"
 
 /**
@@ -11,16 +10,17 @@
  */
 class StaticBody : public Body {
  public:
-  explicit StaticBody(Transform *transform);
+  explicit StaticBody(Vector *position);
   virtual const Vector &velocity() const;
   virtual void apply_force(const Vector &vector);
+  virtual Vector position() const;
   virtual Vector next_position() const;
   virtual void update_fixed();
   virtual void stop();
 
  private:
   static const Vector velocity_;
-  Transform *transform_;
+  Vector *position_;
 };
 
 

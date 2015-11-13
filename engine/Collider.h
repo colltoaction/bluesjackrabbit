@@ -3,6 +3,8 @@
 
 
 #include "Vector.h"
+#include "Body.h"
+
 class CircleCollider;  // Circular reference
 class RectangleCollider;  // Circular reference
 
@@ -11,6 +13,8 @@ class RectangleCollider;  // Circular reference
  */
 class Collider {
  public:
+  virtual ~Collider() {}
+
   /*
    * Returns true if the next position of this collider's body will collide with another collider.
    * Double-dispatching method.
@@ -30,9 +34,9 @@ class Collider {
   virtual bool will_collide(const RectangleCollider &other) const = 0;
 
   /**
-   * Returns the position of the center of this collider.
+   * Returns the body of this collider.
    */
-  virtual const Vector &center() const = 0;
+  virtual const Body &body() const = 0;
 };
 
 
