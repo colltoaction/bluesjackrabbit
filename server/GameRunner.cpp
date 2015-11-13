@@ -3,6 +3,9 @@
 #include <unistd.h>
 #include <iostream>
 
+#define SECOND_TO_MICROSECONDS 1000000.0
+#define TWENTY_MICROSECONDS 20000.0
+
 GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
   : engine_(engine),
     players_(players),
@@ -15,18 +18,18 @@ GameRunner::~GameRunner() {
 void GameRunner::run() {
   std::cout << "Runner start running\n";
   while (keep_running_) {
-    clock_t begin = clock();
-    (void) begin;
+    clock_t start = clock();
     engine_stuff();
     notify_clients();
-    usleep(20000);
+    clock_t stop = clock();
+    double elapsed = static_cast<double>(stop - start)* SECOND_TO_MICROSECONDS / CLOCKS_PER_SEC;
+    usleep(static_cast<__useconds_t>(TWENTY_MICROSECONDS - elapsed));
   }
 }
 
 void GameRunner::engine_stuff() {
   // Lock l(mutex);
   engine_->FixedUpdate();
-  // engine_->get_diffs();
 }
 
 void GameRunner::notify_clients() {
