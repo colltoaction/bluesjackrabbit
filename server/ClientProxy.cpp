@@ -88,8 +88,7 @@ void ClientProxy::new_game_call() {
   socket_->read_buffer(&game_name_length, CANT_BYTES);
   char game_name[MAX_CHAR];
   socket_->read_buffer(game_name, game_name_length);
-  // TODO(tomas) Por que le tengo que sumar 0 para que cpplint no rompa las pelotas
-  game_name[game_name_length + 0] = '\0';
+  game_name[static_cast<size_t>(game_name_length)] = '\0';
   char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
   game_id_ = game_id;
   std::cout << "Finaliza new game call con nombre: " << game_name << "\n";

@@ -11,7 +11,7 @@
 
 class Game {
  public:
-  explicit Game(ClientProxy *admin, const std::string &game_name);
+  Game(ClientProxy *admin, const std::string &game_name);
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();

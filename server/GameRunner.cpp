@@ -1,11 +1,12 @@
 #include "GameRunner.h"
 
 #include <common/Lock.h>
+#include <common/Logger.h>
 #include <unistd.h>
 #include <iostream>
 
 #define SECOND_TO_MICROSECONDS 1000000.0
-#define TWENTY_MICROSECONDS 20000.0
+#define TWENTY_MILLIS_IN_MICROSECONDS 20000.0
 
 GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players, Mutex *engine_mutex)
   : engine_(engine),
@@ -31,7 +32,10 @@ void GameRunner::game_loop() {
     engine_step();
     clock_t stop = clock();
     double elapsed = static_cast<double>(stop - start)* SECOND_TO_MICROSECONDS / CLOCKS_PER_SEC;
-    usleep(static_cast<__useconds_t>(TWENTY_MICROSECONDS - elapsed));
+    if (elapsed > TWENTY_MILLIS_IN_MICROSECONDS) {
+      Logger::warning("Engine too slow to run in 20 milliseconds");
+    }
+    usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
   }
 }
 

@@ -3,7 +3,6 @@
 #include <glibmm/main.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/markup.h>
-#include <glibmm/ustring.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>

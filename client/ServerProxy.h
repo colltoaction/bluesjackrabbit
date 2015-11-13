@@ -1,7 +1,6 @@
 #ifndef BLUESJACKRABBIT_CLIENT_SERVERPROXY_H
 #define BLUESJACKRABBIT_CLIENT_SERVERPROXY_H
 
-#include <glibmm/ustring.h>
 #include <sigc++/functors/slot.h>
 #include <engine/Transform.h>
 #include <engine/GameObject.h>

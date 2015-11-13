@@ -182,8 +182,7 @@ std::map<size_t, std::string> RemoteServerProxy::list_games() {
     socket_->read_buffer(&game_length, CANT_BYTES);
     char game_name[MAX_CHAR];
     socket_->read_buffer(game_name, game_length);
-    // TODO(tomas) Por que le tengo que sumar 0 para que cpplint no rompa las pelotas
-    game_name[game_length + 0] = '\0';
+    game_name[static_cast<size_t>(game_length)] = '\0';
     map[game_number] = game_name;
   }
   std::cout << "Fin listado\n";
