@@ -11,7 +11,7 @@ link_directories(${GTKMM3_LIBRARY_DIRS})
 include_directories(SYSTEM ${CAIROMM_INCLUDE_DIRS})
 include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 
-set(SOURCES main.cpp)
+set(SOURCES main.cpp Editor.cpp)
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -21,3 +21,5 @@ add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-lint)
 target_link_libraries(${PROJECT_NAME} ${CAIROMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GTKMM3_LIBRARIES})
 
+file(COPY window.glade
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
