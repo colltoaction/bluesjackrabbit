@@ -3,6 +3,7 @@
 
 #include <map>
 
+#include <common/Mutex.h>
 #include <engine/Engine.h>
 
 #include "ClientProxy.h"
@@ -21,6 +22,7 @@ class Game {
  private:
   static const double step;
   Engine engine_;
+  Mutex engine_mutex_;
   std::map<char, ClientProxy*> players_;
   GameRunner runner_;
   char player_index_;

@@ -38,7 +38,6 @@ class ClientProxy : public Thread {
  private:
   Socket *socket_;
   bool finalized_;
-  bool in_game;
   bool keep_reading_;
   new_game_callback create_new_game_functor_;
   join_game_callback join_game_functor_;

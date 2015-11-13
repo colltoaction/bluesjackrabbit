@@ -61,6 +61,5 @@ void GameMonitor::finalize() {
   Lock lock(&game_admin_mutex_);
   for (char index = 0; index < game_index_; index++) {
     games_[index]->finalize();
-    // delete games_[index];
   }
 }

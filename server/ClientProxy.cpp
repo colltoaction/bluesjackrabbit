@@ -14,7 +14,6 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_callback lm_callback) :
     socket_(socket),
     finalized_(false),
-    in_game(false),
     keep_reading_(true),
     create_new_game_functor_(ng_callback),
     join_game_functor_(jg_callback),
@@ -40,8 +39,6 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
-  // init_game();
-  in_game = true;
   while (keep_reading_ && !finalized_) {
     read_protocol();
   }

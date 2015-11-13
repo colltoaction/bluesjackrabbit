@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include <common/Lock.h>
 #include <iostream>
 #include "Constants.h"
 
@@ -11,8 +12,9 @@ const double Game::step = 0.003;
 
 Game::Game(ClientProxy *admin) :
     engine_(),
+    engine_mutex_(),
     players_(),
-    runner_(&engine_, &players_),
+    runner_(&engine_, &players_, &engine_mutex_),
     player_index_(0),
 
 
@@ -35,6 +37,7 @@ void Game::add_player(ClientProxy *player) {
 }
 
 void Game::start_game() {
+  Lock lock(&engine_mutex_);
   std::cout << "GAME: STARTGAME\n";
   // TODO(tomas) MAGIC! CON ESTE NUMERO ES LA CANTIDAD DE JUGADORES QUE SE CONECTAN
   if (player_index_ == PLAYERS) {
@@ -66,6 +69,7 @@ void Game::place_player(ClientProxy *player) {
 }
 
 void Game::action(char object_id, char option) {
+  Lock lock(&engine_mutex_);
   std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_.apply_force_(object_id, Vector(-step, 0));
