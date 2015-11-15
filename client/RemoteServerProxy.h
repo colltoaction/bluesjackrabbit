@@ -7,6 +7,7 @@
 
 #include <common/Socket.h>
 #include <common/Mutex.h>
+#include <common/NumericHelper.h>
 #include <engine/GameObject.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -54,8 +55,6 @@ class RemoteServerProxy : public ServerProxy {
   uint32_t object_id_;
   static const int UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
-  void convert_from_littleendian(char *buffer, int len, uint32_t *object_id);
-  bool is_littleendian();
   void update_object(uint32_t object_id, double x, double y);
 };
 

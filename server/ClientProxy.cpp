@@ -106,33 +106,12 @@ void ClientProxy::join_game_call() {
 
 void ClientProxy::send_object_id(uint32_t *object_id) {
   // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
-  char buffer[UINT32_T_LENGTH];
-  convert_to_littleendian(buffer, UINT32_T_LENGTH, object_id);
-  socket_->send_buffer(buffer, UINT32_T_LENGTH);
+  char buffer[NumericHelper::UINT32_T_LENGTH];
+  NumericHelper::convert_to_littleendian(buffer, NumericHelper::UINT32_T_LENGTH, object_id);
+  socket_->send_buffer(buffer, NumericHelper::UINT32_T_LENGTH);
 }
 
 
-void ClientProxy::convert_to_littleendian(char *buffer, int len, uint32_t *object_id) {
-  char *byte = static_cast<char*>(static_cast<void*>(object_id));
-  int index = 0;
-  if (is_littleendian()) {
-    for (int i = 0; i < len; i++) {
-      buffer[index] = byte[i];
-      index++;
-    }
-  } else {
-    for (int i = len - 1; i >= 0; i--) {
-      buffer[index] = byte[i];
-      index++;
-    }
-  }
-}
-
-bool ClientProxy::is_littleendian() {
-  int number = 1;
-  char *check = static_cast<char*>(static_cast<void*>(&number));
-  return check[0] == 1;
-}
 
 void ClientProxy::list_games_call() {
   std::cout << "ClientProxy:: Entra en listar games\n";

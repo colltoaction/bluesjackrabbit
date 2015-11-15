@@ -6,9 +6,9 @@
 
 #include <engine/Engine.h>
 #include <engine/GameObject.h>
-
 #include <common/Socket.h>
 #include <common/Thread.h>
+#include <common/NumericHelper.h>
 
 class ClientProxy;
 
@@ -49,15 +49,12 @@ class ClientProxy : public Thread {
 
   char game_id_;
   uint32_t object_id_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_protocol();
   void new_game_call();
   void join_game_call();
   void list_games_call();
   void list_maps_call();
   void send_object_id(uint32_t *object_id);
-  bool is_littleendian();
-  void convert_to_littleendian(char *buffer, int len, uint32_t *object_id);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */

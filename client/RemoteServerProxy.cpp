@@ -104,32 +104,12 @@ void RemoteServerProxy::join_game(size_t game_id) {
 }
 
 void RemoteServerProxy::read_object_id(uint32_t *object_id) {
-  char buffer[UINT32_T_LENGTH];
-  socket_->read_buffer(buffer, UINT32_T_LENGTH);
-  convert_from_littleendian(buffer, UINT32_T_LENGTH, object_id);
+  char buffer[NumericHelper::UINT32_T_LENGTH];
+  socket_->read_buffer(buffer, NumericHelper::UINT32_T_LENGTH);
+  NumericHelper::convert_from_littleendian(buffer, NumericHelper::UINT32_T_LENGTH, object_id);
 }
 
-void RemoteServerProxy::convert_from_littleendian(char *buffer, int len, uint32_t *object_id) {
-  char *byte = static_cast<char*>(static_cast<void*>(object_id));
-    int index = 0;
-    if (is_littleendian()) {
-      for (int i = 0; i < len; i++) {
-        byte[index] = buffer[i];
-        index++;
-      }
-    } else {
-      for (int i = len - 1; i >= 0; i--) {
-        byte[index] = buffer[i];
-        index++;
-      }
-    }
-}
 
-bool RemoteServerProxy::is_littleendian() {
-  int number = 1;
-  char *check = static_cast<char*>(static_cast<void*>(&number));
-  return check[0] == 1;
-}
 
 void RemoteServerProxy::init_game() {
   std::cout << "RemoteServerProxy::init_game\n";
