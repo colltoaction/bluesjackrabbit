@@ -31,8 +31,8 @@ class RemoteServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual std::map<char, Renderer*> &renderers();
   virtual Vector character_position();
+  virtual std::map<uint32_t, Renderer*> &renderers();
 
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
@@ -40,20 +40,23 @@ class RemoteServerProxy : public ServerProxy {
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();
   virtual void join_game(size_t game_id);
-  void read_object_position(char *object_id, double *x, double *y);
+  void read_object_position(uint32_t *object_id, double *x, double *y);
   virtual void shutdown();
 
  private:
   static const double step;
   // Engine engine_;
-  std::map<char, Renderer*> renderers_;
+  std::map<uint32_t, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
   RemoteServerProxyUpdater updater_;
   Mutex mutex_;
-  char object_id_;
-
-  void update_object(char object_id, double x, double y);
+  uint32_t object_id_;
+  static const int UINT32_T_LENGTH = sizeof(uint32_t);
+  void read_object_id(uint32_t *object_id);
+  void convert_from_littleendian(char *buffer, int len, uint32_t *object_id);
+  bool is_littleendian();
+  void update_object(uint32_t object_id, double x, double y);
 };
 
 

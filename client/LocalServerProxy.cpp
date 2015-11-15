@@ -29,8 +29,9 @@ LocalServerProxy::LocalServerProxy() {
 
   engine_.game_objects()[0]->body().position();
   renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position());
-  char i = 0;
-  for (std::map<char, GameObject*>::iterator game_object = engine_.game_objects().begin();
+
+  uint32_t i = 0;
+  for (std::map<uint32_t, GameObject*>::iterator game_object = engine_.game_objects().begin();
        game_object != engine_.game_objects().end();
        ++game_object) {
     if (i == 2) {
@@ -47,7 +48,7 @@ LocalServerProxy::LocalServerProxy() {
 }
 
 LocalServerProxy::~LocalServerProxy() {
-  for (std::map<char, Renderer*>::iterator game_object = renderers_.begin();
+  for (std::map<uint32_t, Renderer*>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
     delete game_object->second;
@@ -84,7 +85,7 @@ void LocalServerProxy::init_game() {
 }
 
 // Nothing, it will be updated from other place
-std::map<char, Renderer*> &LocalServerProxy::renderers() {
+std::map<uint32_t, Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
 }
 

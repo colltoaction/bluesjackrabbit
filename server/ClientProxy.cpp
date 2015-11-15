@@ -75,7 +75,7 @@ void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
 
-void ClientProxy::add_object_id(char object_id) {
+void ClientProxy::add_object_id(uint32_t object_id) {
   std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
   object_id_ = object_id;
 }
@@ -92,7 +92,7 @@ void ClientProxy::new_game_call() {
   char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
   game_id_ = game_id;
   std::cout << "Finaliza new game call con nombre: " << game_name << "\n";
-  socket_->send_buffer(&object_id_, CANT_BYTES);
+  send_object_id(&object_id_);
 }
 
 void ClientProxy::join_game_call() {
@@ -101,7 +101,37 @@ void ClientProxy::join_game_call() {
   socket_->read_buffer(&game_id, MAP_ID_LENGTH);
   join_game_functor_(game_id, this);
   std::cout << "Finaliza join game call\n";
-  socket_->send_buffer(&object_id_, CANT_BYTES);
+  send_object_id(&object_id_);
+}
+
+void ClientProxy::send_object_id(uint32_t *object_id) {
+  // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
+  char buffer[UINT32_T_LENGTH];
+  convert_to_littleendian(buffer, UINT32_T_LENGTH, object_id);
+  socket_->send_buffer(buffer, UINT32_T_LENGTH);
+}
+
+
+void ClientProxy::convert_to_littleendian(char *buffer, int len, uint32_t *object_id) {
+  char *byte = static_cast<char*>(static_cast<void*>(object_id));
+  int index = 0;
+  if (is_littleendian()) {
+    for (int i = 0; i < len; i++) {
+      buffer[index] = byte[i];
+      index++;
+    }
+  } else {
+    for (int i = len - 1; i >= 0; i--) {
+      buffer[index] = byte[i];
+      index++;
+    }
+  }
+}
+
+bool ClientProxy::is_littleendian() {
+  int number = 1;
+  char *check = static_cast<char*>(static_cast<void*>(&number));
+  return check[0] == 1;
 }
 
 void ClientProxy::list_games_call() {
@@ -137,7 +167,7 @@ void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
 }
 
-void ClientProxy::send_object_position(char object_id, GameObject *object) {
+void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
   size_t double_size = sizeof(double);
   double x = object->body().position().x();
   double y = object->body().position().y();
@@ -145,7 +175,7 @@ void ClientProxy::send_object_position(char object_id, GameObject *object) {
       << "(" << x << ", " << y << ")\n";
   char *x_address = static_cast<char*>(static_cast<void*>(&x));
   char *y_address = static_cast<char*>(static_cast<void*>(&y));
-  socket_->send_buffer(&object_id, CANT_BYTES);
+  send_object_id(&object_id);
   socket_->send_buffer(x_address, double_size);
   socket_->send_buffer(y_address, double_size);
 }

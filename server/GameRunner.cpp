@@ -53,7 +53,7 @@ void GameRunner::notify_clients(bool notify_object_ids) {
       char object_size = static_cast<char>(engine_->game_objects().size());
       it->second->send_object_size(object_size);
     }
-    for (std::map<char, GameObject*>::iterator game_it = engine_->game_objects().begin();
+    for (std::map<uint32_t, GameObject*>::iterator game_it = engine_->game_objects().begin();
               game_it != engine_->game_objects().end();
               game_it++) {
       it->second->send_object_position(game_it->first, game_it->second);

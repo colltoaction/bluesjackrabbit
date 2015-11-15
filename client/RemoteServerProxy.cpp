@@ -47,7 +47,7 @@ RemoteServerProxy::RemoteServerProxy() :
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
-  for (std::map<char, Renderer*>::iterator game_object = renderers_.begin();
+  for (std::map<uint32_t, Renderer*>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
     delete game_object->second;
@@ -61,7 +61,7 @@ Vector RemoteServerProxy::character_position() {
   return renderers_[object_id_]->position();
 }
 
-std::map<char, Renderer*> &RemoteServerProxy::renderers() {
+std::map<uint32_t, Renderer*> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
@@ -85,7 +85,7 @@ bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
   char game_name_length = static_cast<char>(game_name.size());
   socket_->send_buffer(&game_name_length, CANT_BYTES);
   socket_->send_buffer(game_name.c_str(), game_name_length);
-  socket_->read_buffer(&object_id_, CANT_BYTES);
+  read_object_id(&object_id_);
   init_game();
   updater_.start();
   return true;
@@ -98,9 +98,37 @@ void RemoteServerProxy::join_game(size_t game_id) {
   socket_->send_buffer(&option, OPTION_LENGTH);
   char game = static_cast<char>(game_id);
   socket_->send_buffer(&game, MAP_ID_LENGTH);
-  socket_->read_buffer(&object_id_, CANT_BYTES);
+  read_object_id(&object_id_);
   init_game();
   updater_.start();
+}
+
+void RemoteServerProxy::read_object_id(uint32_t *object_id) {
+  char buffer[UINT32_T_LENGTH];
+  socket_->read_buffer(buffer, UINT32_T_LENGTH);
+  convert_from_littleendian(buffer, UINT32_T_LENGTH, object_id);
+}
+
+void RemoteServerProxy::convert_from_littleendian(char *buffer, int len, uint32_t *object_id) {
+  char *byte = static_cast<char*>(static_cast<void*>(object_id));
+    int index = 0;
+    if (is_littleendian()) {
+      for (int i = 0; i < len; i++) {
+        byte[index] = buffer[i];
+        index++;
+      }
+    } else {
+      for (int i = len - 1; i >= 0; i--) {
+        byte[index] = buffer[i];
+        index++;
+      }
+    }
+}
+
+bool RemoteServerProxy::is_littleendian() {
+  int number = 1;
+  char *check = static_cast<char*>(static_cast<void*>(&number));
+  return check[0] == 1;
 }
 
 void RemoteServerProxy::init_game() {
@@ -109,7 +137,7 @@ void RemoteServerProxy::init_game() {
   socket_->read_buffer(&objects_size, 1);
   std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
   for (char i = 0; i < objects_size; i++) {
-    char object_id;
+    uint32_t object_id;
     double x, y;
     read_object_position(&object_id, &x, &y);
     std::cout << "llega objeto id: " << static_cast<int>(object_id)
@@ -130,7 +158,7 @@ void RemoteServerProxy::shutdown() {
 }
 
 // TODO(tomas) Ver como devolver el object_id desde el cliente.
-void RemoteServerProxy::update_object(char object_id, double x, double y) {
+void RemoteServerProxy::update_object(uint32_t object_id, double x, double y) {
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
   renderers_[object_id]->update_position(Vector(x, y));
@@ -138,13 +166,13 @@ void RemoteServerProxy::update_object(char object_id, double x, double y) {
 }
 
 
-void RemoteServerProxy::read_object_position(char *object_id, double *x, double *y) {
+void RemoteServerProxy::read_object_position(uint32_t *object_id, double *x, double *y) {
   size_t double_size = sizeof(double);
   void *dir_x = static_cast<void*>(x);
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(y);
   char *dir_y_posta = static_cast<char*>(dir_y);
-  socket_->read_buffer(object_id, CANT_BYTES);
+  read_object_id(object_id);
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
 }
