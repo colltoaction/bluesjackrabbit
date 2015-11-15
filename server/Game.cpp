@@ -69,7 +69,7 @@ void Game::place_player(ClientProxy *player) {
 
 void Game::action(uint32_t object_id, char option) {
   Lock lock(&engine_mutex_);
-  std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
+  // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_.apply_force_(object_id, Vector(-step, 0));
   } else if (option == RIGHT) {

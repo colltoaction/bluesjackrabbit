@@ -120,8 +120,8 @@ void RemoteServerProxy::init_game() {
     uint32_t object_id;
     double x, y;
     read_object_position(&object_id, &x, &y);
-    std::cout << "llega objeto id: " << static_cast<int>(object_id)
-        << "(" << x << ", " << y << ")\n";
+    // std::cout << "llega objeto id: " << static_cast<int>(object_id)
+       // << "(" << x << ", " << y << ")\n";
     if (object_id == object_id_) {
       renderers_[object_id] = new CharacterRenderer(Vector(x, y));
     } else {
