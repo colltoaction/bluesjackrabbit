@@ -4,18 +4,18 @@
 
 #include <cairomm/context.h>
 #include <gtkmm/drawingarea.h>
-#include <engine/Transform.h>
-#include <engine/GameObject.h>
+#include <engine/Vector.h>
 
 class Renderer {
  public:
-  explicit Renderer(const GameObject *game_object);
+  explicit Renderer(const Vector &position);
   virtual ~Renderer();
-  virtual void Render(const Cairo::RefPtr<Cairo::Context> &cr);
+  const Vector &position() const;
+  void update_position(const Vector &position);
+  virtual void render(const Cairo::RefPtr<Cairo::Context> &cr) = 0;
 
- private:
-  const GameObject *game_object_;
-  double radius;
+ protected:
+  Vector position_;
 };
 
 

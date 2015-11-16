@@ -1,12 +1,7 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.4)
 project(BluesJackrabbit)
 
-# Workaround for gtkmm. Should still write c++98 and check in Linux for compatibility.
-IF(WIN32)
-    set(CMAKE_CXX_STANDARD 11)
-ELSE(WIN32)
-    set(CMAKE_CXX_STANDARD 98)
-ENDIF(WIN32)
+set(CMAKE_CXX_STANDARD 98)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     # Errors and warnings.
@@ -24,6 +19,8 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules/")
 find_package(Cppunit REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(Threads)
+include(CppLint)
 enable_testing()
 
 pkg_check_modules(CAIROMM REQUIRED cairomm-1.0)
@@ -38,6 +35,8 @@ include_directories(SYSTEM ${GTKMM3_INCLUDE_DIRS})
 include_directories(SYSTEM ${SIGC_INCLUDE_DIRS})
 include_directories(SYSTEM ${GOOCANVAS_INCLUDE_DIRS})
 add_subdirectory(client)
+add_subdirectory(common)
 add_subdirectory(engine)
+add_subdirectory(server)
 add_subdirectory(spikes)
 add_subdirectory(editor)
