@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include <engine/RigidBody.h>
+#include <engine/Vector.h>
+#include <engine/CircleCollider.h>
 #include <common/Lock.h>
 #include <iostream>
 #include "Constants.h"
@@ -21,8 +24,10 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
 
     even(0) {
   add_player(admin);
-  engine_.add_game_object(true, true, Vector(0, 5));
-  engine_.add_game_object(true, true, Vector(5, 0));
+  RigidBody *b1 = new RigidBody(new Vector(0, 5));
+  RigidBody *b2 = new RigidBody(new Vector(5, 0));
+  engine_.add_game_object(b1, new CircleCollider(*b1));
+  engine_.add_game_object(b2, new CircleCollider(*b2));
 }
 
 Game::~Game() {
@@ -50,11 +55,14 @@ void Game::start_game() {
 
 void Game::place_player(ClientProxy *player) {
   char object_id;
+  Vector *pos = NULL;
   if (even % 2 == 0) {
-    object_id = engine_.add_game_object(false, true, Vector::zero());
+    pos = new Vector(0, 0);
   } else {
-    object_id = engine_.add_game_object(false, true, Vector(5, -15));
+    pos = new Vector(5, -15);
   }
+  RigidBody *body = new RigidBody(pos);
+  object_id = engine_.add_game_object(body, new CircleCollider(*body));
   player->add_object_id(object_id);
   even++;
 }

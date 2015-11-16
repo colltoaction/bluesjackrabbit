@@ -139,8 +139,8 @@ void ClientProxy::send_object_size(char object_size) {
 
 void ClientProxy::send_object_position(char object_id, GameObject *object) {
   size_t double_size = sizeof(double);
-  double x = object->transform().position().x();
-  double y = object->transform().position().y();
+  double x = object->body().position().x();
+  double y = object->body().position().y();
   std::cout << "Enviando posicion id: " << static_cast<int>(object_id)
       << "(" << x << ", " << y << ")\n";
   char *x_address = static_cast<char*>(static_cast<void*>(&x));
