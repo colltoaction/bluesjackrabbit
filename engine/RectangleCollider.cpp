@@ -1,6 +1,7 @@
 #include "RectangleCollider.h"
 #include "CircleCollider.h"
 
+// Hardcoded as FloorRenderer
 RectangleCollider::RectangleCollider(const Body &body)
     : width_(10), height_(1), body_(body) {
 }

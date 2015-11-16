@@ -8,6 +8,7 @@
 #include "Constants.h"
 
 #include <unistd.h>
+#include <engine/StaticBody.h>
 
 #define PLAYERS 2
 
@@ -24,10 +25,9 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
 
     even(0) {
   add_player(admin);
-  RigidBody *b1 = new RigidBody(new Vector(0, 5));
-  RigidBody *b2 = new RigidBody(new Vector(5, 0));
-  engine_.add_game_object(b1, new CircleCollider(*b1));
-  engine_.add_game_object(b2, new CircleCollider(*b2));
+
+  StaticBody *floor = new StaticBody(new Vector(3, 5));
+  engine_.add_game_object(floor, new RectangleCollider(*floor));
 }
 
 Game::~Game() {

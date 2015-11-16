@@ -3,8 +3,6 @@
 
 
 #include <cairomm/context.h>
-#include <gtkmm/drawingarea.h>
-#include <engine/Vector.h>
 #include "Renderer.h"
 
 class FloorRenderer : public Renderer {
@@ -12,9 +10,6 @@ class FloorRenderer : public Renderer {
   explicit FloorRenderer(const Vector &position);
   virtual ~FloorRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
-
- private:
-  double radius;
 };
 
 
