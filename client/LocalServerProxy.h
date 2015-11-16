@@ -18,7 +18,7 @@ class LocalServerProxy : public ServerProxy {
   virtual void MoveLeft();
   virtual void MoveRight();
   virtual std::map<char, Renderer*> &renderers();
-  virtual const Vector &character_position();
+  virtual Vector character_position();
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();

@@ -19,14 +19,6 @@ double Vector::y() const {
   return y_;
 }
 
-void Vector::set_x(double d) {
-  x_ = d;
-}
-
-void Vector::set_y(double d) {
-  y_ = d;
-}
-
 double Vector::magnitude() const {
   return std::sqrt(x_ * x_ + y_ * y_);
 }

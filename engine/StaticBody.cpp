@@ -2,24 +2,32 @@
 
 const Vector StaticBody::velocity_ = Vector::zero();
 
-StaticBody::StaticBody(Transform *transform)
-    : transform_(transform) {
+StaticBody::StaticBody(Vector *position)
+    : position_(position) {
 }
 
-void StaticBody::apply_force(const Vector &force) {
-  (void)force;  // Ignore parameter
+StaticBody::~StaticBody() {
+  delete position_;
 }
 
 const Vector &StaticBody::velocity() const {
   return velocity_;
 }
 
+void StaticBody::apply_force(const Vector &force) {
+  (void)force;  // Ignore parameter
+}
+
+Vector StaticBody::position() const {
+  return *position_;
+}
+
+Vector StaticBody::next_position() const {
+  return position();
+}
+
 void StaticBody::update_fixed() {
 }
 
 void StaticBody::stop() {
-}
-
-Vector StaticBody::next_position() const {
-  return transform_->position();
 }

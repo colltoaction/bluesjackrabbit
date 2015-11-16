@@ -9,6 +9,8 @@ set(SOURCES
         Event.h
         EventBus.cpp
         EventBus.h
+        FloorRenderer.cpp
+        FloorRenderer.h
         LocalServerProxy.cpp
         LocalServerProxy.h
         MainWindow.cpp

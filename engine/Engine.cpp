@@ -1,9 +1,10 @@
 #include <glibmm/main.h>
 #include <vector>
 #include "Engine.h"
-#include "GameObjectTemplate.h"
 #include "RigidBody.h"
 #include "StaticBody.h"
+#include "CircleCollider.h"
+#include "GameObject.h"
 
 #include <iostream>
 
@@ -32,10 +33,10 @@ void Engine::FixedUpdate() {
        ++game_object) {
     apply_force(game_object->second, gravity_);
     if (will_collide(game_object)) {
-      game_object->second->rigid_body().stop();
+      game_object->second->body().stop();
     }
 
-    game_object->second->rigid_body().update_fixed();
+    game_object->second->body().update_fixed();
     game_object->second->update_fixed();
   }
 }
@@ -55,21 +56,16 @@ bool Engine::will_collide(const std::map<char, GameObject*>::iterator &game_obje
 }
 
 void Engine::apply_force(GameObject *game_object, Vector force) {
-  game_object->rigid_body().apply_force(force);
+  game_object->body().apply_force(force);
 }
 
 void Engine::apply_force_(char object_id, Vector force) {
-  game_objects_[object_id]->rigid_body().apply_force(force);
+  game_objects_[object_id]->body().apply_force(force);
 }
 
-
-char Engine::add_game_object(bool is_static, bool circle_collider, const Vector &position) {
-  (void) circle_collider;
-  if (is_static) {
-    game_objects_[object_index_] = new GameObjectTemplate<StaticBody>(position);
-  } else {
-    game_objects_[object_index_] = new GameObjectTemplate<RigidBody>(position);
-  }
+char Engine::add_game_object(Body *body, Collider *collider) {
+  GameObject *game_object = new GameObject(body, collider);
+  game_objects_[object_index_] = game_object;
   char to_return = object_index_;
   object_index_++;
   return to_return;

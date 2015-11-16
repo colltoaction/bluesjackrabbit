@@ -3,20 +3,20 @@ project(engine)
 
 set(SOURCES
         Body.h
+        CircleCollider.cpp
+        CircleCollider.h
         Collider.cpp
         Collider.h
         Engine.cpp
         Engine.h
         GameObject.cpp
         GameObject.h
-        GameObjectTemplate.cpp
-        GameObjectTemplate.h
+        RectangleCollider.cpp
+        RectangleCollider.h
         RigidBody.cpp
         RigidBody.h
         StaticBody.cpp
         StaticBody.h
-        Transform.cpp
-        Transform.h
         Vector.cpp
         Vector.h
 )

@@ -9,6 +9,8 @@
  */
 class Body {
  public:
+  virtual ~Body() {}
+
   /**
    * The body's current velocity.
    */
@@ -19,6 +21,11 @@ class Body {
    * so a force needs to be applied repeatedly to be constant (like gravity).
    */
   virtual void apply_force(const Vector &vector) = 0;
+
+  /**
+   * The current position of the body.
+   */
+  virtual Vector position() const = 0;
 
   /**
    * Provides the position the body will be after calling update_fixed. A RigidBody would
