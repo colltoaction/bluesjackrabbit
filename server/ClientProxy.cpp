@@ -66,7 +66,7 @@ void ClientProxy::read_protocol() {
     } else if (option == JUMP) {
       std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
     } else if (option == SHOOT) {
-      std::cout << "Llego un SHOOT del jugador: " << static_cast<int>(object_id_) << std::endl;
+      shoot_functor_(object_id_);
     }
   }
 }
@@ -74,6 +74,11 @@ void ClientProxy::read_protocol() {
 void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
 }
+
+void ClientProxy::add_shoot_functor(shoot_callback shoot_callback) {
+  shoot_functor_ = shoot_callback;
+}
+
 
 void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
@@ -148,6 +153,11 @@ void ClientProxy::list_maps_call() {
 
 void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
+}
+
+void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
+  send_object_position(object_id, object);
+  send_object_type(object->game_object_type());
 }
 
 void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {

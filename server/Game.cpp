@@ -38,6 +38,7 @@ void Game::add_player(ClientProxy *player) {
   std::cout << "Game::addplayer\n";
   players_[player_index_] = player;
   player->add_move_functor(sigc::mem_fun(*this, &Game::action));
+  player->add_shoot_functor(sigc::mem_fun(*this, &Game::shoot));
   player->add_start_functor(sigc::mem_fun(*this, &Game::start_game));
   place_player(player);
   player_index_++;
@@ -81,6 +82,11 @@ void Game::action(uint32_t object_id, char option) {
   } else if (option == UP) {
     engine_.apply_force_(object_id, Vector(0, -step));
   }
+}
+
+void Game::shoot(uint32_t object_id) {
+  Lock lock(&engine_mutex_);
+  engine_.player_shoot(object_id);
 }
 
 bool Game::can_join() {

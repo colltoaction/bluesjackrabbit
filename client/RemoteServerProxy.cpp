@@ -9,6 +9,7 @@
 #include <common/Lock.h>
 
 #include "RemoteServerProxy.h"
+#include "BulletRenderer.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
 #include "OtherCharacterRenderer.h"
@@ -169,7 +170,11 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
   (void) type;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
-  renderers_[object_id]->update_position(Vector(x, y));
+  if (renderers_.find(object_id) != renderers_.end()) {
+    renderers_[object_id]->update_position(Vector(x, y));
+  } else {
+    renderers_[object_id] = new BulletRenderer(Vector(x, y));
+  }
   // std::cout << "Fin RemoteServerProxy::update_object\n";
 }
 

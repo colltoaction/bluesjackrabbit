@@ -15,7 +15,8 @@ class Game {
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();
-  void action(uint32_t player_id, char option);
+  void action(uint32_t object_id, char option);
+  void shoot(uint32_t object_id);
   std::string name();
 
   void finalize();

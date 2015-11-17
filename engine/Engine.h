@@ -64,6 +64,11 @@ class Engine {
   uint32_t add_game_object(GameObject *game_object);
 
   /**
+   * Player with object id shot a bullet.
+   */
+  void player_shoot(uint32_t object_id);
+
+  /**
    * Number of objects in game.
    */
   uint32_t objects_size();
@@ -72,6 +77,7 @@ class Engine {
   static const Vector gravity_;
   uint32_t object_index_;
   std::map<uint32_t, GameObject*> game_objects_;
+  std::map<uint32_t, bool> player_shoot_;
   bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
 };
 

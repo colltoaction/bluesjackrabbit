@@ -57,8 +57,7 @@ void GameRunner::notify_clients(bool notify_object_ids) {
     for (std::map<uint32_t, GameObject*>::iterator game_it = engine_->game_objects().begin();
               game_it != engine_->game_objects().end();
               game_it++) {
-      it->second->send_object_position(game_it->first, game_it->second);
-      it->second->send_object_type(game_it->second->game_object_type());
+      it->second->send_object(game_it->first, game_it->second);
     }
   }
 }

@@ -2,6 +2,8 @@ project(client)
 
 set(SOURCES
         main.cpp
+        BulletRenderer.cpp
+        BulletRenderer.h
         CharacterRenderer.cpp
         CharacterRenderer.h
         Constants.h
