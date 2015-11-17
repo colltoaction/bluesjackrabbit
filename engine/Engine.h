@@ -59,6 +59,11 @@ class Engine {
   uint32_t add_game_object(Body *body, Collider *collider);
 
   /**
+   * Adds a game object with a specific body and collider to the Engine.
+   */
+  uint32_t add_game_object(GameObject *game_object);
+
+  /**
    * Number of objects in game.
    */
   uint32_t objects_size();

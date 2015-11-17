@@ -56,6 +56,7 @@ class RemoteServerProxy : public ServerProxy {
   void update_object(uint32_t object_id, double x, double y, char type);
   void read_object_position(double *x, double *y);
   void read_object_type(char *type);
+  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position);
 };
 
 

@@ -11,6 +11,7 @@
 #include "RemoteServerProxy.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
+#include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 
 
@@ -124,13 +125,25 @@ void RemoteServerProxy::init_game() {
     read_object_id(&object_id);
     read_object_position(&x, &y);
     read_object_type(&type);
-    if (object_id == object_id_) {
-      renderers_[object_id] = new CharacterRenderer(Vector(x, y));
-    } else {
-      renderers_[object_id] = new TurtleRenderer(Vector(x, y));
-    }
+    create_object_renderer(object_id, type, Vector(x, y));
   }
   std::cout << "FIN INIT GAME\n";
+}
+
+void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position) {
+  Renderer *render = NULL;
+  switch (object_type) {
+    case 'p':
+      if (object_id == object_id_) {
+        render = new CharacterRenderer(position);
+      } else {
+        render = new OtherCharacterRenderer(position);
+      }
+      break;
+    case 'g':
+      render = new TurtleRenderer(position);
+  }
+  renderers_[object_id] = render;
 }
 
 void RemoteServerProxy::shutdown() {

@@ -70,6 +70,13 @@ uint32_t Engine::add_game_object(Body *body, Collider *collider) {
   return to_return;
 }
 
+uint32_t Engine::add_game_object(GameObject *game_object) {
+  game_objects_[object_index_] = game_object;
+  uint32_t to_return = object_index_;
+  object_index_++;
+  return to_return;
+}
+
 uint32_t Engine::objects_size() {
   return static_cast<uint32_t>(game_objects_.size());
 }
