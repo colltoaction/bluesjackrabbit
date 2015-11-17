@@ -157,24 +157,31 @@ void ClientProxy::send_object_size(char object_size) {
 
 void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
   send_object_position(object_id, object);
-  send_object_type(object->game_object_type());
+  send_object_type(object);
+  send_object_points(object);
 }
 
 void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
-  size_t double_size = sizeof(double);
+  send_object_id(&object_id);
   double x = object->body().position().x();
   double y = object->body().position().y();
-  // std::cout << "Enviando posicion id: " << static_cast<int>(object_id)
-     // << "(" << x << ", " << y << ")\n";
-  char *x_address = static_cast<char*>(static_cast<void*>(&x));
-  char *y_address = static_cast<char*>(static_cast<void*>(&y));
-  send_object_id(&object_id);
-  socket_->send_buffer(x_address, double_size);
-  socket_->send_buffer(y_address, double_size);
+  send_double(&x);
+  send_double(&y);
 }
 
-void ClientProxy::send_object_type(char type) {
+void ClientProxy::send_object_type(GameObject *object) {
+  char type = object->game_object_type();
   socket_->send_buffer(&type, CANT_BYTES);
+}
+
+void ClientProxy::send_object_points(GameObject *object) {
+  (void) object;
+}
+
+void ClientProxy::send_double(double *value) {
+  size_t double_size = sizeof(double);
+  char *address = static_cast<char*>(static_cast<void*>(value));
+  socket_->send_buffer(address, double_size);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

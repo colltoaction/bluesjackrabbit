@@ -24,3 +24,7 @@ void GameObject::update_fixed() {
 char GameObject::game_object_type() {
   return 'g';
 }
+
+std::list<Vector> GameObject::characteristic_points() {
+  return collider_->characteristic_points();
+}

@@ -13,6 +13,8 @@ set(SOURCES
         GameObject.h
         GameObjectBullet.cpp
         GameObjectBullet.h
+        GameObjectFloor.cpp
+        GameObjectFloor.h
         GameObjectPlayer.cpp
         GameObjectPlayer.h
         RectangleCollider.cpp

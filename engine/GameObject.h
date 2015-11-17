@@ -35,6 +35,11 @@ class GameObject {
    */
   virtual char game_object_type();
 
+  /**
+   * Returns a list of points the client will use to render the object
+   */
+  virtual std::list<Vector> characteristic_points();
+
  private:
   Body *body_;
   Collider *collider_;

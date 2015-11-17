@@ -1,7 +1,7 @@
 #ifndef BLUESJACKRABBIT_ENGINE_CIRCLECOLLIDER_H
 #define BLUESJACKRABBIT_ENGINE_CIRCLECOLLIDER_H
 
-
+#include <list>
 #include "Body.h"
 #include "Collider.h"
 #include "RectangleCollider.h"
@@ -13,6 +13,7 @@ class CircleCollider : public Collider {
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;
   virtual const Body &body() const;
+  virtual std::list<Vector> characteristic_points() const;
 
  private:
   double radius_;

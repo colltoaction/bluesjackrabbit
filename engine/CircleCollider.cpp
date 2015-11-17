@@ -35,3 +35,9 @@ bool CircleCollider::will_collide(const RectangleCollider &other) const {
 const Body &CircleCollider::body() const {
   return body_;
 }
+
+std::list<Vector> CircleCollider::characteristic_points() const {
+  std::list<Vector> point_list;
+  point_list.push_back(Vector(radius_, radius_));
+  return point_list;
+}
