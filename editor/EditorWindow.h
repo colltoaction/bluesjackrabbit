@@ -15,22 +15,10 @@ class EditorWindow : public Gtk::Window {
  public:
 	EditorWindow();
 	virtual ~EditorWindow();
-  /**
-   * Handles Canvas's on_drag_motion signal. It's signature matches the standard slot for
-   * that signal.
-   */
   bool on_canvas_drag_motion(
       const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, guint timestamp);
-  /**
-   * Handles Canvas's on_drag_drop signal. It's signature matches the standard slot for
-   * that signal.
-   */
   bool on_canvas_drag_drop(
       const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, guint timestamp);
-  /**
-   * Handles Canvas's on_drag_data_received signal. It's signature matches the standard slot for
-   * that signal.
-   */
   void on_canvas_drag_data_received(
       const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, 
       const Gtk::SelectionData& selection_data, guint info, guint timestamp);
@@ -59,8 +47,7 @@ class EditorWindow : public Gtk::Window {
   void tilemap_visible();
 
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y);
-  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon);
-
+  
   EditorController controller_;
 
 	Gtk::Box* root_;

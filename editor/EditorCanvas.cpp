@@ -3,6 +3,7 @@
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolpalette.h>
 #include <goocanvasmm/image.h>
+#include <goocanvasmm/rect.h>
 #include "EditorCanvas.h"
 
 #include <iostream>
@@ -105,4 +106,12 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
   Glib::RefPtr<Goocanvas::Item> img = Goocanvas::Image::create(image->get_pixbuf(), x, y);
   get_root_item()->add_child(img);
   return img;
+}
+
+// TODO(Diego): not needed anymore - kept for debug purposes
+Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y) {
+  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(x, y, 20, 20);
+  rect->set_property("fill_color", Glib::ustring("red"));
+  get_root_item()->add_child(rect);
+  return rect;
 }
