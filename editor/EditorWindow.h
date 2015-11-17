@@ -36,6 +36,10 @@ class EditorWindow : public Gtk::Window {
   void on_palette_drag_data_get(
       const Glib::RefPtr<Gdk::DragContext>& /* drag_context */, Gtk::SelectionData& selection_data,
       guint /* info */, guint /* time */);
+  void on_toolbutton_drag_data_get(
+      const Glib::RefPtr<Gdk::DragContext>& /* drag_context */, Gtk::SelectionData& selection_data,
+      guint /* info */, guint /* time */, std::string asset_uid);
+
 
  private:
   /**
@@ -54,6 +58,7 @@ class EditorWindow : public Gtk::Window {
   void tilemap_visible();
 
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon);
 
   EditorController controller_;
 
