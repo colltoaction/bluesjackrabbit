@@ -106,9 +106,9 @@ void ClientProxy::join_game_call() {
 
 void ClientProxy::send_object_id(uint32_t *object_id) {
   // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
-  char buffer[NumericHelper::UINT32_T_LENGTH];
-  NumericHelper::convert_to_littleendian(buffer, NumericHelper::UINT32_T_LENGTH, object_id);
-  socket_->send_buffer(buffer, NumericHelper::UINT32_T_LENGTH);
+  uint32_t send_number = htonl(*object_id);
+  char* buffer = static_cast<char*>(static_cast<void*>(&send_number));
+  socket_->send_buffer(buffer, UINT32_T_LENGTH);
 }
 
 

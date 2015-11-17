@@ -104,9 +104,10 @@ void RemoteServerProxy::join_game(size_t game_id) {
 }
 
 void RemoteServerProxy::read_object_id(uint32_t *object_id) {
-  char buffer[NumericHelper::UINT32_T_LENGTH];
-  socket_->read_buffer(buffer, NumericHelper::UINT32_T_LENGTH);
-  NumericHelper::convert_from_littleendian(buffer, NumericHelper::UINT32_T_LENGTH, object_id);
+  uint32_t read;
+  char *buffer = static_cast<char*>(static_cast<void*>(&read));
+  socket_->read_buffer(buffer, UINT32_T_LENGTH);
+  *object_id = ntohl(read);
 }
 
 

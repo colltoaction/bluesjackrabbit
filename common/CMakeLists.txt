@@ -7,8 +7,6 @@ set(SOURCES
         Logger.h
         Mutex.cpp
         Mutex.h
-        NumericHelper.cpp
-        NumericHelper.h
         Socket.cpp
         Socket.h
         Thread.cpp

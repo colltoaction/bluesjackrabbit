@@ -8,7 +8,6 @@
 #include <engine/GameObject.h>
 #include <common/Socket.h>
 #include <common/Thread.h>
-#include <common/NumericHelper.h>
 
 class ClientProxy;
 
@@ -49,6 +48,7 @@ class ClientProxy : public Thread {
 
   char game_id_;
   uint32_t object_id_;
+  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_protocol();
   void new_game_call();
   void join_game_call();
