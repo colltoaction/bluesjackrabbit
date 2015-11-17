@@ -120,7 +120,8 @@ void RemoteServerProxy::init_game() {
   for (char i = 0; i < objects_size; i++) {
     uint32_t object_id;
     double x, y;
-    read_object_position(&object_id, &x, &y);
+    read_object_id(&object_id);
+    read_object_position(&x, &y);
     // std::cout << "llega objeto id: " << static_cast<int>(object_id)
        // << "(" << x << ", " << y << ")\n";
     if (object_id == object_id_) {
@@ -147,13 +148,12 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y) {
 }
 
 
-void RemoteServerProxy::read_object_position(uint32_t *object_id, double *x, double *y) {
+void RemoteServerProxy::read_object_position(double *x, double *y) {
   size_t double_size = sizeof(double);
   void *dir_x = static_cast<void*>(x);
   char *dir_x_posta = static_cast<char*>(dir_x);
   void *dir_y = static_cast<void*>(y);
   char *dir_y_posta = static_cast<char*>(dir_y);
-  read_object_id(object_id);
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
 }

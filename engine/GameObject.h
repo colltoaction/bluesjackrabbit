@@ -13,7 +13,7 @@ class GameObject {
  public:
   GameObject(Body *body, Collider *collider);
 
-  ~GameObject();
+  virtual ~GameObject();
 
   /**
    * The body will be responsible for holding things like the size of an object and simluating rigid body physics.
@@ -29,6 +29,11 @@ class GameObject {
    * Returns true if this object's will collide with another after moving to its next position.
    */
   bool will_collide(const GameObject &other) const;
+
+  /**
+   * Returns game object type according if it is a player, turtle or floor.
+   */
+  virtual char game_object_type();
 
  private:
   Body *body_;

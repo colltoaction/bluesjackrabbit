@@ -20,3 +20,7 @@ Body &GameObject::body() {
 
 void GameObject::update_fixed() {
 }
+
+char GameObject::game_object_type() {
+  return 'g';
+}

@@ -40,7 +40,6 @@ class RemoteServerProxy : public ServerProxy {
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();
   virtual void join_game(size_t game_id);
-  void read_object_position(uint32_t *object_id, double *x, double *y);
   virtual void shutdown();
 
  private:
@@ -55,6 +54,8 @@ class RemoteServerProxy : public ServerProxy {
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
   void update_object(uint32_t object_id, double x, double y);
+  void read_object_position(double *x, double *y);
+  void read_object_type();
 };
 
 

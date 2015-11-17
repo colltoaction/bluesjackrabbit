@@ -11,6 +11,8 @@ set(SOURCES
         Engine.h
         GameObject.cpp
         GameObject.h
+        GameObjectPlayer.cpp
+        GameObjectPlayer.h
         RectangleCollider.cpp
         RectangleCollider.h
         RigidBody.cpp
