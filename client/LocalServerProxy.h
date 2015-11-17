@@ -17,8 +17,8 @@ class LocalServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual std::map<char, Renderer*> &renderers();
   virtual Vector character_position();
+  virtual std::map<uint32_t, Renderer*> &renderers();
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();
@@ -31,7 +31,7 @@ class LocalServerProxy : public ServerProxy {
   static const double step;
   static const double jump_force;
   Engine engine_;
-  std::map<char, Renderer*> renderers_;
+  std::map<uint32_t, Renderer*> renderers_;
   bool engine_step();
 };
 

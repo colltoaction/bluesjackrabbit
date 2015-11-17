@@ -54,8 +54,8 @@ void Game::start_game() {
 }
 
 void Game::place_player(ClientProxy *player) {
-  char object_id;
   Vector *pos = NULL;
+  uint32_t object_id;
   if (even % 2 == 0) {
     pos = new Vector(0, 0);
   } else {
@@ -67,9 +67,9 @@ void Game::place_player(ClientProxy *player) {
   even++;
 }
 
-void Game::action(char object_id, char option) {
+void Game::action(uint32_t object_id, char option) {
   Lock lock(&engine_mutex_);
-  std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
+  // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_.apply_force_(object_id, Vector(-step, 0));
   } else if (option == RIGHT) {

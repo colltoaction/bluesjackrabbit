@@ -6,7 +6,6 @@
 
 #include <engine/Engine.h>
 #include <engine/GameObject.h>
-
 #include <common/Socket.h>
 #include <common/Thread.h>
 
@@ -19,7 +18,7 @@ typedef sigc::slot<char, char, std::string, ClientProxy*> new_game_callback;
 typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
 typedef sigc::slot<GameList> list_games_callback;
 typedef sigc::slot<ObjectList> list_maps_callback;
-typedef sigc::slot<void, char, char> action_callback;
+typedef sigc::slot<void, uint32_t, char> action_callback;
 typedef sigc::slot<void> start_callback;
 
 class ClientProxy : public Thread {
@@ -30,11 +29,11 @@ class ClientProxy : public Thread {
   void run();
   void say_hello();
   void send_object_size(char object_size);
-  void send_object_position(char object_id, GameObject *object);
+  void send_object_position(uint32_t object_id, GameObject *object);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
   void add_start_functor(start_callback start_cb);
-  void add_object_id(char player_id);
+  void add_object_id(uint32_t object_id);
 
  private:
   Socket *socket_;
@@ -48,13 +47,14 @@ class ClientProxy : public Thread {
   start_callback start_functor_;
 
   char game_id_;
-  char object_id_;
-
+  uint32_t object_id_;
+  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_protocol();
   void new_game_call();
   void join_game_call();
   void list_games_call();
   void list_maps_call();
+  void send_object_id(uint32_t *object_id);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */
