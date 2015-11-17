@@ -1,8 +1,10 @@
 #include "Game.h"
 
+
 #include <engine/RigidBody.h>
 #include <engine/Vector.h>
 #include <engine/CircleCollider.h>
+#include <engine/GameObjectFloor.h>
 #include <engine/GameObjectPlayer.h>
 #include <common/Lock.h>
 #include <iostream>
@@ -27,8 +29,13 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
     even(0) {
   add_player(admin);
 
-  StaticBody *floor = new StaticBody(new Vector(3, 5));
-  engine_.add_game_object(floor, new RectangleCollider(*floor));
+  StaticBody *body = new StaticBody(new Vector(3, 5));
+  GameObjectFloor *floor = new GameObjectFloor(body, new RectangleCollider(*body));
+  engine_.add_game_object(floor);
+
+  StaticBody *body2 = new StaticBody(new Vector(3, 8));
+  GameObjectFloor *floor2 = new GameObjectFloor(body2, new RectangleCollider(*body2));
+  engine_.add_game_object(floor2);
 }
 
 Game::~Game() {

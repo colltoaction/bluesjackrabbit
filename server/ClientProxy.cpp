@@ -175,7 +175,17 @@ void ClientProxy::send_object_type(GameObject *object) {
 }
 
 void ClientProxy::send_object_points(GameObject *object) {
-  (void) object;
+  std::list<Vector> points = object->characteristic_points();
+  char points_size = static_cast<char>(points.size());
+  socket_->send_buffer(&points_size, CANT_BYTES);
+  for (std::list<Vector>::iterator it = points.begin();
+      it != points.end();
+      it++) {
+    double x = it->x();
+    double y = it->y();
+    send_double(&x);
+    send_double(&y);
+  }
 }
 
 void ClientProxy::send_double(double *value) {

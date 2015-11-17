@@ -55,10 +55,12 @@ class RemoteServerProxy : public ServerProxy {
   uint32_t object_id_;
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
-  void update_object(uint32_t object_id, double x, double y, char type);
+  void update_object(uint32_t object_id, double x, double y, char type, point_type points);
   void read_object_position(double *x, double *y);
   void read_object_type(char *type);
-  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position);
+  std::list<Vector> read_object_points();
+  void read_double(double *value);
+  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
 };
 
 

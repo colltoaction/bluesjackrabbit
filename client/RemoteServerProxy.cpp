@@ -9,7 +9,9 @@
 #include <common/Lock.h>
 
 #include "RemoteServerProxy.h"
+
 #include "BulletRenderer.h"
+#include "FloorRenderer.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
 #include "OtherCharacterRenderer.h"
@@ -138,12 +140,14 @@ void RemoteServerProxy::init_game() {
     read_object_id(&object_id);
     read_object_position(&x, &y);
     read_object_type(&type);
-    create_object_renderer(object_id, type, Vector(x, y));
+    std::list<Vector> points = read_object_points();
+    create_object_renderer(object_id, type, Vector(x, y), points);
   }
   std::cout << "FIN INIT GAME\n";
 }
 
-void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position) {
+void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
+    std::list<Vector> points) {
   Renderer *render = NULL;
   switch (object_type) {
     case 'p':
@@ -155,6 +159,10 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
       break;
     case 'g':
       render = new TurtleRenderer(position);
+      break;
+    case 'f':
+      render = new FloorRenderer(position, points);
+      break;
   }
   renderers_[object_id] = render;
 }
@@ -165,9 +173,9 @@ void RemoteServerProxy::shutdown() {
   updater_.join();
 }
 
-// TODO(tomas) Ver como devolver el object_id desde el cliente.
-void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type) {
+void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points) {
   (void) type;
+  (void) points;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
   if (renderers_.find(object_id) != renderers_.end()) {
@@ -180,17 +188,31 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
 
 
 void RemoteServerProxy::read_object_position(double *x, double *y) {
-  size_t double_size = sizeof(double);
-  void *dir_x = static_cast<void*>(x);
-  char *dir_x_posta = static_cast<char*>(dir_x);
-  void *dir_y = static_cast<void*>(y);
-  char *dir_y_posta = static_cast<char*>(dir_y);
-  socket_->read_buffer(dir_x_posta, double_size);
-  socket_->read_buffer(dir_y_posta, double_size);
+  read_double(x);
+  read_double(y);
 }
 
 void RemoteServerProxy::read_object_type(char *type) {
   socket_->read_buffer(type, CANT_BYTES);
+}
+
+std::list<Vector> RemoteServerProxy::read_object_points() {
+  char points_size;
+  socket_->read_buffer(&points_size, CANT_BYTES);
+  std::list<Vector> points;
+  for (char i = 0; i < points_size; i++) {
+    double x, y;
+    read_double(&x);
+    read_double(&y);
+    points.push_back(Vector(x, y));
+  }
+  return points;
+}
+
+void RemoteServerProxy::read_double(double *value) {
+  size_t double_size = sizeof(double);
+  char *address = static_cast<char*>(static_cast<void*>(value));
+  socket_->read_buffer(address, double_size);
 }
 
 // recibir and write
