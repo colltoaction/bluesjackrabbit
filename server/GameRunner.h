@@ -11,17 +11,20 @@
 
 class GameRunner: public Thread {
  public:
-  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players, Mutex *engine_mutex);
+  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players);
   virtual ~GameRunner();
   virtual void run();
+  void action(uint32_t object_id, char option);
+  void shoot(uint32_t object_id);
   void finalize();
 
  private:
   Engine *engine_;
-  Mutex *engine_mutex_;
+  Mutex engine_mutex_;
   std::map<char, ClientProxy*> *players_;
   bool keep_running_;
   bool game_finished_;
+  static const double step;
 
   void game_loop();
   void engine_step();

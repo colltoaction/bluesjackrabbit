@@ -5,12 +5,16 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "Constants.h"
+
 #define SECOND_TO_MICROSECONDS 1000000.0
 #define TWENTY_MILLIS_IN_MICROSECONDS 20000.0
 
-GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players, Mutex *engine_mutex)
+const double GameRunner::step = 0.003;
+
+GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
   : engine_(engine),
-    engine_mutex_(engine_mutex),
+    engine_mutex_(),
     players_(players),
     keep_running_(true),
     game_finished_(false) {
@@ -40,7 +44,7 @@ void GameRunner::game_loop() {
 }
 
 void GameRunner::engine_step() {
-  Lock lock(engine_mutex_);
+  Lock lock(&engine_mutex_);
   engine_->FixedUpdate();
   notify_clients(false);
 }
@@ -60,6 +64,25 @@ void GameRunner::notify_clients(bool notify_object_ids) {
       it->second->send_object(game_it->first, game_it->second);
     }
   }
+}
+
+void GameRunner::action(uint32_t object_id, char option) {
+  Lock lock(&engine_mutex_);
+  // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
+  if (option == LEFT) {
+    engine_->apply_force_(object_id, Vector(-step, 0));
+  } else if (option == RIGHT) {
+    engine_->apply_force_(object_id, Vector(step, 0));
+  } else if (option == DOWN) {
+    engine_->apply_force_(object_id, Vector(0, step));
+  } else if (option == UP) {
+    engine_->apply_force_(object_id, Vector(0, -step));
+  }
+}
+
+void GameRunner::shoot(uint32_t object_id) {
+  Lock lock(&engine_mutex_);
+  engine_->player_shoot(object_id);
 }
 
 void GameRunner::finalize() {

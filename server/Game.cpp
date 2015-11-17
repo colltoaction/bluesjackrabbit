@@ -21,7 +21,7 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
     engine_(),
     engine_mutex_(),
     players_(),
-    runner_(&engine_, &players_, &engine_mutex_),
+    runner_(&engine_, &players_),
     player_index_(0),
     in_game(false),
     game_name_(game_name),
@@ -52,7 +52,6 @@ void Game::add_player(ClientProxy *player) {
 }
 
 void Game::start_game() {
-  Lock lock(&engine_mutex_);
   std::cout << "GAME: STARTGAME\n";
   // TODO(tomas) MAGIC! CON ESTE NUMERO ES LA CANTIDAD DE JUGADORES QUE SE CONECTAN
   if (player_index_ == PLAYERS) {
@@ -78,22 +77,11 @@ void Game::place_player(ClientProxy *player) {
 }
 
 void Game::action(uint32_t object_id, char option) {
-  Lock lock(&engine_mutex_);
-  // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
-  if (option == LEFT) {
-    engine_.apply_force_(object_id, Vector(-step, 0));
-  } else if (option == RIGHT) {
-    engine_.apply_force_(object_id, Vector(step, 0));
-  } else if (option == DOWN) {
-    engine_.apply_force_(object_id, Vector(0, step));
-  } else if (option == UP) {
-    engine_.apply_force_(object_id, Vector(0, -step));
-  }
+  runner_.action(object_id, option);
 }
 
 void Game::shoot(uint32_t object_id) {
-  Lock lock(&engine_mutex_);
-  engine_.player_shoot(object_id);
+  runner_.shoot(object_id);
 }
 
 bool Game::can_join() {
