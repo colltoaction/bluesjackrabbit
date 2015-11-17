@@ -22,9 +22,11 @@ void RemoteServerProxyUpdater::run() {
     // std::cout << "Running... esperando position\n";
     uint32_t object_id;
     double x, y;
+    char type;
     read_object_id(&object_id);
     read_object_position(&x, &y);
-    update_functor_(object_id, x, y);
+    read_object_type(&type);
+    update_functor_(object_id, x, y, type);
   }
   std::cout << "RemoteServerProxyUpdater::run finished\n";
 }
@@ -44,6 +46,10 @@ void RemoteServerProxyUpdater::read_object_position(double *x, double *y) {
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
   // std::cout << "POSITION DESDE SERVER: (" << (*x) << ", " << (*y) << ")\n";
+}
+
+void RemoteServerProxyUpdater::read_object_type(char *type) {
+  socket_->read_buffer(type, CANT_BYTES);
 }
 
 void RemoteServerProxyUpdater::read_object_id(uint32_t *object_id) {

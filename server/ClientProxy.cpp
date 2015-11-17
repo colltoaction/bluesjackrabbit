@@ -159,6 +159,10 @@ void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
   socket_->send_buffer(y_address, double_size);
 }
 
+void ClientProxy::send_object_type(char type) {
+  socket_->send_buffer(&type, CANT_BYTES);
+}
+
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar
  * el servidor, eso implica cerrar todas las socketes con los clientes.
  * Se marca como finalized y se cierra la socket con la otra punta

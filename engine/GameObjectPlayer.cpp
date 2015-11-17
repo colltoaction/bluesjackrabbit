@@ -1,7 +1,7 @@
 #include "GameObjectPlayer.h"
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
-  : GameObject(body, collider){
+  : GameObject(body, collider) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {

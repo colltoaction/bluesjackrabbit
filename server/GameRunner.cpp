@@ -50,6 +50,7 @@ void GameRunner::notify_clients(bool notify_object_ids) {
       it != players_->end();
       it++) {
     if (notify_object_ids) {
+      // Called the first time server notifies clients game objects
       char object_size = static_cast<char>(engine_->game_objects().size());
       it->second->send_object_size(object_size);
     }
@@ -57,6 +58,7 @@ void GameRunner::notify_clients(bool notify_object_ids) {
               game_it != engine_->game_objects().end();
               game_it++) {
       it->second->send_object_position(game_it->first, game_it->second);
+      it->second->send_object_type(game_it->second->game_object_type());
     }
   }
 }

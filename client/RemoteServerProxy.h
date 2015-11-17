@@ -53,9 +53,9 @@ class RemoteServerProxy : public ServerProxy {
   uint32_t object_id_;
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
-  void update_object(uint32_t object_id, double x, double y);
+  void update_object(uint32_t object_id, double x, double y, char type);
   void read_object_position(double *x, double *y);
-  void read_object_type();
+  void read_object_type(char *type);
 };
 
 

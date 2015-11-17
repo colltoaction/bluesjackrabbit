@@ -30,6 +30,7 @@ class ClientProxy : public Thread {
   void say_hello();
   void send_object_size(char object_size);
   void send_object_position(uint32_t object_id, GameObject *object);
+  void send_object_type(char type);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
   void add_start_functor(start_callback start_cb);

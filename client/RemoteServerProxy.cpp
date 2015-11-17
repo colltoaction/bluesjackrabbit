@@ -120,10 +120,10 @@ void RemoteServerProxy::init_game() {
   for (char i = 0; i < objects_size; i++) {
     uint32_t object_id;
     double x, y;
+    char type;
     read_object_id(&object_id);
     read_object_position(&x, &y);
-    // std::cout << "llega objeto id: " << static_cast<int>(object_id)
-       // << "(" << x << ", " << y << ")\n";
+    read_object_type(&type);
     if (object_id == object_id_) {
       renderers_[object_id] = new CharacterRenderer(Vector(x, y));
     } else {
@@ -140,7 +140,8 @@ void RemoteServerProxy::shutdown() {
 }
 
 // TODO(tomas) Ver como devolver el object_id desde el cliente.
-void RemoteServerProxy::update_object(uint32_t object_id, double x, double y) {
+void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type) {
+  (void) type;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
   renderers_[object_id]->update_position(Vector(x, y));
@@ -156,6 +157,10 @@ void RemoteServerProxy::read_object_position(double *x, double *y) {
   char *dir_y_posta = static_cast<char*>(dir_y);
   socket_->read_buffer(dir_x_posta, double_size);
   socket_->read_buffer(dir_y_posta, double_size);
+}
+
+void RemoteServerProxy::read_object_type(char *type) {
+  socket_->read_buffer(type, CANT_BYTES);
 }
 
 // recibir and write

@@ -5,7 +5,7 @@
 #include <common/Socket.h>
 #include <common/Thread.h>
 
-typedef sigc::slot<void, uint32_t, double, double> RendererUpdate;
+typedef sigc::slot<void, uint32_t, double, double, char> RendererUpdate;
 
 class RemoteServerProxyUpdater : public Thread {
  public:
@@ -21,6 +21,7 @@ class RemoteServerProxyUpdater : public Thread {
   RendererUpdate update_functor_;
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_position(double *x, double *y);
+  void read_object_type(char *type);
   void read_object_id(uint32_t *object_id);
 };
 
