@@ -134,9 +134,8 @@ bool EditorWindow::on_canvas_drag_motion(
   /* If item exists, we're supposed to move it and call drag_status() */
   if (dnd_item_) {
     // TODO(Diego): sacar linea de debug!!!
-    std::cout << "on_canvas_drag_motion: dnd_item creado" << std::endl;
-    double item_x = x;
-    double item_y = y;
+    double item_x = x;  // + canvas_window_->get_hadjustment()->get_value();
+    double item_y = y;  // + canvas_window_->get_vadjustment()->get_value();
     canvas_.convert_from_pixels(item_x, item_y); /* scale to canvas units */
     gdouble t_x, t_y, t_scale, t_rotation;
     dnd_item_->get_simple_transform(t_x, t_y, t_scale, t_rotation);
@@ -145,11 +144,9 @@ bool EditorWindow::on_canvas_drag_motion(
   } else {
     /* If item doesn't exist, we should get it's data from the source and create it. It's achieved
     via the drag_get_data method, which in turn emits the drag_data_received signal */
-    std::cout << "on_canvas_drag_motion: dnd_item por crearse" << std::endl;
     requested_for_motion_ = true;
     canvas_.drag_get_data(drag_context, target, timestamp);
     return true;
-    // td::cout << "on_canvas_drag_motion: despues de drag_get_data" << std::endl;
   }
 
   return true;
@@ -160,24 +157,28 @@ void EditorWindow::on_canvas_drag_data_received(
     const Gtk::SelectionData& /* selection_data */, guint /* info */, guint timestamp) {
   // TODO(Diego): sacar linea de debug!!!
   std::cout << "on_canvas_drag_data_received" << std::endl;
-  if (!dnd_item_) {
-    dnd_item_ = create_canvas_item(x, y);
-  }
+  double item_x = x + canvas_window_->get_hadjustment()->get_value();
+  double item_y = y + canvas_window_->get_vadjustment()->get_value();
+  canvas_.convert_from_pixels(item_x, item_y);
+
   /* This method is called from either drag_motion or drag_drop, and the DragContext has to be
   updated in consequence */
   if (requested_for_motion_) {
+    if (!dnd_item_) {
+      dnd_item_ = create_canvas_item(item_x, item_y);
+    }
     drag_context->drag_status(Gdk::ACTION_COPY, timestamp);
     requested_for_motion_ = false;
   } else {
+    dnd_item_->remove();
+    dnd_item_.reset();
+    create_canvas_item(item_x, item_y);
     drag_context->drag_finish(false, false, timestamp);
   }
 }
 
-Glib::RefPtr<Goocanvas::Item> EditorWindow::create_canvas_item(int x, int y) {
-  double item_x = x;
-  double item_y = y;
-  // canvas_.convert_from_pixels(item_x, item_y);
-  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(item_x, item_y, 20, 20);
+Glib::RefPtr<Goocanvas::Item> EditorWindow::create_canvas_item(double x, double y) {
+  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(x, y, 20, 20);
   rect->set_property("fill_color", Glib::ustring("red"));
   canvas_.get_root_item()->add_child(rect);
   return rect;

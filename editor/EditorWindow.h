@@ -53,7 +53,7 @@ class EditorWindow : public Gtk::Window {
   void change_layer(int parameter);
   void tilemap_visible();
 
-  Glib::RefPtr<Goocanvas::Item> create_canvas_item(int x, int y);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y);
 
   EditorController controller_;
 
