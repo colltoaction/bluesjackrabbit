@@ -154,6 +154,8 @@ void MainWindow::init_server_proxy() {
   bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
   bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
   bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
+  bus_.subscribeKeyPress(GDK_KEY_space, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::jump)));
+  bus_.subscribeKeyPress(GDK_KEY_Control_L, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::shoot)));
   scene_.set_server_proxy(server_proxy_);
 }
 

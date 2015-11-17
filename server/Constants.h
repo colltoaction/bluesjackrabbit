@@ -12,6 +12,8 @@
 #define RIGHT 0x2
 #define DOWN 0x3
 #define UP 0x4
+#define JUMP 0x5
+#define SHOOT 0x6
 
 #define CANT_BYTES 1
 

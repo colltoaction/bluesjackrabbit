@@ -77,6 +77,14 @@ void LocalServerProxy::MoveRight() {
   engine_.apply_force_(0, Vector(step, 0));
 }
 
+void LocalServerProxy::jump() {
+  engine_.apply_force_(0, Vector(step, step));
+}
+
+void LocalServerProxy::shoot() {
+  // TODO(tomas) Implementar esto
+}
+
 Vector LocalServerProxy::character_position() {
   return engine_.game_objects()[0]->body().position();
 }

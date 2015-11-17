@@ -63,6 +63,10 @@ void ClientProxy::read_protocol() {
       list_maps_call();
     } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
       move_functor_(object_id_, option);
+    } else if (option == JUMP) {
+      std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
+    } else if (option == SHOOT) {
+      std::cout << "Llego un SHOOT del jugador: " << static_cast<int>(object_id_) << std::endl;
     }
   }
 }

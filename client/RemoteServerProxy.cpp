@@ -41,6 +41,18 @@ void RemoteServerProxy::MoveRight() {
   socket_->send_buffer(&move, 1);
 }
 
+void RemoteServerProxy::jump() {
+  Lock l(&mutex_);
+  char move = JUMP;
+  socket_->send_buffer(&move, 1);
+}
+
+void RemoteServerProxy::shoot() {
+  Lock l(&mutex_);
+  char move = SHOOT;
+  socket_->send_buffer(&move, 1);
+}
+
 RemoteServerProxy::RemoteServerProxy() :
     socket_(NULL),
     updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)),
