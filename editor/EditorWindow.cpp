@@ -6,14 +6,13 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/image.h>
-#include <gtkmm/targetentry.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolitemgroup.h>
-#include <goocanvasmm/canvas.h>
 #include <goocanvasmm/image.h>
 #include <goocanvasmm/rect.h>
 #include "EditorLayer.h"
 #include "EditorController.h"
+#include "EditorCanvas.h"
 #include "EditorWindow.h"
 #define GLADE_FILENAME "window.glade"
 #define MAIN_WINDOW_GLADE_ID "MainBox"
@@ -23,7 +22,7 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow() {
+EditorWindow::EditorWindow() : canvas_(canvas_window_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
@@ -42,17 +41,7 @@ EditorWindow::EditorWindow() {
   /* Set drag and drop communication between palette and canvas */
   palette_->add_drag_dest(canvas_, (Gtk::DestDefaults)0, Gtk::TOOL_PALETTE_DRAG_ITEMS,
       Gdk::ACTION_COPY);
-  /* The following line is a workaround. palette->add_drag_dest also adds some default
-  behaviors that conflicts with custom handlers for DnD signals. Re-setting 0 as default
-  destination behavior makes it work.
-  Ref: https://mail.gnome.org/archives/gtk-list/2007-December/msg00087.html */
-  canvas_.drag_dest_set((Gtk::DestDefaults)0, Gdk::ACTION_COPY);
-  canvas_.signal_drag_motion().connect(
-      sigc::mem_fun(*this, &EditorWindow::on_canvas_drag_motion) );
-  canvas_.signal_drag_drop().connect(
-      sigc::mem_fun(*this, &EditorWindow::on_canvas_drag_drop) );
-  canvas_.signal_drag_data_received().connect(
-      sigc::mem_fun(*this, &EditorWindow::on_canvas_drag_data_received) );
+
   init_menus();
   add(*root_);
   show_all();

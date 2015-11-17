@@ -8,6 +8,7 @@
 #include <gtkmm/window.h>
 #include <goocanvasmm/canvas.h>
 #include "EditorController.h"
+#include "EditorCanvas.h"
 // #include "Level.h"
 
 class EditorWindow : public Gtk::Window {
@@ -70,7 +71,7 @@ class EditorWindow : public Gtk::Window {
   Gtk::ToolItemGroup* misc_group_;
 
   Gtk::ScrolledWindow* canvas_window_;
-  Goocanvas::Canvas canvas_;
+  EditorCanvas canvas_;
 
   Glib::RefPtr<Goocanvas::Item> dnd_item_;
   bool requested_for_motion_;
