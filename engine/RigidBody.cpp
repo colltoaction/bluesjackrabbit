@@ -47,3 +47,7 @@ void RigidBody::update_fixed() {
 void RigidBody::stop() {
   velocity_ = Vector::zero();
 }
+
+void RigidBody::stop_y() {
+  velocity_ = Vector(velocity_.x(), 0);
+}
