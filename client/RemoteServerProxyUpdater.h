@@ -8,7 +8,7 @@
 #include <engine/Vector.h>
 
 typedef std::list<Vector> point_type;
-typedef sigc::slot<void, uint32_t, double, double, char, point_type> RendererUpdate;
+typedef sigc::slot<void, uint32_t, double, double, char, point_type, bool> RendererUpdate;
 
 class RemoteServerProxyUpdater : public Thread {
  public:
@@ -27,6 +27,7 @@ class RemoteServerProxyUpdater : public Thread {
   void read_object_type(char *type);
   void read_object_id(uint32_t *object_id);
   std::list<Vector> read_object_points();
+  void read_alive(char *alive);
   void read_double(double *value);
 };
 

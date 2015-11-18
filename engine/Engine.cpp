@@ -75,6 +75,22 @@ bool Engine::will_collide(const std::map<uint32_t, GameObject*>::iterator &game_
   return collides;
 }
 
+void Engine::clean_dead() {
+  std::list<uint32_t> ids;
+  for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
+         other != game_objects_.end();
+         ++other) {
+    if (!other->second->alive()) {
+       ids.push_back(other->first);
+    }
+  }
+  for (std::list<uint32_t>::iterator it = ids.begin(); it != ids.end(); it++) {
+    GameObject *object = game_objects_[*it];
+    game_objects_.erase(*it);
+    delete object;
+  }
+}
+
 void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->body().apply_force(force);
 }

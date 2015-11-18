@@ -59,7 +59,8 @@ void RemoteServerProxy::shoot() {
 RemoteServerProxy::RemoteServerProxy() :
     socket_(NULL),
     updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)),
-    object_id_(0) {
+    object_id_(0),
+    alive_(true) {
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
@@ -74,7 +75,10 @@ RemoteServerProxy::~RemoteServerProxy() {
 }
 
 Vector RemoteServerProxy::character_position() {
-  return renderers_[object_id_]->position();
+  // std::cout << "char position\n";
+  Vector ret = renderers_[object_id_]->position();
+  // std::cout << "char position after\n";
+  return ret;
 }
 
 std::map<uint32_t, Renderer*> &RemoteServerProxy::renderers() {
@@ -137,13 +141,19 @@ void RemoteServerProxy::init_game() {
     uint32_t object_id;
     double x, y;
     char type;
+    char alive;
     read_object_id(&object_id);
     read_object_position(&x, &y);
     read_object_type(&type);
     std::list<Vector> points = read_object_points();
+    read_alive(&alive);
     create_object_renderer(object_id, type, Vector(x, y), points);
   }
   std::cout << "FIN INIT GAME\n";
+}
+
+void RemoteServerProxy::read_alive(char *alive) {
+  socket_->read_buffer(alive, CANT_BYTES);
 }
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
@@ -173,15 +183,28 @@ void RemoteServerProxy::shutdown() {
   updater_.join();
 }
 
-void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points) {
+void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
+    bool alive) {
   (void) type;
   (void) points;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
-  if (renderers_.find(object_id) != renderers_.end()) {
-    renderers_[object_id]->update_position(Vector(x, y));
+  if (alive) {
+    if (renderers_.find(object_id) != renderers_.end()) {
+      renderers_[object_id]->update_position(Vector(x, y));
+    } else {
+      renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+    }
   } else {
-    renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+    if (object_id != object_id_) {
+      std::cout << "muere object: " << type << std::endl;
+      Renderer *render = renderers_[object_id];
+      renderers_.erase(object_id);
+      delete render;
+    } else {
+      // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
+      std::cout << "te mataron\n";
+    }
   }
   // std::cout << "Fin RemoteServerProxy::update_object\n";
 }
