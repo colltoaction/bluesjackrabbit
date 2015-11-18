@@ -1,8 +1,8 @@
 #include <cmath>
 #include "CircleCollider.h"
 
-CircleCollider::CircleCollider(const Body &body)
-    : radius_(0.5), body_(body) {
+CircleCollider::CircleCollider(const Body &body, double radius)
+    : radius_(radius), body_(body) {
 }
 
 // double-dispatching

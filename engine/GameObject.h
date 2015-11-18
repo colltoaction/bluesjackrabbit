@@ -40,6 +40,13 @@ class GameObject {
    */
   virtual std::list<Vector> characteristic_points();
 
+  virtual void impact(GameObject *other);
+
+  virtual bool alive();
+
+ protected:
+  bool alive_;
+
  private:
   Body *body_;
   Collider *collider_;

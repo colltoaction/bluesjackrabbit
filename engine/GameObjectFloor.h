@@ -10,6 +10,8 @@ class GameObjectFloor: public GameObject {
   GameObjectFloor(Body *body, Collider *collider);
   virtual ~GameObjectFloor();
   virtual char game_object_type();
+  virtual void impact(GameObject *other);
+  virtual bool alive();
 };
 
 #endif /* BLUESJACKRABBIT_ENGINE_GAMEOBJECTFLOOR_H */

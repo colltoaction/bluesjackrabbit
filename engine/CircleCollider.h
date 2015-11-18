@@ -8,7 +8,7 @@
 
 class CircleCollider : public Collider {
  public:
-  explicit CircleCollider(const Body &body);
+  explicit CircleCollider(const Body &body, double radius);
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;

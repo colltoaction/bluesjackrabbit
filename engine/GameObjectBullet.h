@@ -9,6 +9,8 @@ class GameObjectBullet: public GameObject {
   virtual ~GameObjectBullet();
   virtual void update_fixed();
   virtual char game_object_type();
+  virtual void impact(GameObject *other);
+  virtual bool alive();
 };
 
 #endif /* BLUESJACKRABBIT_ENGINE_GAMEOBJECTBULLET_H */

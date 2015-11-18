@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 GameObject::GameObject(Body *body, Collider *collider)
-  : body_(body), collider_(collider) {
+  : alive_(true), body_(body), collider_(collider) {
 }
 
 GameObject::~GameObject() {
@@ -27,4 +27,12 @@ char GameObject::game_object_type() {
 
 std::list<Vector> GameObject::characteristic_points() {
   return collider_->characteristic_points();
+}
+
+void GameObject::impact(GameObject *other) {
+  (void)other;
+}
+
+bool GameObject::alive() {
+  return true;
 }

@@ -14,3 +14,12 @@ void GameObjectBullet::update_fixed() {
 char GameObjectBullet::game_object_type() {
   return 'b';
 }
+
+void GameObjectBullet::impact(GameObject *other) {
+  (void) other;
+  alive_ = false;
+}
+
+bool GameObjectBullet::alive() {
+  return alive_;
+}

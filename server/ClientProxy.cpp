@@ -20,7 +20,8 @@ ClientProxy::ClientProxy(Socket *socket,
     list_games_functor_(lg_callback),
     list_maps_functor_(lm_callback),
     game_id_(0),
-    object_id_(0) {
+    object_id_(0),
+    bullet_shot(false) {
 }
 
 ClientProxy::~ClientProxy() {
@@ -159,6 +160,7 @@ void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
   send_object_position(object_id, object);
   send_object_type(object);
   send_object_points(object);
+  send_object_alive(object);
 }
 
 void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
@@ -186,6 +188,10 @@ void ClientProxy::send_object_points(GameObject *object) {
     send_double(&x);
     send_double(&y);
   }
+}
+
+void ClientProxy::send_object_alive(GameObject *object) {
+  (void) object;
 }
 
 void ClientProxy::send_double(double *value) {

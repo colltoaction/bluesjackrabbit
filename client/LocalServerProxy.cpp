@@ -19,16 +19,16 @@ const double LocalServerProxy::jump_force = 0.003;  // should take into account 
 LocalServerProxy::LocalServerProxy() {
   // new objects will be managed by the engine
   RigidBody *b0 = new RigidBody(new Vector(0, 0));
-  engine_.add_game_object(b0, new CircleCollider(*b0));
+  engine_.add_game_object(b0, new CircleCollider(*b0, 5));
 
   StaticBody *b1 = new StaticBody(new Vector(5, 0));
-  engine_.add_game_object(b1, new CircleCollider(*b1));
+  engine_.add_game_object(b1, new CircleCollider(*b1, 5));
 
   StaticBody *b2 = new StaticBody(new Vector(0, 5));
   engine_.add_game_object(b2, new RectangleCollider(*b2));
 
   engine_.game_objects()[0]->body().position();
-  renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position());
+  renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position(), 0.5);
 
   uint32_t i = 0;
   for (std::map<uint32_t, GameObject*>::iterator game_object = engine_.game_objects().begin();
@@ -42,7 +42,7 @@ LocalServerProxy::LocalServerProxy() {
       points.push_back(Vector(-2, 5.5));
       renderers_[i] = new FloorRenderer(game_object->second->body().position(), points);
     } else if (i != 0) {
-      renderers_[i] = new TurtleRenderer(game_object->second->body().position());
+      renderers_[i] = new TurtleRenderer(game_object->second->body().position(), 0.5);
     }
     i++;
   }
