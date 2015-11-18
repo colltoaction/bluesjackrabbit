@@ -22,7 +22,7 @@ void GameObjectRedTurtle::impact(GameObject *other) {
       lives_--;
       break;
     case 'f':
-      body().apply_force(Vector(0, 0.0000098 * (-20) * 20));
+      body().stop();
       break;
   }
 }

@@ -159,6 +159,9 @@ void RemoteServerProxy::read_alive(char *alive) {
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
     std::list<Vector> points) {
   Renderer *render = NULL;
+  if (object_type == 'r') {
+    std::cout << "Llega la roja\n";
+  }
   switch (object_type) {
     case 'p':
       if (object_id == object_id_) {
@@ -167,8 +170,11 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
         render = new OtherCharacterRenderer(position, points.front().x());
       }
       break;
-    case 'g':
-      render = new TurtleRenderer(position, points.front().x());
+    case 't':
+      render = new TurtleRenderer(position, points.front().x(), object_type);
+      break;
+    case 'r':
+      render = new TurtleRenderer(position, points.front().x(), object_type);
       break;
     case 'f':
       render = new FloorRenderer(position, points);
