@@ -5,6 +5,7 @@
 #define MAX_CHAR 256
 
 #define OPTION_LENGTH 1
+#define NOT 0x00
 #define OK 0xFF
 
 // GAME PROTOCOL CONSTANTS
@@ -22,6 +23,9 @@
 #define JOIN_GAME 0x21
 #define LIST_GAMES 0x22
 #define LIST_MAPS 0x23
+
+#define TRUE_PROTOCOL 0x30
+#define FALSE_PROTOCOL 0x31
 
 #define MAP_ID_LENGTH 1
 

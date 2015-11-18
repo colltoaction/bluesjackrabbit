@@ -191,7 +191,13 @@ void ClientProxy::send_object_points(GameObject *object) {
 }
 
 void ClientProxy::send_object_alive(GameObject *object) {
-  (void) object;
+  char alive;
+  if (object->alive()) {
+    alive = TRUE_PROTOCOL;
+  } else {
+    alive = FALSE_PROTOCOL;
+  }
+  socket_->send_buffer(&alive, CANT_BYTES);
 }
 
 void ClientProxy::send_double(double *value) {

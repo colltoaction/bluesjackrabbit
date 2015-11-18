@@ -23,13 +23,20 @@ void RemoteServerProxyUpdater::run() {
     uint32_t object_id;
     double x, y;
     char type;
+    char alive;
     read_object_id(&object_id);
     read_object_position(&x, &y);
     read_object_type(&type);
     std::list<Vector> points = read_object_points();
-    update_functor_(object_id, x, y, type, points);
+    read_alive(&alive);
+    bool bool_alive = (alive == TRUE_PROTOCOL) ? true : false;
+    update_functor_(object_id, x, y, type, points, bool_alive);
   }
   std::cout << "RemoteServerProxyUpdater::run finished\n";
+}
+
+void RemoteServerProxyUpdater::read_alive(char *alive) {
+  socket_->read_buffer(alive, CANT_BYTES);
 }
 
 void RemoteServerProxyUpdater::shutdown() {

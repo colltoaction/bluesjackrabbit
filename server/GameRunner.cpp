@@ -47,6 +47,7 @@ void GameRunner::engine_step() {
   Lock lock(&engine_mutex_);
   engine_->FixedUpdate();
   notify_clients(false);
+  engine_->clean_dead();
 }
 
 void GameRunner::notify_clients(bool notify_object_ids) {

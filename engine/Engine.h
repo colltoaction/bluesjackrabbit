@@ -73,6 +73,11 @@ class Engine {
    */
   uint32_t objects_size();
 
+  /**
+   * Removes from game object list all dead objects after proxy notifies client.
+   */
+  void clean_dead();
+
  private:
   static const Vector gravity_;
   uint32_t object_index_;
