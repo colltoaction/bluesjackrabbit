@@ -34,9 +34,10 @@ void Engine::players_shots() {
       player->increase_step();
       if (player->can_shoot()) {
         Vector origin = game_objects_[it->first]->body().position();
-        Vector *offset = new Vector(origin + Vector(4, 0));
+        Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
         RigidBody *body = new RigidBody(offset);
-        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body, 0.05));
+        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body, 0.05),
+            player->direction());
         game_objects_[object_index_++] = object;
         player->shot();
       }
@@ -96,7 +97,9 @@ void Engine::apply_force(GameObject *game_object, Vector force) {
 }
 
 void Engine::apply_force_(uint32_t object_id, Vector force) {
-  game_objects_[object_id]->body().apply_force(force);
+  if (game_objects_.find(object_id) != game_objects_.end()) {
+    game_objects_[object_id]->body().apply_force(force);
+  }
 }
 
 uint32_t Engine::add_game_object(Body *body, Collider *collider) {
@@ -115,15 +118,17 @@ uint32_t Engine::add_game_object(GameObject *game_object) {
 }
 
 void Engine::player_shoot(uint32_t object_id) {
-  player_shoot_[object_id] = true;
-  // Despues vemos si esto es necesario
-  /*Vector origin = game_objects_[object_id]->body().position();
-  Vector *offset = new Vector(origin + Vector(4, 0));
-  RigidBody *body = new RigidBody(offset);
-  GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body));
-  game_objects_[object_index_++] = object;*/
+  if (game_objects_.find(object_id) != game_objects_.end()) {
+    player_shoot_[object_id] = true;
+  }
 }
 
 uint32_t Engine::objects_size() {
   return static_cast<uint32_t>(game_objects_.size());
+}
+
+void Engine::update_player_direction(uint32_t object_id, bool right) {
+  if (game_objects_.find(object_id) != game_objects_.end()) {
+    static_cast<GameObjectPlayer*>(game_objects_[object_id])->new_direction(right);
+  }
 }
