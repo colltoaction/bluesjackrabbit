@@ -9,7 +9,7 @@ GameObjectGreenTurtle::~GameObjectGreenTurtle() {
 }
 
 void GameObjectGreenTurtle::update_fixed() {
-  body().apply_force(Vector(0.003, 0));
+  body().apply_force(Vector(0.0003, 0));
 }
 
 char GameObjectGreenTurtle::game_object_type() {
@@ -22,7 +22,7 @@ void GameObjectGreenTurtle::impact(GameObject *other) {
       lives_--;
       break;
     case 'f':
-      body().apply_force(Vector(0, 0.0000098 * (-20) * 20));
+      body().stop();
       break;
   }
 }

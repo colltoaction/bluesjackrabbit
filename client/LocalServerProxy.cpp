@@ -42,7 +42,7 @@ LocalServerProxy::LocalServerProxy() {
       points.push_back(Vector(-2, 5.5));
       renderers_[i] = new FloorRenderer(game_object->second->body().position(), points);
     } else if (i != 0) {
-      renderers_[i] = new TurtleRenderer(game_object->second->body().position(), 0.5);
+      renderers_[i] = new TurtleRenderer(game_object->second->body().position(), 0.5, 't');
     }
     i++;
   }

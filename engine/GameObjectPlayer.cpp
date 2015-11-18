@@ -33,8 +33,11 @@ void GameObjectPlayer::impact(GameObject *other) {
     case 'b':
       lives_--;
       break;
+    case 't':
+    case 'r':
+      lives_--;
+      break;
   }
-  (void) other;
 }
 
 bool GameObjectPlayer::alive() {
