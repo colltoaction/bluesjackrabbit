@@ -31,3 +31,6 @@ void StaticBody::update_fixed() {
 
 void StaticBody::stop() {
 }
+
+void StaticBody::stop_y() {
+}

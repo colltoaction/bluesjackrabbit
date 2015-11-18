@@ -44,6 +44,11 @@ class Body {
    * Zeroes the force and velocity of the object to make it stop immediately.
    */
   virtual void stop() = 0;
+
+  /**
+   * Zeroes the force and velocity in Y axe.
+   * */
+  virtual void stop_y() = 0;
 };
 
 
