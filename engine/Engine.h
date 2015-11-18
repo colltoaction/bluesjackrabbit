@@ -78,6 +78,11 @@ class Engine {
    */
   void clean_dead();
 
+  /**
+   * Updates player direction to shoot bullets.
+   * */
+  void update_player_direction(uint32_t object_id, bool right);
+
  private:
   static const Vector gravity_;
   uint32_t object_index_;

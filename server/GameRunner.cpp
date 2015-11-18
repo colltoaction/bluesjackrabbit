@@ -72,8 +72,10 @@ void GameRunner::action(uint32_t object_id, char option) {
   // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_->apply_force_(object_id, Vector(-step, 0));
+    engine_->update_player_direction(object_id, false);
   } else if (option == RIGHT) {
     engine_->apply_force_(object_id, Vector(step, 0));
+    engine_->update_player_direction(object_id, true);
   } else if (option == DOWN) {
     engine_->apply_force_(object_id, Vector(0, step));
   } else if (option == UP) {

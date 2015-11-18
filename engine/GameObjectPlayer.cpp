@@ -3,7 +3,7 @@
 #define LIVES 4
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
-  : GameObject(body, collider), engine_steps_(0), lives_(LIVES) {
+  : GameObject(body, collider), engine_steps_(0), lives_(LIVES), direction_(1) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {
@@ -42,4 +42,12 @@ void GameObjectPlayer::impact(GameObject *other) {
 
 bool GameObjectPlayer::alive() {
   return lives_ != 0;
+}
+
+char GameObjectPlayer::direction() {
+  return direction_;
+}
+
+void GameObjectPlayer::new_direction(bool right) {
+  direction_ = (right) ? 1 : -1;
 }
