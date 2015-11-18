@@ -79,6 +79,7 @@ class Engine {
   std::map<uint32_t, GameObject*> game_objects_;
   std::map<uint32_t, bool> player_shoot_;
   bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
+  void players_shots();
 };
 
 

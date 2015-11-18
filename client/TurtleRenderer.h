@@ -9,12 +9,11 @@
 
 class TurtleRenderer : public Renderer {
  public:
-  explicit TurtleRenderer(const Vector &position);
+  explicit TurtleRenderer(const Vector &position, double radius);
   virtual ~TurtleRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
-
  private:
-  double radius;
+  double radius_;
 };
 
 

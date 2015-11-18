@@ -152,13 +152,13 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
   switch (object_type) {
     case 'p':
       if (object_id == object_id_) {
-        render = new CharacterRenderer(position);
+        render = new CharacterRenderer(position, points.front().x());
       } else {
-        render = new OtherCharacterRenderer(position);
+        render = new OtherCharacterRenderer(position, points.front().x());
       }
       break;
     case 'g':
-      render = new TurtleRenderer(position);
+      render = new TurtleRenderer(position, points.front().x());
       break;
     case 'f':
       render = new FloorRenderer(position, points);
@@ -181,7 +181,7 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
   if (renderers_.find(object_id) != renderers_.end()) {
     renderers_[object_id]->update_position(Vector(x, y));
   } else {
-    renderers_[object_id] = new BulletRenderer(Vector(x, y));
+    renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
   }
   // std::cout << "Fin RemoteServerProxy::update_object\n";
 }

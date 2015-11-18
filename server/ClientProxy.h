@@ -52,6 +52,7 @@ class ClientProxy : public Thread {
   char game_id_;
   uint32_t object_id_;
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
+  bool bullet_shot;
   void read_protocol();
   void new_game_call();
   void join_game_call();
@@ -61,6 +62,7 @@ class ClientProxy : public Thread {
   void send_object_position(uint32_t object_id, GameObject *object);
   void send_object_type(GameObject *object);
   void send_object_points(GameObject *object);
+  void send_object_alive(GameObject *object);
   void send_double(double *value);
 };
 
