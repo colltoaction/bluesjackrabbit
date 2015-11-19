@@ -45,6 +45,12 @@ class Body {
    */
   virtual void stop() = 0;
 
+
+  /**
+   * Zeroes the force and velocity un X axe.
+   * */
+  virtual void stop_x() = 0;
+
   /**
    * Zeroes the force and velocity in Y axe.
    * */
@@ -54,6 +60,11 @@ class Body {
    * Informs whether body is stopped or moving.
    * */
   virtual bool stopped() = 0;
+
+  /**
+   * Informs whether body is not moving in X axe.
+   * */
+  virtual bool stopped_x() = 0;
 };
 
 

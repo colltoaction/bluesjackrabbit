@@ -35,7 +35,7 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
   GameObjectFloor *floor = new GameObjectFloor(body, new RectangleCollider(*body));
   engine_.add_game_object(floor);
 
-  StaticBody *body2 = new StaticBody(new Vector(3, 8));
+  StaticBody *body2 = new StaticBody(new Vector(3, 10));
   GameObjectFloor *floor2 = new GameObjectFloor(body2, new RectangleCollider(*body2));
   engine_.add_game_object(floor2);
 
@@ -46,6 +46,10 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
   RigidBody *r_body2 = new RigidBody(new Vector(5, -10));
   GameObjectRedTurtle *turtle_red = new GameObjectRedTurtle(r_body2, new CircleCollider(*r_body2, 0.5));
   engine_.add_game_object(turtle_red);
+
+  RigidBody *r_body3 = new RigidBody(new Vector(0, 8));
+  GameObjectRedTurtle *turtle_red2 = new GameObjectRedTurtle(r_body3, new CircleCollider(*r_body3, 0.5));
+  engine_.add_game_object(turtle_red2);
 }
 
 Game::~Game() {
