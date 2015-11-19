@@ -18,8 +18,10 @@ class StaticBody : public Body {
   virtual Vector next_position() const;
   virtual void update_fixed();
   virtual void stop();
+  virtual void stop_x();
   virtual void stop_y();
   virtual bool stopped();
+  virtual bool stopped_x();
 
  private:
   static const Vector velocity_;

@@ -48,10 +48,18 @@ void RigidBody::stop() {
   velocity_ = Vector::zero();
 }
 
+void RigidBody::stop_x() {
+  velocity_ = Vector(0, velocity_.y());
+}
+
 void RigidBody::stop_y() {
   velocity_ = Vector(velocity_.x(), 0);
 }
 
 bool RigidBody::stopped() {
   return velocity_ == Vector::zero();
+}
+
+bool RigidBody::stopped_x() {
+  return velocity_.x() == 0;
 }
