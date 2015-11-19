@@ -18,7 +18,8 @@ Body &GameObject::body() {
   return *body_;
 }
 
-void GameObject::update_fixed() {
+void GameObject::update_fixed(Vector gravity) {
+  (void) gravity;
 }
 
 char GameObject::game_object_type() {

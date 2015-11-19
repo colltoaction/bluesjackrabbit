@@ -23,7 +23,7 @@ class GameObject {
   /**
    * This method should be called in each step of the engine to perform routine operations.
    */
-  virtual void update_fixed();
+  virtual void update_fixed(Vector gravity);
 
   /**
    * Returns true if this object's will collide with another after moving to its next position.

@@ -2,13 +2,17 @@
 #define RED_TURTLE_LIVES 1
 
 GameObjectRedTurtle::GameObjectRedTurtle(Body *body, Collider *collider)
-  : GameObject(body, collider), lives_(RED_TURTLE_LIVES) {
+  : GameObject(body, collider), lives_(RED_TURTLE_LIVES), normal_(false) {
 }
 
 GameObjectRedTurtle::~GameObjectRedTurtle() {
 }
 
-void GameObjectRedTurtle::update_fixed() {
+void GameObjectRedTurtle::update_fixed(Vector gravity) {
+  if (!normal_) {
+    body().apply_force(gravity);
+  }
+  normal_ = false;
   body().apply_force(Vector(0.003, 0));
 }
 
@@ -22,7 +26,7 @@ void GameObjectRedTurtle::impact(GameObject *other) {
       lives_--;
       break;
     case 'f':
-      body().stop();
+      normal_ = true;
       break;
   }
 }

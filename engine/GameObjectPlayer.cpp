@@ -3,7 +3,8 @@
 #define LIVES 4
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
-  : GameObject(body, collider), engine_steps_(0), lives_(LIVES), direction_(1) {
+  : GameObject(body, collider), engine_steps_(0), lives_(LIVES), direction_(1),
+    normal_(false) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {
@@ -25,10 +26,18 @@ void GameObjectPlayer::shot() {
   engine_steps_ = 0;
 }
 
+void GameObjectPlayer::update_fixed(Vector gravity) {
+  if (!normal_) {
+    body().apply_force(gravity);
+  }
+  normal_ = false;
+}
+
 void GameObjectPlayer::impact(GameObject *other) {
   switch (other->game_object_type()) {
     case 'f':
-      body().stop();
+      // body().stop();
+      normal_ = true;
       break;
     case 'b':
       lives_--;
