@@ -11,9 +11,11 @@ GameObjectRedTurtle::~GameObjectRedTurtle() {
 void GameObjectRedTurtle::update_fixed(Vector gravity) {
   if (!normal_) {
     body().apply_force(gravity);
+  } else {
+    body().stop_y();
   }
   normal_ = false;
-  body().apply_force(Vector(0.003, 0));
+  body().apply_force(Vector(0.00003, 0));
 }
 
 char GameObjectRedTurtle::game_object_type() {

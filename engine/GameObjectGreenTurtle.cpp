@@ -11,8 +11,11 @@ GameObjectGreenTurtle::~GameObjectGreenTurtle() {
 void GameObjectGreenTurtle::update_fixed(Vector gravity) {
   if (!normal_) {
     body().apply_force(gravity);
+  } else {
+    body().stop_y();
   }
-  body().apply_force(Vector(0.0003, 0));
+  normal_ = false;
+  body().apply_force(Vector(0.00003, 0));
 }
 
 char GameObjectGreenTurtle::game_object_type() {
