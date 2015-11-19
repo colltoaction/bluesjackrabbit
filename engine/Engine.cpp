@@ -51,12 +51,12 @@ void Engine::FixedUpdate() {
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
-    apply_force(game_object->second, gravity_);
+    // apply_force(game_object->second, gravity_);
     if (will_collide(game_object)) {
       // game_object->second->body().stop();
     }
+    game_object->second->update_fixed(gravity_);
     game_object->second->body().update_fixed();
-    game_object->second->update_fixed();
   }
 }
 

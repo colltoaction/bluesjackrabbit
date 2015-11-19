@@ -2,13 +2,16 @@
 #define GREEN_TURTLE_LIVES 2
 
 GameObjectGreenTurtle::GameObjectGreenTurtle(Body *body, Collider *collider)
-  : GameObject(body, collider), lives_(GREEN_TURTLE_LIVES) {
+  : GameObject(body, collider), lives_(GREEN_TURTLE_LIVES), normal_(false) {
 }
 
 GameObjectGreenTurtle::~GameObjectGreenTurtle() {
 }
 
-void GameObjectGreenTurtle::update_fixed() {
+void GameObjectGreenTurtle::update_fixed(Vector gravity) {
+  if (!normal_) {
+    body().apply_force(gravity);
+  }
   body().apply_force(Vector(0.0003, 0));
 }
 
@@ -22,7 +25,7 @@ void GameObjectGreenTurtle::impact(GameObject *other) {
       lives_--;
       break;
     case 'f':
-      body().stop();
+      normal_ = true;
       break;
   }
 }
