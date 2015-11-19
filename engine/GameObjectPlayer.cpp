@@ -29,6 +29,8 @@ void GameObjectPlayer::shot() {
 void GameObjectPlayer::update_fixed(Vector gravity) {
   if (!normal_) {
     body().apply_force(gravity);
+  } else {
+    body().stop_y();
   }
   normal_ = false;
 }
@@ -36,12 +38,9 @@ void GameObjectPlayer::update_fixed(Vector gravity) {
 void GameObjectPlayer::impact(GameObject *other) {
   switch (other->game_object_type()) {
     case 'f':
-      // body().stop();
       normal_ = true;
       break;
     case 'b':
-      lives_--;
-      break;
     case 't':
     case 'r':
       lives_--;
