@@ -41,3 +41,11 @@ std::list<Vector> RectangleCollider::characteristic_points() const {
   point_list.push_back(Vector(body_.position().x() - width_ / 2, body_.position().y() + height_ / 2));
   return point_list;
 }
+
+double RectangleCollider::right_x() const {
+  return body_.position().x() + width_ / 2;
+}
+
+double RectangleCollider::left_x() const {
+  return body_.position().x() - width_ / 2;
+}

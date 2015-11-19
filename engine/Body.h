@@ -49,6 +49,11 @@ class Body {
    * Zeroes the force and velocity in Y axe.
    * */
   virtual void stop_y() = 0;
+
+  /**
+   * Informs whether body is stopped or moving.
+   * */
+  virtual bool stopped() = 0;
 };
 
 

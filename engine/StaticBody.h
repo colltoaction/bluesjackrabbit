@@ -19,6 +19,7 @@ class StaticBody : public Body {
   virtual void update_fixed();
   virtual void stop();
   virtual void stop_y();
+  virtual bool stopped();
 
  private:
   static const Vector velocity_;

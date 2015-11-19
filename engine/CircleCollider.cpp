@@ -41,3 +41,11 @@ std::list<Vector> CircleCollider::characteristic_points() const {
   point_list.push_back(Vector(radius_, radius_));
   return point_list;
 }
+
+double CircleCollider::right_x() const {
+  return body().position().x();
+}
+
+double CircleCollider::left_x() const {
+  return body().position().x();
+}

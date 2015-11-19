@@ -34,3 +34,7 @@ void StaticBody::stop() {
 
 void StaticBody::stop_y() {
 }
+
+bool StaticBody::stopped() {
+  return true;
+}

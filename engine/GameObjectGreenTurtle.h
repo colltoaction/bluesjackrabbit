@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_ENGINE_GAMEOBJECTGREENTURTLE_H_
 
 #include "GameObject.h"
+#include "GameObjectFloor.h"
 
 class GameObjectGreenTurtle: public GameObject {
  public:
@@ -14,6 +15,8 @@ class GameObjectGreenTurtle: public GameObject {
  private:
   char lives_;
   bool normal_;
+  GameObjectFloor *floor_under_;
+  int direction_;
 };
 
 #endif /* BLUESJACKRABBIT_ENGINE_GAMEOBJECTGREENTURTLE_H_ */
