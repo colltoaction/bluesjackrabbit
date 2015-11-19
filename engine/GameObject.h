@@ -46,10 +46,10 @@ class GameObject {
 
  protected:
   bool alive_;
-
- private:
   Body *body_;
   Collider *collider_;
+
+ private:
 };
 
 
