@@ -8,12 +8,10 @@ CharacterRenderer::~CharacterRenderer() {
 }
 
 void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
-  cr->set_source_rgb(0.0, 0.0, 1.0);
-  cr->set_line_width(0.1);
-  cr->arc(position_.x(),
-          position_.y(),
-          radius_,
-          0.0,
-          2.0 * M_PI);
-  cr->stroke();
+  Cairo::RefPtr<Cairo::ImageSurface> image =
+      Cairo::ImageSurface::create_from_png("static/sprites/Jazz.png");
+  cr->translate(position_.x(), position_.y());
+  cr->scale(1.0/image->get_width(), 1.0/image->get_height());
+  cr->set_source(image, 0, 0);
+  cr->paint();
 }
