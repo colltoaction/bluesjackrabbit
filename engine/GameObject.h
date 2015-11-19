@@ -23,7 +23,7 @@ class GameObject {
   /**
    * This method should be called in each step of the engine to perform routine operations.
    */
-  virtual void update_fixed();
+  virtual void update_fixed(Vector gravity);
 
   /**
    * Returns true if this object's will collide with another after moving to its next position.
@@ -40,9 +40,16 @@ class GameObject {
    */
   virtual std::list<Vector> characteristic_points();
 
- private:
+  virtual void impact(GameObject *other);
+
+  virtual bool alive();
+
+ protected:
+  bool alive_;
   Body *body_;
   Collider *collider_;
+
+ private:
 };
 
 

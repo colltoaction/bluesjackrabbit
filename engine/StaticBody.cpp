@@ -31,3 +31,17 @@ void StaticBody::update_fixed() {
 
 void StaticBody::stop() {
 }
+
+void StaticBody::stop_x() {
+}
+
+void StaticBody::stop_y() {
+}
+
+bool StaticBody::stopped() {
+  return true;
+}
+
+bool StaticBody::stopped_x() {
+  return true;
+}

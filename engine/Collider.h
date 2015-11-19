@@ -42,6 +42,18 @@ class Collider {
    * Returns a list of points (x, y) the client will use to render the object
    */
   virtual std::list<Vector> characteristic_points() const = 0;
+
+  /**
+   * Returns Right x position of object.
+   * This is implemented so turtles know where to change moving direction
+   * */
+  virtual double right_x() const = 0;
+
+  /**
+   * Returns Left x position of object.
+   * This is implemented so turtles know where to change moving direction
+   * */
+  virtual double left_x() const = 0;
 };
 
 

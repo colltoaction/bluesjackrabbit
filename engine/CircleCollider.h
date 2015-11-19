@@ -8,12 +8,14 @@
 
 class CircleCollider : public Collider {
  public:
-  explicit CircleCollider(const Body &body);
+  explicit CircleCollider(const Body &body, double radius);
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;
   virtual const Body &body() const;
   virtual std::list<Vector> characteristic_points() const;
+  virtual double right_x() const;
+  virtual double left_x() const;
 
  private:
   double radius_;

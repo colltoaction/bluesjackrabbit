@@ -73,12 +73,23 @@ class Engine {
    */
   uint32_t objects_size();
 
+  /**
+   * Removes from game object list all dead objects after proxy notifies client.
+   */
+  void clean_dead();
+
+  /**
+   * Updates player direction to shoot bullets.
+   * */
+  void update_player_direction(uint32_t object_id, bool right);
+
  private:
   static const Vector gravity_;
   uint32_t object_index_;
   std::map<uint32_t, GameObject*> game_objects_;
   std::map<uint32_t, bool> player_shoot_;
   bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
+  void players_shots();
 };
 
 

@@ -15,8 +15,12 @@ set(SOURCES
         GameObjectBullet.h
         GameObjectFloor.cpp
         GameObjectFloor.h
+        GameObjectGreenTurtle.cpp
+        GameObjectGreenTurtle.h
         GameObjectPlayer.cpp
         GameObjectPlayer.h
+        GameObjectRedTurtle.cpp
+        GameObjectRedTurtle.h
         RectangleCollider.cpp
         RectangleCollider.h
         RigidBody.cpp

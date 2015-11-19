@@ -1,8 +1,8 @@
 #include <cmath>
 #include "CircleCollider.h"
 
-CircleCollider::CircleCollider(const Body &body)
-    : radius_(0.5), body_(body) {
+CircleCollider::CircleCollider(const Body &body, double radius)
+    : radius_(radius), body_(body) {
 }
 
 // double-dispatching
@@ -40,4 +40,12 @@ std::list<Vector> CircleCollider::characteristic_points() const {
   std::list<Vector> point_list;
   point_list.push_back(Vector(radius_, radius_));
   return point_list;
+}
+
+double CircleCollider::right_x() const {
+  return body().position().x();
+}
+
+double CircleCollider::left_x() const {
+  return body().position().x();
 }
