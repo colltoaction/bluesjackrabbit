@@ -20,6 +20,8 @@ class ServerProxy {
   virtual void MoveDown() = 0;
   virtual void MoveLeft() = 0;
   virtual void MoveRight() = 0;
+  virtual void jump() = 0;
+  virtual void shoot() = 0;
   virtual Vector character_position() = 0;
   virtual std::map<uint32_t, Renderer*> &renderers() = 0;
 

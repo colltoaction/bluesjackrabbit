@@ -2,6 +2,8 @@ project(client)
 
 set(SOURCES
         main.cpp
+        BulletRenderer.cpp
+        BulletRenderer.h
         CharacterRenderer.cpp
         CharacterRenderer.h
         Constants.h
@@ -15,6 +17,8 @@ set(SOURCES
         LocalServerProxy.h
         MainWindow.cpp
         MainWindow.h
+        OtherCharacterRenderer.cpp
+        OtherCharacterRenderer.h
         RemoteServerProxy.cpp
         RemoteServerProxy.h
         RemoteServerProxyUpdater.cpp

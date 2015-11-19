@@ -11,6 +11,12 @@ set(SOURCES
         Engine.h
         GameObject.cpp
         GameObject.h
+        GameObjectBullet.cpp
+        GameObjectBullet.h
+        GameObjectFloor.cpp
+        GameObjectFloor.h
+        GameObjectPlayer.cpp
+        GameObjectPlayer.h
         RectangleCollider.cpp
         RectangleCollider.h
         RigidBody.cpp

@@ -31,6 +31,8 @@ class RemoteServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
+  virtual void jump();
+  virtual void shoot();
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
 
@@ -40,7 +42,6 @@ class RemoteServerProxy : public ServerProxy {
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();
   virtual void join_game(size_t game_id);
-  void read_object_position(uint32_t *object_id, double *x, double *y);
   virtual void shutdown();
 
  private:
@@ -54,7 +55,12 @@ class RemoteServerProxy : public ServerProxy {
   uint32_t object_id_;
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
-  void update_object(uint32_t object_id, double x, double y);
+  void update_object(uint32_t object_id, double x, double y, char type, point_type points);
+  void read_object_position(double *x, double *y);
+  void read_object_type(char *type);
+  std::list<Vector> read_object_points();
+  void read_double(double *value);
+  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
 };
 
 

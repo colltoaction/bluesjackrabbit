@@ -17,6 +17,8 @@ class LocalServerProxy : public ServerProxy {
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
+  virtual void jump();
+  virtual void shoot();
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
   virtual bool connect();

@@ -35,7 +35,12 @@ LocalServerProxy::LocalServerProxy() {
        game_object != engine_.game_objects().end();
        ++game_object) {
     if (i == 2) {
-      renderers_[i] = new FloorRenderer(game_object->second->body().position());
+      std::list<Vector> points;
+      points.push_back(Vector(-2, 4.5));
+      points.push_back(Vector(8, 4.5));
+      points.push_back(Vector(8, 5.5));
+      points.push_back(Vector(-2, 5.5));
+      renderers_[i] = new FloorRenderer(game_object->second->body().position(), points);
     } else if (i != 0) {
       renderers_[i] = new TurtleRenderer(game_object->second->body().position());
     }
@@ -75,6 +80,14 @@ void LocalServerProxy::MoveLeft() {
 
 void LocalServerProxy::MoveRight() {
   engine_.apply_force_(0, Vector(step, 0));
+}
+
+void LocalServerProxy::jump() {
+  engine_.apply_force_(0, Vector(step, step));
+}
+
+void LocalServerProxy::shoot() {
+  // TODO(tomas) Implementar esto
 }
 
 Vector LocalServerProxy::character_position() {

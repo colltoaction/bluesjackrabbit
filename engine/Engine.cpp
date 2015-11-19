@@ -1,6 +1,7 @@
 #include <glibmm/main.h>
 #include <vector>
 #include "Engine.h"
+#include "GameObjectBullet.h"
 #include "RigidBody.h"
 #include "StaticBody.h"
 #include "CircleCollider.h"
@@ -37,6 +38,9 @@ void Engine::FixedUpdate() {
 
     game_object->second->body().update_fixed();
     game_object->second->update_fixed();
+    if (player_shoot_.find(game_object->first) != player_shoot_.end()) {
+      player_shoot_[game_object->first] = false;
+    }
   }
 }
 
@@ -68,6 +72,25 @@ uint32_t Engine::add_game_object(Body *body, Collider *collider) {
   uint32_t to_return = object_index_;
   object_index_++;
   return to_return;
+}
+
+uint32_t Engine::add_game_object(GameObject *game_object) {
+  game_objects_[object_index_] = game_object;
+  uint32_t to_return = object_index_;
+  object_index_++;
+  return to_return;
+}
+
+void Engine::player_shoot(uint32_t object_id) {
+  if (player_shoot_[object_id]) {
+    return;
+  }
+  player_shoot_[object_id] = true;
+  Vector origin = game_objects_[object_id]->body().position();
+  Vector *offset = new Vector(origin + Vector(4, 0));
+  RigidBody *body = new RigidBody(offset);
+  GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body));
+  game_objects_[object_index_++] = object;
 }
 
 uint32_t Engine::objects_size() {

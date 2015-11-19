@@ -9,8 +9,12 @@
 #include <common/Lock.h>
 
 #include "RemoteServerProxy.h"
+
+#include "BulletRenderer.h"
+#include "FloorRenderer.h"
 #include "CharacterRenderer.h"
 #include "Constants.h"
+#include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 
 
@@ -37,6 +41,18 @@ void RemoteServerProxy::MoveLeft() {
 void RemoteServerProxy::MoveRight() {
   Lock l(&mutex_);
   char move = RIGHT;
+  socket_->send_buffer(&move, 1);
+}
+
+void RemoteServerProxy::jump() {
+  Lock l(&mutex_);
+  char move = JUMP;
+  socket_->send_buffer(&move, 1);
+}
+
+void RemoteServerProxy::shoot() {
+  Lock l(&mutex_);
+  char move = SHOOT;
   socket_->send_buffer(&move, 1);
 }
 
@@ -120,16 +136,35 @@ void RemoteServerProxy::init_game() {
   for (char i = 0; i < objects_size; i++) {
     uint32_t object_id;
     double x, y;
-    read_object_position(&object_id, &x, &y);
-    // std::cout << "llega objeto id: " << static_cast<int>(object_id)
-       // << "(" << x << ", " << y << ")\n";
-    if (object_id == object_id_) {
-      renderers_[object_id] = new CharacterRenderer(Vector(x, y));
-    } else {
-      renderers_[object_id] = new TurtleRenderer(Vector(x, y));
-    }
+    char type;
+    read_object_id(&object_id);
+    read_object_position(&x, &y);
+    read_object_type(&type);
+    std::list<Vector> points = read_object_points();
+    create_object_renderer(object_id, type, Vector(x, y), points);
   }
   std::cout << "FIN INIT GAME\n";
+}
+
+void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
+    std::list<Vector> points) {
+  Renderer *render = NULL;
+  switch (object_type) {
+    case 'p':
+      if (object_id == object_id_) {
+        render = new CharacterRenderer(position);
+      } else {
+        render = new OtherCharacterRenderer(position);
+      }
+      break;
+    case 'g':
+      render = new TurtleRenderer(position);
+      break;
+    case 'f':
+      render = new FloorRenderer(position, points);
+      break;
+  }
+  renderers_[object_id] = render;
 }
 
 void RemoteServerProxy::shutdown() {
@@ -138,24 +173,46 @@ void RemoteServerProxy::shutdown() {
   updater_.join();
 }
 
-// TODO(tomas) Ver como devolver el object_id desde el cliente.
-void RemoteServerProxy::update_object(uint32_t object_id, double x, double y) {
+void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points) {
+  (void) type;
+  (void) points;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
      // << " (" << x << ", " << y << ")\n";
-  renderers_[object_id]->update_position(Vector(x, y));
+  if (renderers_.find(object_id) != renderers_.end()) {
+    renderers_[object_id]->update_position(Vector(x, y));
+  } else {
+    renderers_[object_id] = new BulletRenderer(Vector(x, y));
+  }
   // std::cout << "Fin RemoteServerProxy::update_object\n";
 }
 
 
-void RemoteServerProxy::read_object_position(uint32_t *object_id, double *x, double *y) {
+void RemoteServerProxy::read_object_position(double *x, double *y) {
+  read_double(x);
+  read_double(y);
+}
+
+void RemoteServerProxy::read_object_type(char *type) {
+  socket_->read_buffer(type, CANT_BYTES);
+}
+
+std::list<Vector> RemoteServerProxy::read_object_points() {
+  char points_size;
+  socket_->read_buffer(&points_size, CANT_BYTES);
+  std::list<Vector> points;
+  for (char i = 0; i < points_size; i++) {
+    double x, y;
+    read_double(&x);
+    read_double(&y);
+    points.push_back(Vector(x, y));
+  }
+  return points;
+}
+
+void RemoteServerProxy::read_double(double *value) {
   size_t double_size = sizeof(double);
-  void *dir_x = static_cast<void*>(x);
-  char *dir_x_posta = static_cast<char*>(dir_x);
-  void *dir_y = static_cast<void*>(y);
-  char *dir_y_posta = static_cast<char*>(dir_y);
-  read_object_id(object_id);
-  socket_->read_buffer(dir_x_posta, double_size);
-  socket_->read_buffer(dir_y_posta, double_size);
+  char *address = static_cast<char*>(static_cast<void*>(value));
+  socket_->read_buffer(address, double_size);
 }
 
 // recibir and write
