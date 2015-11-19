@@ -16,19 +16,20 @@
 #include "RemoteServerProxy.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow()
-  : scene_(),
-    main_frame_(),
-    connection_screen_(),
-    initial_screen_(),
-    new_game_screen_(),
-    join_game_screen_(),
-    text_game_name_(NULL),
-    server_proxy_(NULL),
-    map_id_(0),
-    game_id_(0),
-    map_combo(NULL),
-    game_combo(NULL) {
+MainWindow::MainWindow(const Configuration &config)
+    : config_(config)
+    , scene_()
+    , main_frame_()
+    , connection_screen_()
+    , initial_screen_()
+    , new_game_screen_()
+    , join_game_screen_()
+    , text_game_name_(NULL)
+    , server_proxy_(NULL)
+    , map_id_(0)
+    , game_id_(0)
+    , map_combo(NULL)
+    , game_combo(NULL) {
   set_title("Blues Jackrabbit");
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
@@ -136,7 +137,7 @@ void MainWindow::singleplayer_click() {
 }
 
 void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy();
+  server_proxy_ = new RemoteServerProxy(config_);
   init_server_proxy();
   main_game_view();
 }

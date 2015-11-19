@@ -5,6 +5,7 @@
 #include <string>
 #include <sigc++/functors/slot.h>
 
+#include <common/Configuration.h>
 #include <common/Socket.h>
 #include <common/Mutex.h>
 #include <engine/GameObject.h>
@@ -25,7 +26,7 @@ typedef sigc::slot<void> Subscriber;
 
 class RemoteServerProxy : public ServerProxy {
  public:
-  RemoteServerProxy();
+  explicit RemoteServerProxy(const Configuration &config);
   virtual ~RemoteServerProxy();
   virtual void MoveUp();
   virtual void MoveDown();
@@ -47,6 +48,7 @@ class RemoteServerProxy : public ServerProxy {
  private:
   static const double step;
   // Engine engine_;
+  const Configuration &config_;
   std::map<uint32_t, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;

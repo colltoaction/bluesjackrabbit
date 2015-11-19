@@ -56,15 +56,16 @@ void RemoteServerProxy::shoot() {
   socket_->send_buffer(&move, 1);
 }
 
-RemoteServerProxy::RemoteServerProxy() :
-    socket_(NULL),
-    updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object)),
-    object_id_(0),
-    alive_(true) {
+RemoteServerProxy::RemoteServerProxy(const Configuration &config)
+    : config_(config)
+    , socket_(NULL)
+    , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object))
+    , object_id_(0)
+    , alive_(true) {
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
-  for (std::map<uint32_t, Renderer*>::iterator game_object = renderers_.begin();
+  for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
     delete game_object->second;
@@ -81,13 +82,13 @@ Vector RemoteServerProxy::character_position() {
   return ret;
 }
 
-std::map<uint32_t, Renderer*> &RemoteServerProxy::renderers() {
+std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
 // recibir and write.
 bool RemoteServerProxy::connect() {
-  socket_ = new Socket("localhost", "socks", 0);
+  socket_ = new Socket(config_["server_ip"], "socks", 0);
   updater_.set_socket(socket_);
   socket_->connect_socket();
   char c;
@@ -125,11 +126,10 @@ void RemoteServerProxy::join_game(size_t game_id) {
 
 void RemoteServerProxy::read_object_id(uint32_t *object_id) {
   uint32_t read;
-  char *buffer = static_cast<char*>(static_cast<void*>(&read));
+  char *buffer = static_cast<char *>(static_cast<void *>(&read));
   socket_->read_buffer(buffer, UINT32_T_LENGTH);
   *object_id = ntohl(read);
 }
-
 
 
 void RemoteServerProxy::init_game() {
@@ -157,7 +157,7 @@ void RemoteServerProxy::read_alive(char *alive) {
 }
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
-    std::list<Vector> points) {
+                                               std::list<Vector> points) {
   Renderer *render = NULL;
   if (object_type == 'r') {
     std::cout << "Llega la roja\n";
@@ -190,11 +190,11 @@ void RemoteServerProxy::shutdown() {
 }
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
-    bool alive) {
+                                      bool alive) {
   (void) type;
   (void) points;
   // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
-     // << " (" << x << ", " << y << ")\n";
+  // << " (" << x << ", " << y << ")\n";
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
@@ -240,7 +240,7 @@ std::list<Vector> RemoteServerProxy::read_object_points() {
 
 void RemoteServerProxy::read_double(double *value) {
   size_t double_size = sizeof(double);
-  char *address = static_cast<char*>(static_cast<void*>(value));
+  char *address = static_cast<char *>(static_cast<void *>(value));
   socket_->read_buffer(address, double_size);
 }
 
