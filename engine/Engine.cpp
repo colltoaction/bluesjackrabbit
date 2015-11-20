@@ -26,7 +26,6 @@ Engine::~Engine() {
 std::map<uint32_t, GameObject*> &Engine::game_objects() {
   return game_objects_;
 }
-
 void Engine::FixedUpdate() {
   players_shots();
   move_objects();
@@ -55,6 +54,7 @@ void Engine::players_shots() {
       GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[it->first]);
       player->increase_step();
       if (player->can_shoot()) {
+        // Create a new bullet
         Vector origin = game_objects_[it->first]->body().position();
         Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
         RigidBody *body = new RigidBody(offset);
@@ -101,7 +101,6 @@ bool Engine::will_collide(const std::map<uint32_t, GameObject*>::iterator &game_
   }
   return collides;
 }
-
 
 void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->body().apply_force(force);

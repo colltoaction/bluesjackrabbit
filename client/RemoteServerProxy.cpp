@@ -190,11 +190,9 @@ void RemoteServerProxy::shutdown() {
 }
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
-                                      bool alive) {
+  bool alive) {
   (void) type;
   (void) points;
-  // std::cout << "RemoteServerProxy::update_object id: " << static_cast<int>(object_id)
-  // << " (" << x << ", " << y << ")\n";
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
@@ -212,7 +210,6 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
       std::cout << "te mataron\n";
     }
   }
-  // std::cout << "Fin RemoteServerProxy::update_object\n";
 }
 
 
