@@ -88,7 +88,7 @@ std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
 
 // recibir and write.
 bool RemoteServerProxy::connect() {
-  socket_ = new Socket(config_["server_ip"], "socks", 0);
+  socket_ = new Socket(config_["server_host"], config_["server_port"], 0);
   updater_.set_socket(socket_);
   socket_->connect_socket();
   char c;
