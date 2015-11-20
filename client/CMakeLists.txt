@@ -49,3 +49,5 @@ target_link_libraries(${PROJECT_NAME} common)
 
 file(COPY static
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY client.ini
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

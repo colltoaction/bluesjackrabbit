@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 #define BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
 
+#include <common/Configuration.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/combobox.h>
@@ -16,10 +17,11 @@
 
 class MainWindow: public Gtk::Window {
  public:
-  MainWindow();
+  explicit MainWindow(const Configuration &config);
   virtual ~MainWindow();
 
  private:
+  const Configuration &config_;
   SceneRenderer scene_;
   EventBus bus_;
   Gtk::Box main_frame_;

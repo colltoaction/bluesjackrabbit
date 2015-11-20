@@ -1,6 +1,8 @@
 project(common)
 
 set(SOURCES
+        Configuration.cpp
+        Configuration.h
         Lock.cpp
         Lock.h
         Logger.cpp
