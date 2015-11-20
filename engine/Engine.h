@@ -55,6 +55,7 @@ class Engine {
 
   /**
    * Adds a game object to the Engine.
+   * DEPRECATED!
    */
   uint32_t add_game_object(Body *body, Collider *collider);
 
@@ -77,6 +78,11 @@ class Engine {
    * Removes from game object list all dead objects after proxy notifies client.
    */
   void clean_dead();
+
+  /**
+   * Applies forces and moves objects with (poor) artificial intelligence.
+   * */
+  void move_objects();
 
   /**
    * Updates player direction to shoot bullets.
