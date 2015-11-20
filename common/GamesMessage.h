@@ -9,7 +9,7 @@ class GamesMessage {
  public:
   explicit GamesMessage(Socket *socket);
   std::map<size_t, std::string> read();
-  void send(const std::map<size_t, std::string> &games);
+  void send(const std::map<char, std::string> &games);
 
  private:
   Socket *socket_;

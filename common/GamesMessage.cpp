@@ -27,14 +27,17 @@ std::map<size_t, std::string> GamesMessage::read() {
   return games;
 }
 
-void GamesMessage::send(const std::map<size_t, std::string> &games) {
-  (void)games;  // UNUSED
-//  char game_count = static_cast<char>(games.size());
-//  socket_->send_buffer(&game_count, sizeof(char));
-//  for (std::map<size_t, std::string>::const_iterator game_id = games.begin();
-//       game_id != games.end(); game_id++) {
-//    socket_->send_buffer(&(*game_id), sizeof(char));
-//  }
-//
-//  Logger::info("Sent available games");
+void GamesMessage::send(const std::map<char, std::string> &games) {
+  char game_count = static_cast<char>(games.size());
+  socket_->send_buffer(&game_count, sizeof(char));
+  for (std::map<char, std::string>::const_iterator it = games.begin();
+       it != games.end(); it++) {
+    char game_id = it->first;
+    socket_->send_buffer(&game_id, sizeof(char));
+    char game_name_length = static_cast<char>(it->second.size());
+    socket_->send_buffer(&game_name_length, sizeof(char));
+    socket_->send_buffer(it->second.c_str(), game_name_length);
+  }
+
+  Logger::info("Sent available games");
 }

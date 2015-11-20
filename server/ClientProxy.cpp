@@ -123,22 +123,8 @@ void ClientProxy::send_object_id(uint32_t *object_id) {
 }
 
 void ClientProxy::list_games_call() {
-  std::cout << "ClientProxy:: Entra en listar games\n";
-  char message_type = LIST_GAMES;
-  socket_->send_buffer(&message_type, CANT_BYTES);
-  std::map<char, std::string> game_ids = list_games_functor_();
-  char message_length = static_cast<char>(game_ids.size());
-  socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::map<char, std::string>::iterator it = game_ids.begin();
-      it != game_ids.end(); it++) {
-    char send = it->first;
-    std::cout << "ENVIANDO: " << static_cast<int>(send) << std::endl;
-    socket_->send_buffer(&send, CANT_BYTES);
-    char game_length = static_cast<char>(it->second.size());
-    socket_->send_buffer(&game_length, CANT_BYTES);
-    socket_->send_buffer(it->second.c_str(), game_length);
-  }
-  std::cout << "ClientProxy:: Finaliza listar games\n";
+  MessageWriter writer(socket_);
+  writer.send_available_games(list_games_functor_());
 }
 
 void ClientProxy::list_maps_call() {
