@@ -3,10 +3,14 @@ project(common)
 set(SOURCES
         Configuration.cpp
         Configuration.h
+        InvalidMessageException.cpp
+        InvalidMessageException.h
         Lock.cpp
         Lock.h
         Logger.cpp
         Logger.h
+        MessageReader.cpp
+        MessageReader.h
         Mutex.cpp
         Mutex.h
         Socket.cpp

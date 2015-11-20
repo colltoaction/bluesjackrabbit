@@ -9,6 +9,8 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/messagedialog.h>
+#include <common/InvalidMessageException.h>
+#include <common/Logger.h>
 
 #include "EventBus.h"
 #include "LocalServerProxy.h"
@@ -143,14 +145,19 @@ void MainWindow::multiplayer_click() {
 }
 
 void MainWindow::init_server_proxy() {
-  connected_ = server_proxy_->connect();
-  if (!connected_) {
+  try {
+    server_proxy_->connect();
+  } catch (const InvalidMessageException &ex) {
+    Logger::info(ex.what());
+    connected_ = false;
     Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
     dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
     dialog.run();
     hide();
     return;
   }
+
+  connected_ = true;
   bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
   bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
   bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));

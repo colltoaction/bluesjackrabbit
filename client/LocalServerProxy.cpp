@@ -102,8 +102,7 @@ std::map<uint32_t, Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
 }
 
-bool LocalServerProxy::connect() {
-  return true;
+void LocalServerProxy::connect() {
 }
 
 std::map<size_t, std::string> LocalServerProxy::list_maps() {

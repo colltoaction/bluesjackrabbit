@@ -37,7 +37,11 @@ class RemoteServerProxy : public ServerProxy {
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
 
-  virtual bool connect();
+  /**
+   * Initiates a connection to the server via sockets and initiates the connection.
+   * TODO(tinchou): read the player id.
+   */
+  virtual void connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);

@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include <common/Lock.h>
+#include <common/MessageReader.h>
 
 #include "RemoteServerProxy.h"
 
@@ -86,14 +87,12 @@ std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
-// recibir and write.
-bool RemoteServerProxy::connect() {
+void RemoteServerProxy::connect() {
   socket_ = new Socket(config_["server_host"], config_["server_port"], 0);
   updater_.set_socket(socket_);
   socket_->connect_socket();
-  char c;
-  socket_->read_buffer(&c, CANT_BYTES);
-  return c == 'A';
+  MessageReader reader(socket_);
+  reader.read_player_id();  // TODO(tinchou): use player id
 }
 
 
