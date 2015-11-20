@@ -9,6 +9,8 @@
 #include <common/Lock.h>
 #include <common/MessageReader.h>
 #include <common/MapsMessage.h>
+#include <common/CreateGameMessage.h>
+#include <common/MessageWriter.h>
 
 #include "RemoteServerProxy.h"
 
@@ -98,17 +100,13 @@ void RemoteServerProxy::connect() {
 
 
 bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
-  std::cout << "Start game with map id: " << map_id << std::endl;
-  char option = NEW_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  option = static_cast<char>(map_id);
-  socket_->send_buffer(&option, MAP_ID_LENGTH);
-  char game_name_length = static_cast<char>(game_name.size());
-  socket_->send_buffer(&game_name_length, CANT_BYTES);
-  socket_->send_buffer(game_name.c_str(), game_name_length);
+  MessageWriter writer(socket_);
+  writer.send_create_game(map_id, game_name);
+
   read_object_id(&object_id_);
   init_game();
   updater_.start();
+
   return true;
 }
 
@@ -130,7 +128,6 @@ void RemoteServerProxy::read_object_id(uint32_t *object_id) {
   socket_->read_buffer(buffer, UINT32_T_LENGTH);
   *object_id = ntohl(read);
 }
-
 
 void RemoteServerProxy::init_game() {
   std::cout << "RemoteServerProxy::init_game\n";

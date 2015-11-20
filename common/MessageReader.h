@@ -2,9 +2,10 @@
 #define BLUESJACKRABBIT_COMMON_MESSAGEREADER_H
 
 
-#include "Socket.h"
-#include "MapsMessage.h"
+#include "CreateGameMessage.h"
 #include "GamesMessage.h"
+#include "MapsMessage.h"
+#include "Socket.h"
 
 class MessageReader {
  public:
@@ -29,8 +30,15 @@ class MessageReader {
    */
   GamesMessage read_available_games();
 
+  /**
+   * Reads a request to create a new game.
+   * @throws InvalidMessageException
+   */
+  CreateGameMessage read_create_game();
+
  private:
   Socket *socket_;
+  void validate_message_type(char expected) const;
   char read_message_type() const;
 };
 

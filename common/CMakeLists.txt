@@ -3,6 +3,10 @@ project(common)
 set(SOURCES
         Configuration.cpp
         Configuration.h
+        CreateGameMessage.cpp
+        CreateGameMessage.h
+        GamesMessage.cpp
+        GamesMessage.h
         InvalidMessageException.cpp
         InvalidMessageException.h
         Lock.cpp
@@ -21,7 +25,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-        GamesMessage.cpp GamesMessage.h)
+)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})

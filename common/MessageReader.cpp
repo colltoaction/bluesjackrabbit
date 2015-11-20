@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include "MessageReader.h"
 #include "InvalidMessageException.h"
 
@@ -7,30 +8,34 @@ MessageReader::MessageReader(Socket *socket)
 }
 
 void MessageReader::read_player_id() {
-  char c = read_message_type();
-  if (c != 'A') {
-    throw InvalidMessageException(std::string("Expected A but received ").append(1, c));
-  }
-
+  validate_message_type('A');
   // TODO(tinchou): read player id
 }
 
 MapsMessage MessageReader::read_available_maps() {
-  char c = read_message_type();
-  if (c != 0x23) {
-    throw InvalidMessageException(std::string("Expected ASCII 23 but received ").append(1, c));
-  }
-
+  validate_message_type(0x23);
   return MapsMessage(socket_);
 }
 
 GamesMessage MessageReader::read_available_games() {
-  char c = read_message_type();
-  if (c != 0x22) {
-    throw InvalidMessageException(std::string("Expected ASCII 22 but received ").append(1, c));
-  }
-
+  validate_message_type(0x22);
   return GamesMessage(socket_);
+}
+
+CreateGameMessage MessageReader::read_create_game() {
+  validate_message_type(0x20);
+  return CreateGameMessage(socket_);
+}
+
+void MessageReader::validate_message_type(char expected) const {
+  char c = read_message_type();
+  if (c != expected) {
+    std::stringstream ss;
+    ss << std::hex
+       << "Expected 0x" << static_cast<int>(expected)
+       << " but received 0x" << static_cast<int>(c);
+    throw InvalidMessageException(ss.str());
+  }
 }
 
 char MessageReader::read_message_type() const {

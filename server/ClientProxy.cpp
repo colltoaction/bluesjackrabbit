@@ -4,6 +4,7 @@
 #include <sstream>
 #include <unistd.h>
 #include <common/MessageWriter.h>
+#include <common/MessageReader.h>
 
 #include "ClientProxy.h"
 #include "Constants.h"
@@ -92,17 +93,14 @@ void ClientProxy::add_object_id(uint32_t object_id) {
 }
 
 void ClientProxy::new_game_call() {
-  std::cout << "entra en new_game call\n";
-  char map_id;
-  socket_->read_buffer(&map_id, MAP_ID_LENGTH);
-  char game_name_length;
-  socket_->read_buffer(&game_name_length, CANT_BYTES);
-  char game_name[MAX_CHAR];
-  socket_->read_buffer(game_name, game_name_length);
-  game_name[static_cast<size_t>(game_name_length)] = '\0';
-  char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
+  char option = NEW_GAME;
+  socket_->send_buffer(&option, 1);
+  MessageReader reader(socket_);
+  CreateGameMessage create_game = reader.read_create_game();
+  create_game.read();
+
+  char game_id = create_new_game_functor_(create_game.map_id(), create_game.game_name(), this);
   game_id_ = game_id;
-  std::cout << "Finaliza new game call con nombre: " << game_name << "\n";
   send_object_id(&object_id_);
 }
 
