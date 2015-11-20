@@ -3,8 +3,6 @@
 
 
 #include <list>
-#include <map>
-#include <string>
 #include "Socket.h"
 
 class MapsMessage {

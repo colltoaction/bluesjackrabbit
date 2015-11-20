@@ -1,7 +1,6 @@
 #include <string>
 #include "MessageReader.h"
 #include "InvalidMessageException.h"
-#include "MapsMessage.h"
 
 MessageReader::MessageReader(Socket *socket)
     : socket_(socket) {
@@ -23,6 +22,15 @@ MapsMessage MessageReader::read_available_maps() {
   }
 
   return MapsMessage(socket_);
+}
+
+GamesMessage MessageReader::read_available_games() {
+  char c = read_message_type();
+  if (c != 0x22) {
+    throw InvalidMessageException(std::string("Expected ASCII 22 but received ").append(1, c));
+  }
+
+  return GamesMessage(socket_);
 }
 
 char MessageReader::read_message_type() const {

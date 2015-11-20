@@ -250,24 +250,10 @@ std::list<char> RemoteServerProxy::list_maps() {
 }
 
 std::map<size_t, std::string> RemoteServerProxy::list_games() {
-  std::cout << "Comienzo listado games\n";
-  std::map<size_t, std::string> map;
   char option = LIST_GAMES;
   socket_->send_buffer(&option, 1);
-  socket_->read_buffer(&option, CANT_BYTES);
-  std::cout << "Son " << static_cast<int>(option) << " juegos\n";
-  for (char i = 0; i < option; i++) {
-    std::cout << "Juego: " << static_cast<int>(i) << std::endl;
-    char game_number;
-    socket_->read_buffer(&game_number, CANT_BYTES);
-    char game_length;
-    socket_->read_buffer(&game_length, CANT_BYTES);
-    char game_name[MAX_CHAR];
-    socket_->read_buffer(game_name, game_length);
-    game_name[static_cast<size_t>(game_length)] = '\0';
-    map[game_number] = game_name;
-  }
-  std::cout << "Fin listado\n";
-  return map;
+  MessageReader reader(socket_);
+  GamesMessage games = reader.read_available_games();
+  return games.read();
 }
 

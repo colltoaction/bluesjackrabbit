@@ -4,6 +4,7 @@
 
 #include "Socket.h"
 #include "MapsMessage.h"
+#include "GamesMessage.h"
 
 class MessageReader {
  public:
@@ -17,10 +18,16 @@ class MessageReader {
   void read_player_id();
 
   /**
-   * Reads a MapsMessage from the socket.
+   * Reads a available maps from the socket.
    * @throws InvalidMessageException
    */
   MapsMessage read_available_maps();
+
+  /**
+   * Reads a available games from the socket.
+   * @throws InvalidMessageException
+   */
+  GamesMessage read_available_games();
 
  private:
   Socket *socket_;

@@ -122,10 +122,10 @@ void ClientProxy::send_object_id(uint32_t *object_id) {
   socket_->send_buffer(buffer, UINT32_T_LENGTH);
 }
 
-
-
 void ClientProxy::list_games_call() {
   std::cout << "ClientProxy:: Entra en listar games\n";
+  char message_type = LIST_GAMES;
+  socket_->send_buffer(&message_type, CANT_BYTES);
   std::map<char, std::string> game_ids = list_games_functor_();
   char message_length = static_cast<char>(game_ids.size());
   socket_->send_buffer(&message_length, CANT_BYTES);
