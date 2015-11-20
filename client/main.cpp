@@ -1,5 +1,6 @@
 #include <gtkmm/application.h>
 #include <common/Configuration.h>
+#include <common/Logger.h>
 #include "MainWindow.h"
 
 int main(int argc, char *argv[]) {
@@ -10,8 +11,10 @@ int main(int argc, char *argv[]) {
                                argv,
                                "org.fiuba.bluesjackrabbit",
                                Gio::APPLICATION_NON_UNIQUE);  // Allow multiple windows
+  Logger::init();
   Configuration config("client.ini");
   MainWindow window(config);
   int result = app->run(window);
+  Logger::close();
   return result;
 }

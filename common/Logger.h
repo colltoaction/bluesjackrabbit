@@ -9,12 +9,17 @@
 
 class Logger {
  public:
+  static void init();
+  static void close();
   static void error(std::string message);
   static void info(std::string message);
   static void warning(std::string message);
 
  private:
-  static void log(log4cpp::Priority::PriorityLevel priority_level, const std::string &message);
+  static Logger* instance;
+  log4cpp::Category *category_;
+  explicit Logger(log4cpp::Category *category);
+  void log(log4cpp::Priority::PriorityLevel priority_level, const std::string &message);
 };
 
 

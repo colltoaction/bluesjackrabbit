@@ -19,10 +19,17 @@ std::list<char> MapsMessage::read() {
   std::list<char> maps;
   char map_count;
   socket_->read_buffer(&map_count, sizeof(char));
+  std::stringstream ss;
+  ss << "Available map count: " << static_cast<int>(map_count);
+  Logger::info(ss.str());
+  std::cout << "Does Logger fail?";
+  Logger::info("Does Logger fail?");
   for (char i = 0; i < map_count; i++) {
     char map_id;
+    Logger::info("Reading map");
     socket_->read_buffer(&map_id, sizeof(char));
     maps.push_back(map_id);
+    Logger::info("Reading map ended");
   }
 
   Logger::info("Read available maps");

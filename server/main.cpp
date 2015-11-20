@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <string>
+#include <common/Logger.h>
 
 #include "Server.h"
 
@@ -13,8 +14,10 @@ int main(int argc, char *argv[]) {
     config_filename = std::string(argv[1]);
   }
 
+  Logger::init();
   Configuration config(config_filename);
   Server server(config);
   server.init();
+  Logger::close();
   return 0;
 }

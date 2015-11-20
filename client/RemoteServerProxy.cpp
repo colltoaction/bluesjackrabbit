@@ -18,6 +18,7 @@
 #include "FloorRenderer.h"
 #include "CharacterRenderer.h"
 #include <common/Constants.h>
+#include <common/Logger.h>
 #include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 
@@ -96,8 +97,9 @@ void RemoteServerProxy::connect() {
   socket_->connect_socket();
   MessageReader reader(socket_);
   reader.read_player_id();  // TODO(tinchou): use player id
+  const std::string &peer_name_ = socket_->peer_name();
+  Logger::info(std::string("Server ").append(peer_name_).append(" conectado"));
 }
-
 
 bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
   MessageWriter writer(socket_);

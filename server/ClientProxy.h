@@ -16,7 +16,7 @@ class ClientProxy;
 typedef std::list<char> ObjectList;
 typedef std::map<char, std::string> GameList;
 
-typedef sigc::slot<char, char, const std::string &, ClientProxy*> new_game_callback;
+typedef sigc::slot<char, char, std::string, ClientProxy*> new_game_callback;
 typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
 typedef sigc::slot<GameList> list_games_callback;
 typedef sigc::slot<ObjectList> list_maps_callback;

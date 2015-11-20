@@ -10,6 +10,7 @@
 #include <common/Constants.h>
 #include <common/Logger.h>
 #include <common/JoinGameMessage.h>
+#include <common/InvalidMessageException.h>
 
 ClientProxy::ClientProxy(Socket *socket,
     new_game_callback ng_callback,
@@ -41,16 +42,24 @@ void ClientProxy::say_hello() {
 
 /* Se ejecuta en un hilo separado al del Socket que acepta socketes,
  * por eso tiene su propio Socket peer y referencias a Game para actualizar estados.
- * */
+ */
 void ClientProxy::run() {
   say_hello();
-  Logger::info(std::string("Cliente ").append(socket_->peer_name()).append(" conectado"));
-  while (keep_reading_ && !finalized_) {
-    read_protocol();
-  }
-  socket_->close_connection();
-}
+  const std::string &peer_name_ = socket_->peer_name();
+  Logger::info(std::string("Cliente ").append(peer_name_).append(" conectado"));
+  try {
+    while (keep_reading_ && !finalized_) {
+      read_protocol();
+    }
 
+    Logger::info(std::string("Cliente ").append(peer_name_).append(" desconectado"));
+  } catch (const InvalidMessageException &ex) {
+    Logger::info(std::string("Cliente ").append(peer_name_).append(" desconectado por protocolo inválido"));
+    Logger::info(std::string("Excepción: ").append(ex.what()));
+  }
+
+  finalize();
+}
 
 void ClientProxy::read_protocol() {
   MessageReader reader(socket_);
