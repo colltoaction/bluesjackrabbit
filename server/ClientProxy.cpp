@@ -8,6 +8,8 @@
 
 #include "ClientProxy.h"
 #include <common/Constants.h>
+#include <common/Logger.h>
+#include <common/JoinGameMessage.h>
 
 ClientProxy::ClientProxy(Socket *socket,
     new_game_callback ng_callback,
@@ -51,12 +53,12 @@ void ClientProxy::run() {
 
 void ClientProxy::read_protocol() {
   MessageReader reader(socket_);
-  Message *message = reader.read_message();  // Need an object because of polymorphism
+  Message *message = reader.read_message();  // Need a pointer because of polymorphism
   // GAME OPTIONS
   if (message->type() == CreateGameMessage::type_id()) {
     new_game_call(dynamic_cast<CreateGameMessage *>(message));
-  } else if (message->type() == JOIN_GAME) {
-    join_game_call();
+  } else if (message->type() == JoinGameMessage::type_id()) {
+    join_game_call(dynamic_cast<JoinGameMessage *>(message));
   } else if (message->type() == GamesMessage::type_id()) {
     list_games_call();
   } else if (message->type() == MapsMessage::type_id()) {
@@ -98,12 +100,9 @@ void ClientProxy::new_game_call(CreateGameMessage *create_game) {
   start_functor_();
 }
 
-void ClientProxy::join_game_call() {
-  std::cout << "Entra en join_game call\n";
-  char game_id;
-  socket_->read_buffer(&game_id, MAP_ID_LENGTH);
-  join_game_functor_(game_id, this);
-  std::cout << "Finaliza join game call\n";
+void ClientProxy::join_game_call(JoinGameMessage *join_game) {
+  join_game->read();
+  join_game_functor_(join_game->game_id(), this);
   send_object_id(&object_id_);
   start_functor_();
 }
@@ -116,6 +115,7 @@ void ClientProxy::send_object_id(uint32_t *object_id) {
 }
 
 void ClientProxy::list_games_call() {
+  Logger::info("Sending available games");
   MessageWriter writer(socket_);
   writer.send_available_games(list_games_functor_());
 }

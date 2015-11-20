@@ -113,8 +113,8 @@ Socket* Socket::accept_connection() {
 }
 
 /* Envia del buffer 'tamanio' bytes a la otra punta */
-bool Socket::send_buffer(const char *buffer, ssize_t tamanio) {
-  ssize_t bytesEnviados = 0;
+bool Socket::send_buffer(const char *buffer, size_t tamanio) {
+  size_t bytesEnviados = 0;
   bool error = false, socketCerrado = false;
   while (bytesEnviados < tamanio && !closed) {
     ssize_t envioParcial = send(this->socketFD, buffer + bytesEnviados,

@@ -10,12 +10,16 @@ set(SOURCES
         GamesMessage.h
         InvalidMessageException.cpp
         InvalidMessageException.h
+        JoinGameMessage.cpp
+        JoinGameMessage.h
         Lock.cpp
         Lock.h
         Logger.cpp
         Logger.h
         MapsMessage.cpp
         MapsMessage.h
+        Message.cpp
+        Message.h
         MessageReader.cpp
         MessageReader.h
         MessageWriter.cpp
@@ -26,7 +30,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-        Message.cpp Message.h)
+)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})

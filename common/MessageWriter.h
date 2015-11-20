@@ -22,6 +22,7 @@ class MessageWriter {
   void send_available_games(const std::map<char, std::string> &game_names);
 
   void send_create_game(size_t map_id, const std::string &game_name);
+
  private:
   Socket *socket_;
 };

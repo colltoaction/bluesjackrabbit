@@ -9,6 +9,7 @@
 #include <common/Socket.h>
 #include <common/Thread.h>
 #include <common/CreateGameMessage.h>
+#include <common/JoinGameMessage.h>
 
 class ClientProxy;
 
@@ -56,7 +57,7 @@ class ClientProxy : public Thread {
   bool bullet_shot;
   void read_protocol();
   void new_game_call(CreateGameMessage *create_game);
-  void join_game_call();
+  void join_game_call(JoinGameMessage *join_game);
   void list_games_call();
   void list_maps_call();
   void send_object_id(uint32_t *object_id);

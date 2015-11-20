@@ -17,7 +17,7 @@ void MessageWriter::send_available_maps(const std::list<char> &map_ids) {
 
 void MessageWriter::send_available_games(const std::map<char, std::string> &game_names) {
   char message_type = LIST_GAMES;
-  socket_->send_buffer(&message_type, CANT_BYTES);
+  socket_->send_buffer(&message_type, sizeof(char));
   GamesMessage games(socket_);
   games.send(game_names);
 }

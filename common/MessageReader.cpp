@@ -41,7 +41,7 @@ MapsMessage MessageReader::read_available_maps() {
 }
 
 GamesMessage MessageReader::read_available_games() {
-  validate_message_type(0x22);
+  validate_message_type(LIST_GAMES);
   return GamesMessage(socket_);
 }
 
