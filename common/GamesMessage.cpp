@@ -1,11 +1,21 @@
 #include "GamesMessage.h"
 #include "Logger.h"
+#include "Constants.h"
 
 #define MAX_NAME_LENGTH 256
 
 
 GamesMessage::GamesMessage(Socket *socket)
-    : socket_(socket) {
+    : Message(LIST_GAMES)
+    , socket_(socket) {
+}
+
+char GamesMessage::type_id() {
+  return LIST_GAMES;
+}
+
+char GamesMessage::type() {
+  return Message::type();
 }
 
 std::map<size_t, std::string> GamesMessage::read() {

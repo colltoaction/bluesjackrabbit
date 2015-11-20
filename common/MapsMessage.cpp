@@ -1,8 +1,18 @@
 #include "MapsMessage.h"
 #include "Logger.h"
+#include "Constants.h"
 
 MapsMessage::MapsMessage(Socket *socket)
-    : socket_(socket) {
+    : Message(LIST_MAPS)
+    , socket_(socket) {
+}
+
+char MapsMessage::type_id() {
+  return LIST_MAPS;
+}
+
+char MapsMessage::type() {
+  return Message::type();
 }
 
 std::list<char> MapsMessage::read() {

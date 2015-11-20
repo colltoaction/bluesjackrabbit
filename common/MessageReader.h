@@ -12,6 +12,12 @@ class MessageReader {
   explicit MessageReader(Socket *socket);
 
   /**
+   * Reads a message and parses its contents.
+   * @throws InvalidMessageException
+   */
+  Message * read_message();
+
+  /**
    * Reads a handshake from the socket (char 'A').
    * TODO(tinchou): send and read a message with the player id.
    * @throws InvalidMessageException

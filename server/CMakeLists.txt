@@ -8,7 +8,6 @@ set(SOURCES
         ClientProxy.h
         ClientProxyAcceptor.cpp
         ClientProxyAcceptor.h
-        Constants.h
         Game.cpp
         Game.h
         GameMonitor.cpp

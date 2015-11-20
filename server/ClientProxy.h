@@ -8,6 +8,7 @@
 #include <engine/GameObject.h>
 #include <common/Socket.h>
 #include <common/Thread.h>
+#include <common/CreateGameMessage.h>
 
 class ClientProxy;
 
@@ -54,7 +55,7 @@ class ClientProxy : public Thread {
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   bool bullet_shot;
   void read_protocol();
-  void new_game_call();
+  void new_game_call(CreateGameMessage *create_game);
   void join_game_call();
   void list_games_call();
   void list_maps_call();

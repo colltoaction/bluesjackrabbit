@@ -1,7 +1,17 @@
 #include "CreateGameMessage.h"
+#include "Constants.h"
 
 CreateGameMessage::CreateGameMessage(Socket *socket)
-    : socket_(socket) {
+    : Message(NEW_GAME)
+    , socket_(socket) {
+}
+
+char CreateGameMessage::type_id() {
+  return NEW_GAME;
+}
+
+char CreateGameMessage::type() {
+  return Message::type();
 }
 
 void CreateGameMessage::send(size_t map_id, const std::string &game_name) {

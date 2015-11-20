@@ -1,4 +1,4 @@
-#include <server/Constants.h>
+#include <common/Constants.h>
 #include "MessageWriter.h"
 #include "MapsMessage.h"
 #include "GamesMessage.h"

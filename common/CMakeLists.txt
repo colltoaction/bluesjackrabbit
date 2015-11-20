@@ -3,6 +3,7 @@ project(common)
 set(SOURCES
         Configuration.cpp
         Configuration.h
+        Constants.h
         CreateGameMessage.cpp
         CreateGameMessage.h
         GamesMessage.cpp
@@ -25,7 +26,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-)
+        Message.cpp Message.h)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})

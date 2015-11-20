@@ -1,7 +1,7 @@
 #include "RemoteServerProxyUpdater.h"
 
 #include <iostream>
-#include "Constants.h"
+#include <common/Constants.h>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(RendererUpdate update) :

@@ -6,7 +6,6 @@ set(SOURCES
         BulletRenderer.h
         CharacterRenderer.cpp
         CharacterRenderer.h
-        Constants.h
         Event.cpp
         Event.h
         EventBus.cpp

@@ -17,7 +17,7 @@
 #include "BulletRenderer.h"
 #include "FloorRenderer.h"
 #include "CharacterRenderer.h"
-#include "Constants.h"
+#include <common/Constants.h>
 #include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 

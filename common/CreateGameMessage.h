@@ -3,13 +3,18 @@
 
 #include <string>
 #include "Socket.h"
+#include "Message.h"
 
 #define MAX_NAME_LENGTH 256
 
 
-class CreateGameMessage {
+class CreateGameMessage: public Message {
  public:
   explicit CreateGameMessage(Socket *socket);
+
+  static char type_id();
+
+  virtual char type();
 
   /**
    * Sends a request to create a new game in the server, which opens a lobby.
