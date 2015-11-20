@@ -16,7 +16,7 @@ class ClientProxy;
 typedef std::list<char> ObjectList;
 typedef std::map<char, std::string> GameList;
 
-typedef sigc::slot<char, char, std::string, ClientProxy*> new_game_callback;
+typedef sigc::slot<char, char, const std::string &, ClientProxy*> new_game_callback;
 typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
 typedef sigc::slot<GameList> list_games_callback;
 typedef sigc::slot<ObjectList> list_maps_callback;
@@ -53,7 +53,7 @@ class ClientProxy : public Thread {
 
   char game_id_;
   uint32_t object_id_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
+  static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   bool bullet_shot;
   void read_protocol();
   void new_game_call(CreateGameMessage *create_game);

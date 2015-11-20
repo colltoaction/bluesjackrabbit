@@ -44,6 +44,7 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
+  Logger::info(std::string("Cliente ").append(socket_->peer_name()).append(" conectado"));
   while (keep_reading_ && !finalized_) {
     read_protocol();
   }
@@ -82,7 +83,6 @@ void ClientProxy::add_shoot_functor(shoot_callback shoot_callback) {
   shoot_functor_ = shoot_callback;
 }
 
-
 void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
@@ -108,7 +108,6 @@ void ClientProxy::join_game_call(JoinGameMessage *join_game) {
 }
 
 void ClientProxy::send_object_id(uint32_t *object_id) {
-  // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
   uint32_t send_number = htonl(*object_id);
   char* buffer = static_cast<char*>(static_cast<void*>(&send_number));
   socket_->send_buffer(buffer, UINT32_T_LENGTH);

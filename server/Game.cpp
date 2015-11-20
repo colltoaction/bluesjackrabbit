@@ -56,7 +56,6 @@ Game::~Game() {
 }
 
 void Game::add_player(ClientProxy *player) {
-  std::cout << "Game::addplayer\n";
   players_[player_index_] = player;
   player->add_move_functor(sigc::mem_fun(*this, &Game::action));
   player->add_shoot_functor(sigc::mem_fun(*this, &Game::shoot));
