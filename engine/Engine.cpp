@@ -26,54 +26,9 @@ Engine::~Engine() {
 std::map<uint32_t, GameObject*> &Engine::game_objects() {
   return game_objects_;
 }
-
-void Engine::players_shots() {
-  for (std::map<uint32_t, bool>::iterator it = player_shoot_.begin(); it != player_shoot_.end(); it++) {
-    if (it->second) {
-      GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[it->first]);
-      player->increase_step();
-      if (player->can_shoot()) {
-        Vector origin = game_objects_[it->first]->body().position();
-        Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
-        RigidBody *body = new RigidBody(offset);
-        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body, 0.05),
-            player->direction());
-        game_objects_[object_index_++] = object;
-        player->shot();
-      }
-      player_shoot_[it->first] = false;
-    }
-  }
-}
-
 void Engine::FixedUpdate() {
   players_shots();
-  for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
-       game_object != game_objects_.end();
-       ++game_object) {
-    // apply_force(game_object->second, gravity_);
-    if (will_collide(game_object)) {
-      // game_object->second->body().stop();
-    }
-    game_object->second->update_fixed(gravity_);
-    game_object->second->body().update_fixed();
-  }
-}
-
-bool Engine::will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object) {
-  bool collides = false;
-  for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
-       other != game_objects_.end();
-       ++other) {
-    if (game_object != other) {
-      if (game_object->second->will_collide(*other->second)) {
-        game_object->second->impact(other->second);
-        other->second->impact(game_object->second);
-        collides = true;
-      }
-    }
-  }
-  return collides;
+  move_objects();
 }
 
 void Engine::clean_dead() {
@@ -90,6 +45,61 @@ void Engine::clean_dead() {
     game_objects_.erase(*it);
     delete object;
   }
+}
+
+void Engine::players_shots() {
+  // Player shoot keeps record of which players shot in this engine step
+  for (std::map<uint32_t, bool>::iterator it = player_shoot_.begin(); it != player_shoot_.end(); it++) {
+    if (it->second) {
+      GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[it->first]);
+      player->increase_step();
+      if (player->can_shoot()) {
+        // Create a new bullet
+        Vector origin = game_objects_[it->first]->body().position();
+        Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
+        RigidBody *body = new RigidBody(offset);
+        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body, 0.05),
+            player->direction());
+        game_objects_[object_index_++] = object;
+        player->shot();
+      }
+      player_shoot_[it->first] = false;
+    }
+  }
+}
+
+void Engine::move_objects() {
+  for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
+       game_object != game_objects_.end();
+       ++game_object) {
+    // Gravity no more applied here
+    // apply_force(game_object->second, gravity_);
+    if (will_collide(game_object)) {
+      // This is not done anymore because it depends with what you are colliding
+      // game_object->second->body().stop();
+    }
+    // This applies all forces to the object
+    game_object->second->update_fixed(gravity_);
+    // With all forces applied, new position is calculated
+    game_object->second->body().update_fixed();
+  }
+}
+
+bool Engine::will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object) {
+  bool collides = false;
+  for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
+       other != game_objects_.end();
+       ++other) {
+    if (game_object != other) {
+      if (game_object->second->will_collide(*other->second)) {
+        // Make them impact each other (Cpp does not have multiple dispatch)
+        game_object->second->impact(other->second);
+        other->second->impact(game_object->second);
+        collides = true;
+      }
+    }
+  }
+  return collides;
 }
 
 void Engine::apply_force(GameObject *game_object, Vector force) {

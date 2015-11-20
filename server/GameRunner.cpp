@@ -47,6 +47,7 @@ void GameRunner::engine_step() {
   Lock lock(&engine_mutex_);
   engine_->FixedUpdate();
   notify_clients(false);
+  // Because clients have to be notified, cant clean dead objects before
   engine_->clean_dead();
 }
 
