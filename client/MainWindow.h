@@ -74,6 +74,7 @@ class MainWindow: public Gtk::Window {
   Gtk::ComboBox *game_combo;
   void combo_map_changed();
   void combo_game_changed();
+  void load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::list<char> map_ids);
   void load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names);
 };
 

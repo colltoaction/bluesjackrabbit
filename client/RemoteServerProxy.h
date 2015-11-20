@@ -42,7 +42,11 @@ class RemoteServerProxy : public ServerProxy {
    * TODO(tinchou): read the player id.
    */
   virtual void connect();
-  virtual std::map<size_t, std::string> list_maps();
+
+  /**
+   * Checks the server for available maps.
+   */
+  virtual std::list<char> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();

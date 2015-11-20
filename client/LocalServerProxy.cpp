@@ -105,12 +105,12 @@ std::map<uint32_t, Renderer*> &LocalServerProxy::renderers() {
 void LocalServerProxy::connect() {
 }
 
-std::map<size_t, std::string> LocalServerProxy::list_maps() {
-  std::map<size_t, std::string> map;
-  map[1] = "Mapa 1";
-  map[2] = "Mapa 2";
-  map[3] = "Mapa 3";
-  return map;
+std::list<char> LocalServerProxy::list_maps() {
+  std::list<char> map_ids;
+  map_ids.push_back(1);
+  map_ids.push_back(2);
+  map_ids.push_back(3);
+  return map_ids;
 }
 
 std::map<size_t, std::string> LocalServerProxy::list_games() {

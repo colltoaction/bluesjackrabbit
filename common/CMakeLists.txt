@@ -9,8 +9,12 @@ set(SOURCES
         Lock.h
         Logger.cpp
         Logger.h
+        MapsMessage.cpp
+        MapsMessage.h
         MessageReader.cpp
         MessageReader.h
+        MessageWriter.cpp
+        MessageWriter.h
         Mutex.cpp
         Mutex.h
         Socket.cpp

@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <unistd.h>
+#include <common/MessageWriter.h>
 
 #include "ClientProxy.h"
 #include "Constants.h"
@@ -141,15 +142,8 @@ void ClientProxy::list_games_call() {
 }
 
 void ClientProxy::list_maps_call() {
-  std::cout << "ClientProxy:: Entra en listar maps\n";
-  std::list<char> map_ids = list_maps_functor_();
-  char message_length = static_cast<char>(map_ids.size());
-  socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::list<char>::iterator it = map_ids.begin();
-      it != map_ids.end(); it++) {
-    socket_->send_buffer(&(*it), CANT_BYTES);
-  }
-  std::cout << "ClientProxy:: Finaliza listar maps\n";
+  MessageWriter writer(socket_);
+  writer.send_available_maps(list_maps_functor_());
 }
 
 void ClientProxy::send_object_size(char object_size) {

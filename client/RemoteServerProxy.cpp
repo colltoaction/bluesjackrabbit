@@ -8,6 +8,7 @@
 
 #include <common/Lock.h>
 #include <common/MessageReader.h>
+#include <common/MapsMessage.h>
 
 #include "RemoteServerProxy.h"
 
@@ -240,20 +241,12 @@ void RemoteServerProxy::read_double(double *value) {
   socket_->read_buffer(address, double_size);
 }
 
-// recibir and write
-std::map<size_t, std::string> RemoteServerProxy::list_maps() {
-  std::cout << "Comienza listado\n";
-  std::map<size_t, std::string> map;
+std::list<char> RemoteServerProxy::list_maps() {
   char option = LIST_MAPS;
   socket_->send_buffer(&option, 1);
-  socket_->read_buffer(&option, CANT_BYTES);
-  for (char i = 0; i < option; i++) {
-    char map_number;
-    socket_->read_buffer(&map_number, CANT_BYTES);
-    map[map_number] = "Mapa algo...";
-  }
-  std::cout << "Fin listado\n";
-  return map;
+  MessageReader reader(socket_);
+  MapsMessage maps = reader.read_available_maps();
+  return maps.read();
 }
 
 std::map<size_t, std::string> RemoteServerProxy::list_games() {
