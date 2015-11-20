@@ -1,4 +1,5 @@
 #include "Socket.h"
+#include "Logger.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -58,12 +59,17 @@ Socket::Socket(int nuevoSocketFD) {
 
 /* Asocia el FD socket a la direccion y puerto definidos por addrinfo */
 bool Socket::bind_socket() {
-  int resultado = bind(this->socketFD, &this->ai_addr, this->ai_addrlen);
-  if (resultado != 0) {
-    std::cerr << "ERROR AL BINDEAR SOCKET: " << gai_strerror(resultado)
-        << std::endl;
+  int yes = 1;
+  if ( setsockopt(socketFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ) {
+    Logger::error("Error in socket binding (when configuring to reuse address).");
     return false;
   }
+
+  if (bind(socketFD, &ai_addr, ai_addrlen) != 0) {
+    Logger::error("Error in socket binding.");
+    return false;
+  }
+
   return true;
 }
 
