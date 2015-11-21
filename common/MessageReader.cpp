@@ -50,6 +50,12 @@ CreateGameMessage MessageReader::read_create_game() {
   return CreateGameMessage(socket_);
 }
 
+GameInitMessage MessageReader::read_game_init() {
+  // TODO(tinchou): add message type header
+  // validate_message_type(0x20);
+  return GameInitMessage(socket_);
+}
+
 void MessageReader::validate_message_type(char expected) const {
   char c = read_message_type();
   if (c != expected) {

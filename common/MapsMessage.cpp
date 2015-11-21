@@ -22,8 +22,6 @@ std::list<char> MapsMessage::read() {
   std::stringstream ss;
   ss << "Available map count: " << static_cast<int>(map_count);
   Logger::info(ss.str());
-  std::cout << "Does Logger fail?";
-  Logger::info("Does Logger fail?");
   for (char i = 0; i < map_count; i++) {
     char map_id;
     Logger::info("Reading map");

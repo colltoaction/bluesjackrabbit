@@ -6,6 +6,7 @@
 #include "GamesMessage.h"
 #include "MapsMessage.h"
 #include "Socket.h"
+#include "GameInitMessage.h"
 
 class MessageReader {
  public:
@@ -41,6 +42,12 @@ class MessageReader {
    * @throws InvalidMessageException
    */
   CreateGameMessage read_create_game();
+
+  /**
+   * Reads a message with the initial game state, like the object types and positions.
+   * @throws InvalidMessageException
+   */
+  GameInitMessage read_game_init();
 
  private:
   Socket *socket_;

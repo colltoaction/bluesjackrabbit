@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <common/Constants.h>
+#include <common/MessageReader.h>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(RendererUpdate update) :
@@ -24,6 +25,8 @@ void RemoteServerProxyUpdater::run() {
     double x, y;
     char type;
     char alive;
+//    MessageReader reader;
+//    reader.read_
     read_object_id(&object_id);
     read_object_position(&x, &y);
     read_object_type(&type);

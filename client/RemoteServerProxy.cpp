@@ -19,6 +19,8 @@
 #include "CharacterRenderer.h"
 #include <common/Constants.h>
 #include <common/Logger.h>
+#include <common/GameInitMessage.h>
+#include <common/GameObjectMessage.h>
 #include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 
@@ -112,7 +114,6 @@ bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
   return true;
 }
 
-
 void RemoteServerProxy::join_game(size_t game_id) {
   std::cout << "Join game with game id: " << game_id << std::endl;
   char option = JOIN_GAME;
@@ -133,22 +134,29 @@ void RemoteServerProxy::read_object_id(uint32_t *object_id) {
 
 void RemoteServerProxy::init_game() {
   std::cout << "RemoteServerProxy::init_game\n";
-  char objects_size;
-  socket_->read_buffer(&objects_size, 1);
-  std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
-  for (char i = 0; i < objects_size; i++) {
-    uint32_t object_id;
-    double x, y;
-    char type;
-    char alive;
-    read_object_id(&object_id);
-    read_object_position(&x, &y);
-    read_object_type(&type);
-    std::list<Vector> points = read_object_points();
-    read_alive(&alive);
-    create_object_renderer(object_id, type, Vector(x, y), points);
+  MessageReader reader(socket_);
+  GameInitMessage message = reader.read_game_init();
+  for (std::vector<GameObjectMessage *>::const_iterator i = message.objects().begin();
+       i != message.objects().end(); i++) {
+    create_object_renderer((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
   }
-  std::cout << "FIN INIT GAME\n";
+
+//  char objects_size;
+//  socket_->read_buffer(&objects_size, 1);
+//  std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
+//  for (char i = 0; i < objects_size; i++) {
+//    uint32_t object_id;
+//    double x, y;
+//    char type;
+//    char alive;
+//    read_object_id(&object_id);
+//    read_object_position(&x, &y);
+//    read_object_type(&type);
+//    std::list<Vector> points = read_object_points();
+//    read_alive(&alive);
+//    create_object_renderer(object_id, type, Vector(x, y), points);
+//  }
+//  std::cout << "FIN INIT GAME\n";
 }
 
 void RemoteServerProxy::read_alive(char *alive) {
@@ -156,7 +164,7 @@ void RemoteServerProxy::read_alive(char *alive) {
 }
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
-                                               std::list<Vector> points) {
+                                               std::vector<Vector> points) {
   Renderer *render = NULL;
   if (object_type == 'r') {
     std::cout << "Llega la roja\n";
@@ -208,7 +216,6 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
     std::cout << "te mataron\n";
   }
 }
-
 
 void RemoteServerProxy::read_object_position(double *x, double *y) {
   read_double(x);

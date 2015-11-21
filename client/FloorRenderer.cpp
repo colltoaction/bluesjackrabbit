@@ -3,7 +3,7 @@
 #include <cairomm/context.h>
 #include "FloorRenderer.h"
 
-FloorRenderer::FloorRenderer(const Vector &position, const std::list<Vector> &points)
+FloorRenderer::FloorRenderer(const Vector &position, const std::vector<Vector> &points)
     : Renderer(position), points_() {
   std::copy(points.begin(), points.end(), back_inserter(points_));
   if (points_.size() != 4) {

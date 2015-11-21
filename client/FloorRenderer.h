@@ -8,9 +8,10 @@
 
 class FloorRenderer : public Renderer {
  public:
-  FloorRenderer(const Vector &position, const std::list<Vector> &points);
+  FloorRenderer(const Vector &position, const std::vector<Vector> &points);
   virtual ~FloorRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
+
  private:
   std::vector<Vector> points_;
 };

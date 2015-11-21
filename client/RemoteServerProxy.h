@@ -72,7 +72,7 @@ class RemoteServerProxy : public ServerProxy {
   std::list<Vector> read_object_points();
   void read_alive(char *alive);
   void read_double(double *value);
-  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
+  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::vector<Vector> points);
 };
 
 

@@ -30,7 +30,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-)
+        GameInitMessage.cpp GameInitMessage.h GameObjectMessage.cpp GameObjectMessage.h)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})
