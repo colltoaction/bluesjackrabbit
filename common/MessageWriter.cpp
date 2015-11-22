@@ -5,6 +5,7 @@
 #include "GamesMessage.h"
 #include "CreateGameMessage.h"
 #include "GameInitMessage.h"
+#include "JoinGameMessage.h"
 
 MessageWriter::MessageWriter(Socket *socket)
     : socket_(socket) {
@@ -36,6 +37,13 @@ void MessageWriter::send_game_init(std::map<uint32_t, GameObject *> *game_object
   socket_->send_buffer(&message_type, CANT_BYTES);
   GameInitMessage game_init(socket_);
   game_init.send(game_objects);
+}
+
+void MessageWriter::send_join_game(size_t game_id) {
+  char message_type = JoinGameMessage::type_id();
+  socket_->send_buffer(&message_type, CANT_BYTES);
+  JoinGameMessage join_game(socket_);
+  join_game.send(game_id);
 }
 
 void MessageWriter::send_game_object(uint32_t object_id, GameObject *game_object) {

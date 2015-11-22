@@ -115,11 +115,9 @@ bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
 }
 
 void RemoteServerProxy::join_game(size_t game_id) {
-  std::cout << "Join game with game id: " << game_id << std::endl;
-  char option = JOIN_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  char game = static_cast<char>(game_id);
-  socket_->send_buffer(&game, MAP_ID_LENGTH);
+  MessageWriter writer(socket_);
+  writer.send_join_game(game_id);
+
   read_object_id(&object_id_);
   init_game();
   updater_.start();
@@ -140,27 +138,6 @@ void RemoteServerProxy::init_game() {
        i != message.objects().end(); i++) {
     create_object_renderer((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
   }
-
-//  char objects_size;
-//  socket_->read_buffer(&objects_size, 1);
-//  std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
-//  for (char i = 0; i < objects_size; i++) {
-//    uint32_t object_id;
-//    double x, y;
-//    char type;
-//    char alive;
-//    read_object_id(&object_id);
-//    read_object_position(&x, &y);
-//    read_object_type(&type);
-//    std::list<Vector> points = read_object_points();
-//    read_alive(&alive);
-//    create_object_renderer(object_id, type, Vector(x, y), points);
-//  }
-//  std::cout << "FIN INIT GAME\n";
-}
-
-void RemoteServerProxy::read_alive(char *alive) {
-  socket_->read_buffer(alive, CANT_BYTES);
 }
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
@@ -215,34 +192,6 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
     // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
     std::cout << "te mataron\n";
   }
-}
-
-void RemoteServerProxy::read_object_position(double *x, double *y) {
-  read_double(x);
-  read_double(y);
-}
-
-void RemoteServerProxy::read_object_type(char *type) {
-  socket_->read_buffer(type, CANT_BYTES);
-}
-
-std::list<Vector> RemoteServerProxy::read_object_points() {
-  char points_size;
-  socket_->read_buffer(&points_size, CANT_BYTES);
-  std::list<Vector> points;
-  for (char i = 0; i < points_size; i++) {
-    double x, y;
-    read_double(&x);
-    read_double(&y);
-    points.push_back(Vector(x, y));
-  }
-  return points;
-}
-
-void RemoteServerProxy::read_double(double *value) {
-  size_t double_size = sizeof(double);
-  char *address = static_cast<char *>(static_cast<void *>(value));
-  socket_->read_buffer(address, double_size);
 }
 
 std::vector<char> RemoteServerProxy::list_maps() {

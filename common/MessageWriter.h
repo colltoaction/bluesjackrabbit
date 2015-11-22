@@ -28,6 +28,7 @@ class MessageWriter {
 
   void send_game_object(uint32_t object_id, GameObject *game_object);
 
+  void send_join_game(size_t game_id);
  private:
   Socket *socket_;
 };

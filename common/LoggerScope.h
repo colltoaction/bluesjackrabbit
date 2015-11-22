@@ -1,0 +1,12 @@
+#ifndef BLUESJACKRABBIT_COMMON_LOGGERSCOPE_H
+#define BLUESJACKRABBIT_COMMON_LOGGERSCOPE_H
+
+
+class LoggerScope {
+ public:
+  LoggerScope();
+  ~LoggerScope();
+};
+
+
+#endif  // BLUESJACKRABBIT_COMMON_LOGGERSCOPE_H

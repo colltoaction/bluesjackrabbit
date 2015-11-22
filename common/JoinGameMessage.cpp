@@ -15,7 +15,12 @@ char JoinGameMessage::type() {
 }
 
 void JoinGameMessage::read() {
-  socket_->read_buffer(&game_id_, sizeof(char));
+  game_id_ = read_char(socket_);
+}
+
+void JoinGameMessage::send(size_t game_id) {
+  char game = static_cast<char>(game_id);
+  send_char(socket_, game);
 }
 
 char JoinGameMessage::game_id() {

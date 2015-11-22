@@ -22,6 +22,11 @@ class JoinGameMessage: public Message {
   void read();
 
   /**
+   * Sends a request to join a game.
+   */
+  void send(size_t i);
+
+  /**
    * Returns the game id the player wants to join.
    */
   char game_id();

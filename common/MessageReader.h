@@ -7,6 +7,7 @@
 #include "MapsMessage.h"
 #include "Socket.h"
 #include "GameInitMessage.h"
+#include "JoinGameMessage.h"
 
 class MessageReader {
  public:
@@ -48,6 +49,12 @@ class MessageReader {
    * @throws InvalidMessageException
    */
   GameInitMessage read_game_init();
+
+  /**
+   * Reads a request to join a game.
+   * @throws InvalidMessageException
+   */
+  JoinGameMessage read_join_game();
 
  private:
   Socket *socket_;

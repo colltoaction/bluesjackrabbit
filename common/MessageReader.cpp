@@ -4,6 +4,7 @@
 #include "InvalidMessageException.h"
 #include "Constants.h"
 #include "Message.h"
+#include "JoinGameMessage.h"
 
 MessageReader::MessageReader(Socket *socket)
     : socket_(socket) {
@@ -14,7 +15,8 @@ Message * MessageReader::read_message() {
   // GAME OPTIONS
   if (c == CreateGameMessage::type_id()) {
     return new CreateGameMessage(socket_);
-  } else if (c == JOIN_GAME) {
+  } else if (c == JoinGameMessage::type_id()) {
+    return new JoinGameMessage(socket_);
   } else if (c == GamesMessage::type_id()) {
     return new GamesMessage(socket_);
   } else if (c == MapsMessage::type_id()) {
@@ -53,6 +55,11 @@ CreateGameMessage MessageReader::read_create_game() {
 GameInitMessage MessageReader::read_game_init() {
   validate_message_type(GameInitMessage::type_id());
   return GameInitMessage(socket_);
+}
+
+JoinGameMessage MessageReader::read_join_game() {
+  validate_message_type(JoinGameMessage::type_id());
+  return JoinGameMessage(socket_);
 }
 
 void MessageReader::validate_message_type(char expected) const {
