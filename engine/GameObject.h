@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <vector>
 #include "Body.h"
 #include "Collider.h"
 
@@ -38,7 +39,7 @@ class GameObject {
   /**
    * Returns a list of points the client will use to render the object
    */
-  virtual std::list<Vector> characteristic_points();
+  virtual std::vector<Vector> characteristic_points() const;
 
   virtual void impact(GameObject *other);
 

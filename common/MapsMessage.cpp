@@ -15,8 +15,8 @@ char MapsMessage::type() {
   return Message::type();
 }
 
-std::list<char> MapsMessage::read() {
-  std::list<char> maps;
+std::vector<char> MapsMessage::read() {
+  std::vector<char> maps;
   char map_count;
   socket_->read_buffer(&map_count, sizeof(char));
   std::stringstream ss;
@@ -34,10 +34,10 @@ std::list<char> MapsMessage::read() {
   return maps;
 }
 
-void MapsMessage::send(const std::list<char> &maps) {
+void MapsMessage::send(const std::vector<char> &maps) {
   char map_count = static_cast<char>(maps.size());
   socket_->send_buffer(&map_count, sizeof(char));
-  for (std::list<char>::const_iterator map_id = maps.begin();
+  for (std::vector<char>::const_iterator map_id = maps.begin();
        map_id != maps.end(); map_id++) {
     socket_->send_buffer(&(*map_id), sizeof(char));
   }

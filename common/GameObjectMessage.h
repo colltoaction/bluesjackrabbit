@@ -3,6 +3,7 @@
 
 
 #include <vector>
+#include <engine/GameObject.h>
 #include "Message.h"
 #include "Socket.h"
 
@@ -35,6 +36,8 @@ class GameObjectMessage: public Message {
    */
   const std::vector<Vector> &points() const;
 
+  void send(uint32_t object_id, GameObject *position);
+
  private:
   Socket *socket_;
   uint32_t object_id_;
@@ -43,6 +46,7 @@ class GameObjectMessage: public Message {
   std::vector<Vector> points_;
   char alive_;
   void read_object_points();
+  void send_object_points(Socket *socket, const std::vector<Vector> &points);
 };
 
 

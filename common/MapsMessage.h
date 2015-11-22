@@ -2,7 +2,7 @@
 #define BLUESJACKRABBIT_COMMON_MAPSMESSAGE_H
 
 
-#include <list>
+#include <vector>
 #include "Socket.h"
 #include "Message.h"
 
@@ -11,8 +11,8 @@ class MapsMessage: public Message {
   explicit MapsMessage(Socket *socket);
   static char type_id();
   virtual char type();
-  std::list<char> read();
-  void send(const std::list<char> &maps);
+  std::vector<char> read();
+  void send(const std::vector<char> &maps);
 
  private:
   Socket *socket_;

@@ -34,7 +34,7 @@ class Engine {
   /**
    * A collection of game objects in this simulation.
    */
-  std::map<uint32_t, GameObject*> &game_objects();
+  std::map<uint32_t, GameObject*> *game_objects();
 
   /**
    * Update the physics simulation by $fixed_update_step milliseconds.

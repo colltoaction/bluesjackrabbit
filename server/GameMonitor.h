@@ -19,7 +19,7 @@ class GameMonitor {
   char create_game(char map_id, std::string game_name, ClientProxy *player);
   void join_game(char game_id, ClientProxy *player);
   std::map<char, std::string> list_games();
-  std::list<char> list_maps();
+  std::vector<char> list_maps();
   void finalize();
 
  private:

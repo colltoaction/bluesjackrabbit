@@ -28,7 +28,7 @@ class GameRunner: public Thread {
 
   void game_loop();
   void engine_step();
-  void notify_clients(bool notify_object_ids);
+  void notify_clients();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */

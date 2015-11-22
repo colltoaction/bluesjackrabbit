@@ -23,6 +23,8 @@
 #define JOIN_GAME 0x21
 #define LIST_GAMES 0x22
 #define LIST_MAPS 0x23
+#define GAME_INIT 0x24
+#define GAME_OBJECT 0x25
 
 #define TRUE_PROTOCOL 0x30
 #define FALSE_PROTOCOL 0x31

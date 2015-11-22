@@ -27,15 +27,15 @@ LocalServerProxy::LocalServerProxy() {
   StaticBody *b2 = new StaticBody(new Vector(0, 5));
   engine_.add_game_object(b2, new RectangleCollider(*b2));
 
-  engine_.game_objects()[0]->body().position();
-  renderers_[0] = new CharacterRenderer(engine_.game_objects()[0]->body().position(), 0.5);
+  (*engine_.game_objects())[0]->body().position();
+  renderers_[0] = new CharacterRenderer((*engine_.game_objects())[0]->body().position(), 0.5);
 
   uint32_t i = 0;
-  for (std::map<uint32_t, GameObject*>::iterator game_object = engine_.game_objects().begin();
-       game_object != engine_.game_objects().end();
+  for (std::map<uint32_t, GameObject*>::iterator game_object = engine_.game_objects()->begin();
+       game_object != engine_.game_objects()->end();
        ++game_object) {
     if (i == 2) {
-      std::list<Vector> points;
+      std::vector<Vector> points;
       points.push_back(Vector(-2, 4.5));
       points.push_back(Vector(8, 4.5));
       points.push_back(Vector(8, 5.5));
@@ -62,7 +62,7 @@ LocalServerProxy::~LocalServerProxy() {
 
 bool LocalServerProxy::engine_step() {
   engine_.FixedUpdate();
-  renderers_[0]->update_position(engine_.game_objects()[0]->body().position());
+  renderers_[0]->update_position((*engine_.game_objects())[0]->body().position());
   return true;
 }
 
@@ -91,7 +91,7 @@ void LocalServerProxy::shoot() {
 }
 
 Vector LocalServerProxy::character_position() {
-  return engine_.game_objects()[0]->body().position();
+  return (*engine_.game_objects())[0]->body().position();
 }
 
 void LocalServerProxy::init_game() {
@@ -105,8 +105,8 @@ std::map<uint32_t, Renderer*> &LocalServerProxy::renderers() {
 void LocalServerProxy::connect() {
 }
 
-std::list<char> LocalServerProxy::list_maps() {
-  std::list<char> map_ids;
+std::vector<char> LocalServerProxy::list_maps() {
+  std::vector<char> map_ids;
   map_ids.push_back(1);
   map_ids.push_back(2);
   map_ids.push_back(3);

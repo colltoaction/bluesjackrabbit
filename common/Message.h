@@ -20,15 +20,28 @@ class Message {
   virtual char type();
 
  protected:
+  char read_char(Socket *socket);
+
+  double read_double(Socket *socket);
+
   uint32_t read_uint32(Socket *socket);
 
   Vector read_vector(Socket *socket);
 
-  char read_char(Socket *socket);
+  char read_bool(Socket *socket);
+
+  void send_char(Socket *socket, char c);
+
+  void send_bool(Socket *socket, bool b);
+
+  void send_uint32(Socket *socket, uint32_t n);
+
+  void send_vector(Socket *socket, const Vector &v);
+
+  void send_double(Socket *socket, double d);
 
  private:
   char type_;
-  double read_double(Socket *socket);
 };
 
 

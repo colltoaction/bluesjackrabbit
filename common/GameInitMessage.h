@@ -3,6 +3,7 @@
 
 
 #include <vector>
+#include <bits/stl_map.h>
 #include "GameObjectMessage.h"
 #include "Message.h"
 #include "Socket.h"
@@ -15,6 +16,7 @@ class GameInitMessage: public Message {
   virtual char type();
   void read();
   const std::vector<GameObjectMessage *>& objects();
+  void send(std::map<uint32_t, GameObject *> *game_objects);
 
  private:
   Socket *socket_;

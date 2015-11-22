@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <sigc++/functors/slot.h>
 
 #include <common/Configuration.h>
@@ -46,7 +47,7 @@ class RemoteServerProxy : public ServerProxy {
   /**
    * Checks the server for available maps.
    */
-  virtual std::list<char> list_maps();
+  virtual std::vector<char> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();

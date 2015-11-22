@@ -5,8 +5,8 @@
 #include <sigc++/functors/slot.h>
 #include <engine/Engine.h>
 #include <engine/GameObject.h>
-#include <list>
 #include <map>
+#include <vector>
 #include <string>
 #include "ServerProxy.h"
 
@@ -23,7 +23,7 @@ class LocalServerProxy : public ServerProxy {
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
   virtual void connect();
-  virtual std::list<char> list_maps();
+  virtual std::vector<char> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();

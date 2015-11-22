@@ -51,8 +51,7 @@ CreateGameMessage MessageReader::read_create_game() {
 }
 
 GameInitMessage MessageReader::read_game_init() {
-  // TODO(tinchou): add message type header
-  // validate_message_type(0x20);
+  validate_message_type(GameInitMessage::type_id());
   return GameInitMessage(socket_);
 }
 

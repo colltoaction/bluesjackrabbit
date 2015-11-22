@@ -19,19 +19,19 @@ Body &GameObject::body() {
 }
 
 void GameObject::update_fixed(Vector gravity) {
-  (void) gravity;
+  (void) gravity;  // UNUSED
 }
 
 char GameObject::game_object_type() {
   return 'g';
 }
 
-std::list<Vector> GameObject::characteristic_points() {
+std::vector<Vector> GameObject::characteristic_points() const {
   return collider_->characteristic_points();
 }
 
 void GameObject::impact(GameObject *other) {
-  (void)other;
+  (void) other;  // UNUSED
 }
 
 bool GameObject::alive() {

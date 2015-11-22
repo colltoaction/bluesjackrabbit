@@ -91,7 +91,7 @@ void MainWindow::main_game_view() {
 
 void MainWindow::new_game_click() {
   if (connected_) {
-    std::list<char> maps = server_proxy_->list_maps();
+    std::vector<char> maps = server_proxy_->list_maps();
     load_combo(&map_combo_model, maps);
     initial_screen_.hide();
     new_game_screen_.show();
@@ -272,8 +272,8 @@ void MainWindow::init_join_game_screen() {
 }
 
 
-void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::list<char> map_ids) {
-  for (std::list<char>::const_iterator it = map_ids.begin(); it != map_ids.end(); it++) {
+void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::vector<char> map_ids) {
+  for (std::vector<char>::const_iterator it = map_ids.begin(); it != map_ids.end(); it++) {
     Gtk::TreeModel::Row row = *((*model)->append());
     row[columns.id] = *it;
     row[columns.map_name] = "Map name should come from local files";

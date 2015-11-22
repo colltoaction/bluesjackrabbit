@@ -6,6 +6,7 @@
 #include <engine/Engine.h>
 #include <map>
 #include <string>
+#include <vector>
 #include "Renderer.h"
 
 /**
@@ -26,7 +27,7 @@ class ServerProxy {
   virtual std::map<uint32_t, Renderer*> &renderers() = 0;
 
   virtual void connect() = 0;
-  virtual std::list<char> list_maps() = 0;
+  virtual std::vector<char> list_maps() = 0;
   virtual std::map<size_t, std::string> list_games() = 0;
   virtual bool start_game(size_t map_id, std::string) = 0;
   virtual void join_game(size_t game_id) = 0;

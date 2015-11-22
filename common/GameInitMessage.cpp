@@ -1,8 +1,12 @@
+#include <map>
+#include <engine/GameObject.h>
 #include "GameInitMessage.h"
+#include "Constants.h"
+#include "MessageWriter.h"
 
 
 GameInitMessage::GameInitMessage(Socket *socket)
-    : Message('X')
+    : Message(GAME_INIT)
     , socket_(socket) {
 }
 
@@ -14,7 +18,7 @@ GameInitMessage::~GameInitMessage() {
 }
 
 char GameInitMessage::type_id() {
-  return 'X';
+  return GAME_INIT;
 }
 
 char GameInitMessage::type() {
@@ -28,6 +32,18 @@ void GameInitMessage::read() {
     GameObjectMessage *game_object_message = new GameObjectMessage(socket_);
     game_object_message->read();
     objects_.push_back(game_object_message);
+  }
+}
+
+void GameInitMessage::send(std::map<uint32_t, GameObject *> *game_objects) {
+  char object_size = static_cast<char>(game_objects->size());
+  send_char(socket_, object_size);
+
+  MessageWriter writer(socket_);
+  for (std::map<uint32_t, GameObject*>::iterator game_it = game_objects->begin();
+       game_it != game_objects->end();
+       game_it++) {
+    writer.send_game_object(game_it->first, game_it->second);
   }
 }
 

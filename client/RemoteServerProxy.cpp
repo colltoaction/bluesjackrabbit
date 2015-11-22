@@ -245,7 +245,7 @@ void RemoteServerProxy::read_double(double *value) {
   socket_->read_buffer(address, double_size);
 }
 
-std::list<char> RemoteServerProxy::list_maps() {
+std::vector<char> RemoteServerProxy::list_maps() {
   char option = LIST_MAPS;
   socket_->send_buffer(&option, 1);
   MessageReader reader(socket_);

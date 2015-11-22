@@ -1,6 +1,6 @@
+
 #include <iostream>
 #include <string>
-
 #include <sstream>
 #include <unistd.h>
 #include <common/MessageWriter.h>
@@ -133,52 +133,10 @@ void ClientProxy::list_maps_call() {
   writer.send_available_maps(list_maps_functor_());
 }
 
-void ClientProxy::send_object_size(char object_size) {
-  socket_->send_buffer(&object_size, CANT_BYTES);
-}
-
-void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
-  send_object_position(object_id, object);
-  send_object_type(object);
-  send_object_points(object);
-  send_object_alive(object);
-}
-
-void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
-  send_object_id(&object_id);
-  double x = object->body().position().x();
-  double y = object->body().position().y();
-  send_double(&x);
-  send_double(&y);
-}
-
-void ClientProxy::send_object_type(GameObject *object) {
-  char type = object->game_object_type();
-  socket_->send_buffer(&type, CANT_BYTES);
-}
-
-void ClientProxy::send_object_points(GameObject *object) {
-  std::list<Vector> points = object->characteristic_points();
-  char points_size = static_cast<char>(points.size());
-  socket_->send_buffer(&points_size, CANT_BYTES);
-  for (std::list<Vector>::iterator it = points.begin();
-      it != points.end();
-      it++) {
-    double x = it->x();
-    double y = it->y();
-    send_double(&x);
-    send_double(&y);
-  }
-}
-
-void ClientProxy::send_object_alive(GameObject *object) {
-  char alive;
-  if (object->alive()) {
-    alive = TRUE_PROTOCOL;
-  } else {
-    alive = FALSE_PROTOCOL;
-  }
-  socket_->send_buffer(&alive, CANT_BYTES);
+void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
+  // TODO(tinchou): don't use the "Init" class for every message
+  MessageWriter writer(socket_);
+  writer.send_game_init(game_objects);
 }
 
 void ClientProxy::send_double(double *value) {

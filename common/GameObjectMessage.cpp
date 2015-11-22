@@ -11,7 +11,7 @@ void GameObjectMessage::read() {
   position_ = read_vector(socket_);
   object_type_ = read_char(socket_);
   read_object_points();
-  alive_ = read_char(socket_);
+  alive_ = read_bool(socket_);
 }
 
 void GameObjectMessage::read_object_points() {
@@ -19,6 +19,24 @@ void GameObjectMessage::read_object_points() {
   socket_->read_buffer(&point_count, sizeof(char));
   for (char i = 0; i < point_count; i++) {
     points_.push_back(read_vector(socket_));
+  }
+}
+
+void GameObjectMessage::send(uint32_t object_id, GameObject *game_object) {
+  send_uint32(socket_, object_id);
+  send_vector(socket_, game_object->body().position());
+  send_char(socket_, game_object->game_object_type());
+  send_object_points(socket_, game_object->characteristic_points());
+  send_bool(socket_, game_object->alive());
+}
+
+void GameObjectMessage::send_object_points(Socket* socket, const std::vector<Vector> &points) {
+  char points_size = static_cast<char>(points.size());
+  send_char(socket, points_size);
+  for (std::vector<Vector>::const_iterator it = points.begin();
+       it != points.end();
+       it++) {
+    send_vector(socket_, *it);
   }
 }
 

@@ -33,8 +33,8 @@ const Body &RectangleCollider::body() const {
   return body_;
 }
 
-std::list<Vector> RectangleCollider::characteristic_points() const {
-  std::list<Vector> point_list;
+std::vector<Vector> RectangleCollider::characteristic_points() const {
+  std::vector<Vector> point_list;
   point_list.push_back(Vector(body_.position().x() - width_ / 2, body_.position().y() - height_ / 2));
   point_list.push_back(Vector(body_.position().x() + width_ / 2, body_.position().y() - height_ / 2));
   point_list.push_back(Vector(body_.position().x() + width_ / 2, body_.position().y() + height_ / 2));
