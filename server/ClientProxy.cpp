@@ -14,14 +14,14 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_callback lm_callback) :
     socket_(socket),
     finalized_(false),
-    in_game(false),
     keep_reading_(true),
     create_new_game_functor_(ng_callback),
     join_game_functor_(jg_callback),
     list_games_functor_(lg_callback),
     list_maps_functor_(lm_callback),
     game_id_(0),
-    object_id_(0) {
+    object_id_(0),
+    bullet_shot(false) {
 }
 
 ClientProxy::~ClientProxy() {
@@ -40,8 +40,6 @@ void ClientProxy::say_hello() {
  * */
 void ClientProxy::run() {
   say_hello();
-  // init_game();
-  in_game = true;
   while (keep_reading_ && !finalized_) {
     read_protocol();
   }
@@ -66,6 +64,10 @@ void ClientProxy::read_protocol() {
       list_maps_call();
     } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
       move_functor_(object_id_, option);
+    } else if (option == JUMP) {
+      std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
+    } else if (option == SHOOT) {
+      shoot_functor_(object_id_);
     }
   }
 }
@@ -74,11 +76,16 @@ void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
 }
 
+void ClientProxy::add_shoot_functor(shoot_callback shoot_callback) {
+  shoot_functor_ = shoot_callback;
+}
+
+
 void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
 
-void ClientProxy::add_object_id(char object_id) {
+void ClientProxy::add_object_id(uint32_t object_id) {
   std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
   object_id_ = object_id;
 }
@@ -87,10 +94,15 @@ void ClientProxy::new_game_call() {
   std::cout << "entra en new_game call\n";
   char map_id;
   socket_->read_buffer(&map_id, MAP_ID_LENGTH);
-  char game_id = create_new_game_functor_(map_id, this);
+  char game_name_length;
+  socket_->read_buffer(&game_name_length, CANT_BYTES);
+  char game_name[MAX_CHAR];
+  socket_->read_buffer(game_name, game_name_length);
+  game_name[static_cast<size_t>(game_name_length)] = '\0';
+  char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
   game_id_ = game_id;
-  std::cout << "Finaliza new game call\n";
-  socket_->send_buffer(&object_id_, CANT_BYTES);
+  std::cout << "Finaliza new game call con nombre: " << game_name << "\n";
+  send_object_id(&object_id_);
 }
 
 void ClientProxy::join_game_call() {
@@ -99,19 +111,31 @@ void ClientProxy::join_game_call() {
   socket_->read_buffer(&game_id, MAP_ID_LENGTH);
   join_game_functor_(game_id, this);
   std::cout << "Finaliza join game call\n";
-  socket_->send_buffer(&object_id_, CANT_BYTES);
+  send_object_id(&object_id_);
 }
+
+void ClientProxy::send_object_id(uint32_t *object_id) {
+  // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
+  uint32_t send_number = htonl(*object_id);
+  char* buffer = static_cast<char*>(static_cast<void*>(&send_number));
+  socket_->send_buffer(buffer, UINT32_T_LENGTH);
+}
+
+
 
 void ClientProxy::list_games_call() {
   std::cout << "ClientProxy:: Entra en listar games\n";
-  std::list<char> game_ids = list_games_functor_();
+  std::map<char, std::string> game_ids = list_games_functor_();
   char message_length = static_cast<char>(game_ids.size());
   socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::list<char>::iterator it = game_ids.begin();
+  for (std::map<char, std::string>::iterator it = game_ids.begin();
       it != game_ids.end(); it++) {
-    char send = (*it);
+    char send = it->first;
     std::cout << "ENVIANDO: " << static_cast<int>(send) << std::endl;
     socket_->send_buffer(&send, CANT_BYTES);
+    char game_length = static_cast<char>(it->second.size());
+    socket_->send_buffer(&game_length, CANT_BYTES);
+    socket_->send_buffer(it->second.c_str(), game_length);
   }
   std::cout << "ClientProxy:: Finaliza listar games\n";
 }
@@ -132,17 +156,54 @@ void ClientProxy::send_object_size(char object_size) {
   socket_->send_buffer(&object_size, CANT_BYTES);
 }
 
-void ClientProxy::send_object_position(char object_id, GameObject *object) {
+void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
+  send_object_position(object_id, object);
+  send_object_type(object);
+  send_object_points(object);
+  send_object_alive(object);
+}
+
+void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
+  send_object_id(&object_id);
+  double x = object->body().position().x();
+  double y = object->body().position().y();
+  send_double(&x);
+  send_double(&y);
+}
+
+void ClientProxy::send_object_type(GameObject *object) {
+  char type = object->game_object_type();
+  socket_->send_buffer(&type, CANT_BYTES);
+}
+
+void ClientProxy::send_object_points(GameObject *object) {
+  std::list<Vector> points = object->characteristic_points();
+  char points_size = static_cast<char>(points.size());
+  socket_->send_buffer(&points_size, CANT_BYTES);
+  for (std::list<Vector>::iterator it = points.begin();
+      it != points.end();
+      it++) {
+    double x = it->x();
+    double y = it->y();
+    send_double(&x);
+    send_double(&y);
+  }
+}
+
+void ClientProxy::send_object_alive(GameObject *object) {
+  char alive;
+  if (object->alive()) {
+    alive = TRUE_PROTOCOL;
+  } else {
+    alive = FALSE_PROTOCOL;
+  }
+  socket_->send_buffer(&alive, CANT_BYTES);
+}
+
+void ClientProxy::send_double(double *value) {
   size_t double_size = sizeof(double);
-  double x = object->transform().position().x();
-  double y = object->transform().position().y();
-  std::cout << "Enviando posicion id: " << static_cast<int>(object_id)
-      << "(" << x << ", " << y << ")\n";
-  char *x_address = static_cast<char*>(static_cast<void*>(&x));
-  char *y_address = static_cast<char*>(static_cast<void*>(&y));
-  socket_->send_buffer(&object_id, CANT_BYTES);
-  socket_->send_buffer(x_address, double_size);
-  socket_->send_buffer(y_address, double_size);
+  char *address = static_cast<char*>(static_cast<void*>(value));
+  socket_->send_buffer(address, double_size);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

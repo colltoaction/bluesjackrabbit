@@ -3,12 +3,13 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <common/Configuration.h>
 
-ClientProxyAcceptor::ClientProxyAcceptor(std::string puerto, GameMonitor *game_monitor)
-  : socket_("localhost", puerto, AI_PASSIVE),
-  keep_going_(true),
-  clients_eliminated_(false),
-  game_monitor_(game_monitor) {
+ClientProxyAcceptor::ClientProxyAcceptor(const Configuration &config, GameMonitor *game_monitor)
+    : socket_(config["host"], config["port"], AI_PASSIVE)
+    , keep_going_(true)
+    , clients_eliminated_(false)
+    , game_monitor_(game_monitor) {
   socket_.bind_socket();
 }
 

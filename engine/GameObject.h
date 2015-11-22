@@ -5,37 +5,51 @@
 #include <string>
 #include "Body.h"
 #include "Collider.h"
-#include "Transform.h"
 
 /**
  * A collection of properties that define an object in the physics simulation.
  */
 class GameObject {
  public:
-  virtual ~GameObject();
+  GameObject(Body *body, Collider *collider);
 
-  /**
-   * The transform property contains information like the position in the world.
-   */
-  virtual const Transform &transform() const = 0;
+  virtual ~GameObject();
 
   /**
    * The body will be responsible for holding things like the size of an object and simluating rigid body physics.
    */
-  virtual Body &rigid_body() = 0;
+  Body &body();
 
   /**
    * This method should be called in each step of the engine to perform routine operations.
    */
-  virtual void update_fixed() = 0;
+  virtual void update_fixed(Vector gravity);
 
   /**
    * Returns true if this object's will collide with another after moving to its next position.
    */
-  virtual bool will_collide(const GameObject &other) const;
+  bool will_collide(const GameObject &other) const;
+
+  /**
+   * Returns game object type according if it is a player, turtle or floor.
+   */
+  virtual char game_object_type();
+
+  /**
+   * Returns a list of points the client will use to render the object
+   */
+  virtual std::list<Vector> characteristic_points();
+
+  virtual void impact(GameObject *other);
+
+  virtual bool alive();
 
  protected:
-  virtual const Collider &collider() const = 0;
+  bool alive_;
+  Body *body_;
+  Collider *collider_;
+
+ private:
 };
 
 

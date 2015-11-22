@@ -16,18 +16,20 @@
 #include "RemoteServerProxy.h"
 #include "ServerProxy.h"
 
-MainWindow::MainWindow()
-  : scene_(),
-    main_frame_(),
-    connection_screen_(),
-    initial_screen_(),
-    new_game_screen_(),
-    join_game_screen_(),
-    server_proxy_(NULL),
-    map_id_(0),
-    game_id_(0),
-    map_combo(NULL),
-    game_combo(NULL) {
+MainWindow::MainWindow(const Configuration &config)
+    : config_(config)
+    , scene_()
+    , main_frame_()
+    , connection_screen_()
+    , initial_screen_()
+    , new_game_screen_()
+    , join_game_screen_()
+    , text_game_name_(NULL)
+    , server_proxy_(NULL)
+    , map_id_(0)
+    , game_id_(0)
+    , map_combo(NULL)
+    , game_combo(NULL) {
   set_title("Blues Jackrabbit");
   set_size_request(640, 480);
   set_position(Gtk::WIN_POS_CENTER);
@@ -52,11 +54,6 @@ MainWindow::MainWindow()
         sigc::bind_return(sigc::mem_fun(&scene_, &SceneRenderer::update), true),
         render_step);
 
-  add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
-  signal_key_press_event().connect(
-      sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
-  signal_key_release_event().connect(
-      sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
 
   show_all();
   scene_.hide();
@@ -112,14 +109,25 @@ void MainWindow::join_once_for_all() {
   if (connected_) {
     server_proxy_->join_game(game_id_);
     join_game_screen_.hide();
+    connect_bus_signals();
     scene_.show();
   }
 }
 
 void MainWindow::init_click() {
-  server_proxy_->start_game(map_id_);
+  std::string game_name = text_game_name_->get_text();
+  server_proxy_->start_game(map_id_, game_name);
   new_game_screen_.hide();
+  connect_bus_signals();
   scene_.show();
+}
+
+void MainWindow::connect_bus_signals() {
+  add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
+  signal_key_press_event().connect(
+      sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
+  signal_key_release_event().connect(
+      sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
 }
 
 void MainWindow::singleplayer_click() {
@@ -129,7 +137,7 @@ void MainWindow::singleplayer_click() {
 }
 
 void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy();
+  server_proxy_ = new RemoteServerProxy(config_);
   init_server_proxy();
   main_game_view();
 }
@@ -147,6 +155,8 @@ void MainWindow::init_server_proxy() {
   bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
   bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
   bus_.subscribeKeyPress(GDK_KEY_Right, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveRight)));
+  bus_.subscribeKeyPress(GDK_KEY_space, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::jump)));
+  bus_.subscribeKeyPress(GDK_KEY_Control_L, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::shoot)));
   scene_.set_server_proxy(server_proxy_);
 }
 
@@ -209,12 +219,12 @@ void MainWindow::init_new_game_screen() {
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::init_click));
   }
-
   button = NULL;
   builder->get_widget("cancel", button);
   if (button) {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::main_game_view));
   }
+  builder->get_widget("game_name", text_game_name_);
   builder->get_widget("map", map_combo);
   // Create the Combobox Tree model:
   map_combo_model = Gtk::ListStore::create(columns);

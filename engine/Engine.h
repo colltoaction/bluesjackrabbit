@@ -2,9 +2,11 @@
 #define BLUESJACKRABBIT_ENGINE_ENGINE_H
 
 #include <map>
-
 #include <sigc++/functors/slot.h>
-#include "GameObjectTemplate.h"
+#include "Body.h"
+#include "Collider.h"
+#include "GameObject.h"
+#include <stdint.h>
 
 /**
  * A functor object complying to void functor().
@@ -32,7 +34,7 @@ class Engine {
   /**
    * A collection of game objects in this simulation.
    */
-  std::map<char, GameObject*> &game_objects();
+  std::map<uint32_t, GameObject*> &game_objects();
 
   /**
    * Update the physics simulation by $fixed_update_step milliseconds.
@@ -49,26 +51,51 @@ class Engine {
    * Applies a force to a specific game object id.
    * This will replace apply_force
    */
-  void apply_force_(char object_id, Vector force);
+  void apply_force_(uint32_t object_id, Vector force);
 
   /**
    * Adds a game object to the Engine.
-   * @param is_static if the object can move or not
-   * @param circle_collider if it uses a circle collider or a square collider
-   * @param position initial position of game object 
+   * DEPRECATED!
    */
-  char add_game_object(bool is_static, bool circle_collider, const Vector &position);
+  uint32_t add_game_object(Body *body, Collider *collider);
+
+  /**
+   * Adds a game object with a specific body and collider to the Engine.
+   */
+  uint32_t add_game_object(GameObject *game_object);
+
+  /**
+   * Player with object id shot a bullet.
+   */
+  void player_shoot(uint32_t object_id);
 
   /**
    * Number of objects in game.
    */
-  char objects_size();
+  uint32_t objects_size();
+
+  /**
+   * Removes from game object list all dead objects after proxy notifies client.
+   */
+  void clean_dead();
+
+  /**
+   * Applies forces and moves objects with (poor) artificial intelligence.
+   * */
+  void move_objects();
+
+  /**
+   * Updates player direction to shoot bullets.
+   * */
+  void update_player_direction(uint32_t object_id, bool right);
 
  private:
   static const Vector gravity_;
-  char object_index_;
-  std::map<char, GameObject*> game_objects_;
-  bool will_collide(const std::map<char, GameObject*>::iterator &game_object);
+  uint32_t object_index_;
+  std::map<uint32_t, GameObject*> game_objects_;
+  std::map<uint32_t, bool> player_shoot_;
+  bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
+  void players_shots();
 };
 
 
