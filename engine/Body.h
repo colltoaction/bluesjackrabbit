@@ -9,8 +9,6 @@
  */
 class Body {
  public:
-  virtual ~Body() {}
-
   /**
    * The body's current velocity.
    */
@@ -21,11 +19,6 @@ class Body {
    * so a force needs to be applied repeatedly to be constant (like gravity).
    */
   virtual void apply_force(const Vector &vector) = 0;
-
-  /**
-   * The current position of the body.
-   */
-  virtual Vector position() const = 0;
 
   /**
    * Provides the position the body will be after calling update_fixed. A RigidBody would
@@ -44,27 +37,6 @@ class Body {
    * Zeroes the force and velocity of the object to make it stop immediately.
    */
   virtual void stop() = 0;
-
-
-  /**
-   * Zeroes the force and velocity un X axe.
-   * */
-  virtual void stop_x() = 0;
-
-  /**
-   * Zeroes the force and velocity in Y axe.
-   * */
-  virtual void stop_y() = 0;
-
-  /**
-   * Informs whether body is stopped or moving.
-   * */
-  virtual bool stopped() = 0;
-
-  /**
-   * Informs whether body is not moving in X axe.
-   * */
-  virtual bool stopped_x() = 0;
 };
 
 

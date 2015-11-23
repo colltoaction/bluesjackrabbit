@@ -17,12 +17,11 @@ GameMonitor::~GameMonitor() {
 
 // TODO(tomas) Ver como garcha manejar los map_ids y crear nuevo juego con
 // mapa correspondiente
-char GameMonitor::create_game(char map_id, const std::string &game_name,
-    ClientProxy *player) {
+char GameMonitor::create_game(char map_id, ClientProxy *player) {
   std::cout << "GameMonitor:: CREADO GAME CON MAP ID: " << static_cast<int>(map_id) << "\n";
   (void)map_id;
   Lock lock(&game_admin_mutex_);
-  Game *new_game = new Game(player, game_name);
+  Game *new_game = new Game(player);
   // No se si esto estara bien. Revisar cuando haya mas de un juego
   games_.push_back(new_game);
   char game_id = game_index_;
@@ -37,12 +36,12 @@ void GameMonitor::join_game(char game_id, ClientProxy *player) {
 }
 
 
-std::map<char, std::string> GameMonitor::list_games() {
+std::list<char> GameMonitor::list_games() {
   Lock lock(&game_admin_mutex_);
-  std::map<char, std::string> games;
+  std::list<char> games;
   for (char index = 0; index < game_index_; index++) {
-    if (games_[index]->can_join()) {
-      games[index] = games_[index]->name();
+    if (games_[index]->is_active()) {
+      games.push_back(index);
     }
   }
   return games;
@@ -62,5 +61,6 @@ void GameMonitor::finalize() {
   Lock lock(&game_admin_mutex_);
   for (char index = 0; index < game_index_; index++) {
     games_[index]->finalize();
+    // delete games_[index];
   }
 }

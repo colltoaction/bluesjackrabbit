@@ -2,11 +2,9 @@
 #define BLUESJACKRABBIT_ENGINE_ENGINE_H
 
 #include <map>
+
 #include <sigc++/functors/slot.h>
-#include "Body.h"
-#include "Collider.h"
-#include "GameObject.h"
-#include <stdint.h>
+#include "GameObjectTemplate.h"
 
 /**
  * A functor object complying to void functor().
@@ -34,7 +32,7 @@ class Engine {
   /**
    * A collection of game objects in this simulation.
    */
-  std::map<uint32_t, GameObject*> &game_objects();
+  std::map<char, GameObject*> &game_objects();
 
   /**
    * Update the physics simulation by $fixed_update_step milliseconds.
@@ -46,6 +44,25 @@ class Engine {
    * @deprecated Applies a force to a specific game object.
    */
   void apply_force(GameObject *game_object, Vector force);
+
+  /**
+   * Applies a force to a specific game object id.
+   * This will replace apply_force
+   */
+  void apply_force_(char object_id, Vector force);
+
+  /**
+   * Adds a game object to the Engine.
+   * @param is_static if the object can move or not
+   * @param circle_collider if it uses a circle collider or a square collider
+   * @param position initial position of game object 
+   */
+  char add_game_object(bool is_static, bool circle_collider, const Vector &position);
+
+  /**
+   * Number of objects in game.
+   */
+  char objects_size();
 
   /**
    * Applies a force to a specific game object id.
@@ -91,11 +108,9 @@ class Engine {
 
  private:
   static const Vector gravity_;
-  uint32_t object_index_;
-  std::map<uint32_t, GameObject*> game_objects_;
-  std::map<uint32_t, bool> player_shoot_;
-  bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
-  void players_shots();
+  char object_index_;
+  std::map<char, GameObject*> game_objects_;
+  bool will_collide(const std::map<char, GameObject*>::iterator &game_object);
 };
 
 

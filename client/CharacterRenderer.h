@@ -7,11 +7,9 @@
 
 class CharacterRenderer : public Renderer {
  public:
-  explicit CharacterRenderer(const Vector &position, double radius);
+  explicit CharacterRenderer(const Vector &position);
   virtual ~CharacterRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
- private:
-  double radius_;
 };
 
 

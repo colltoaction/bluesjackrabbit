@@ -8,11 +8,10 @@
 #include "GameMonitor.h"
 #include <common/Socket.h>
 #include <common/Thread.h>
-#include <common/Configuration.h>
 
 class ClientProxyAcceptor : public Thread {
  public:
-  explicit ClientProxyAcceptor(const Configuration &config, GameMonitor *game_monitor);
+  explicit ClientProxyAcceptor(std::string puerto, GameMonitor *game_monitor);
   ~ClientProxyAcceptor();
   virtual void run();
   void listen_connections();

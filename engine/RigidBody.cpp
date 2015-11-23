@@ -2,34 +2,22 @@
 
 const double RigidBody::friction_magnitude_ = 0.1;
 
-RigidBody::RigidBody(Vector *position)
-    : position_(position)
+RigidBody::RigidBody(Transform *transform)
+    : transform_(transform)
     , force_(0, 0)
     , velocity_(0, 0) {
-}
-
-RigidBody::~RigidBody() {
-  delete position_;
-}
-
-const Vector &RigidBody::velocity() const {
-  return velocity_;
 }
 
 void RigidBody::apply_force(const Vector &force) {
   force_ = force_ + force;
 }
 
-Vector RigidBody::position() const {
-  return *position_;
-}
-
-Vector RigidBody::next_position() const {
-  return *position_ + velocity();
+const Vector &RigidBody::velocity() const {
+  return velocity_;
 }
 
 void RigidBody::update_fixed() {
-  *position_ = next_position();
+  transform_->update_position(next_position());
 
   if (force_ == Vector::zero()) {
     Vector friction = velocity_.direction() * -friction_magnitude_;
@@ -48,18 +36,6 @@ void RigidBody::stop() {
   velocity_ = Vector::zero();
 }
 
-void RigidBody::stop_x() {
-  velocity_ = Vector(0, velocity_.y());
-}
-
-void RigidBody::stop_y() {
-  velocity_ = Vector(velocity_.x(), 0);
-}
-
-bool RigidBody::stopped() {
-  return velocity_ == Vector::zero();
-}
-
-bool RigidBody::stopped_x() {
-  return velocity_.x() == 0;
+Vector RigidBody::next_position() const {
+  return transform_->position() + velocity();
 }

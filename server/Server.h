@@ -11,7 +11,7 @@ class Server {
   GameMonitor game_monitor_;
   ClientProxyAcceptor proxy_;
  public:
-  explicit Server(const Configuration &config);
+  explicit Server(std::string port);
   ~Server();
   void init();
 };

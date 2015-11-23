@@ -5,7 +5,6 @@
 #include <string>
 #include <sigc++/functors/slot.h>
 
-#include <common/Configuration.h>
 #include <common/Socket.h>
 #include <common/Mutex.h>
 #include <engine/GameObject.h>
@@ -26,45 +25,35 @@ typedef sigc::slot<void> Subscriber;
 
 class RemoteServerProxy : public ServerProxy {
  public:
-  explicit RemoteServerProxy(const Configuration &config);
+  RemoteServerProxy();
   virtual ~RemoteServerProxy();
   virtual void MoveUp();
   virtual void MoveDown();
   virtual void MoveLeft();
   virtual void MoveRight();
-  virtual void jump();
-  virtual void shoot();
-  virtual Vector character_position();
-  virtual std::map<uint32_t, Renderer*> &renderers();
+  virtual std::map<char, Renderer*> &renderers();
+  virtual const Vector &character_position();
 
   virtual bool connect();
   virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();
-  virtual bool start_game(size_t map_id, std::string game_name);
+  virtual bool start_game(size_t map_id);
   virtual void init_game();
   virtual void join_game(size_t game_id);
+  void read_object_position(char *object_id, double *x, double *y);
   virtual void shutdown();
 
  private:
   static const double step;
   // Engine engine_;
-  const Configuration &config_;
-  std::map<uint32_t, Renderer*> renderers_;
+  std::map<char, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
   RemoteServerProxyUpdater updater_;
   Mutex mutex_;
-  uint32_t object_id_;
-  bool alive_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
-  void read_object_id(uint32_t *object_id);
-  void update_object(uint32_t object_id, double x, double y, char type, point_type points, bool alive);
-  void read_object_position(double *x, double *y);
-  void read_object_type(char *type);
-  std::list<Vector> read_object_points();
-  void read_alive(char *alive);
-  void read_double(double *value);
-  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
+  char object_id_;
+
+  void update_object(char object_id, double x, double y);
 };
 
 

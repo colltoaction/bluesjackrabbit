@@ -33,7 +33,7 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   camera_position_ = server_proxy_->character_position();
   cr->translate(-camera_position_.x(),
                 -camera_position_.y());
-  for (std::map<uint32_t, Renderer*>::iterator renderer = server_proxy_->renderers().begin();
+  for (std::map<char, Renderer*>::iterator renderer = server_proxy_->renderers().begin();
        renderer != server_proxy_->renderers().end();
            ++renderer) {
     cr->save();

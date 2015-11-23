@@ -8,13 +8,12 @@
 #define ARGS_SERVER 2
 
 int main(int argc, char *argv[]) {
-  std::string config_filename = "server.ini";
+  std::string port = "socks";
   if (argc == ARGS_SERVER) {
-    config_filename = std::string(argv[1]);
+    port = std::string(argv[1]);
   }
 
-  Configuration config(config_filename);
-  Server server(config);
+  Server server(port);
   server.init();
   return 0;
 }
