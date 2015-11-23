@@ -9,6 +9,8 @@ addons:
       - libgtkmm-3.0-dev
       - libcppunit-dev
       - liblog4cpp5-dev
+      - libgoocanvasmm-2.0-dev
+      - libxml++2.6-dev
 
 install:
   - mkdir build
