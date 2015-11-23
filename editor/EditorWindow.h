@@ -1,63 +1,50 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H
 #define BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H
+
 #include <giomm/simpleactiongroup.h>
+#include <giomm/simpleaction.h>
 #include <gtkmm/box.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/toolitemgroup.h>
 #include <gtkmm/toolpalette.h>
 #include <gtkmm/window.h>
 #include <goocanvasmm/canvas.h>
+#include <goocanvasmm/item.h>
 #include "EditorController.h"
 #include "EditorCanvas.h"
-// #include "Level.h"
 
-class EditorWindow : public Gtk::Window {
+class EditorWindow: public Gtk::Window {
  public:
-	EditorWindow();
-	virtual ~EditorWindow();
-  bool on_canvas_drag_motion(
-      const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, guint timestamp);
-  bool on_canvas_drag_drop(
-      const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, guint timestamp);
-  void on_canvas_drag_data_received(
-      const Glib::RefPtr<Gdk::DragContext>& drag_context, int x, int y, 
-      const Gtk::SelectionData& selection_data, guint info, guint timestamp);
-  void on_palette_drag_data_get(
-      const Glib::RefPtr<Gdk::DragContext>& /* drag_context */, Gtk::SelectionData& selection_data,
-      guint /* info */, guint /* time */);
-  void on_toolbutton_drag_data_get(
-      const Glib::RefPtr<Gdk::DragContext>& /* drag_context */, Gtk::SelectionData& selection_data,
-      guint /* info */, guint /* time */, std::string asset_uid);
-
+  EditorWindow();
+  virtual ~EditorWindow();
 
  private:
   /**
    * Loads the layout for this window from a Glade file
    */
- 	void load_content_from_glade();
+  void load_content_from_glade();
+
   /**
    * Adds items from various assets to Editor's ToolPalette.
    */
- 	void init_palette();
+  void init_palette();
+
   /**
    * Connects menu items to their corresponding Gio::SimpleAction
    */
- 	void init_menus();
+  void init_menus();
   void change_layer(int parameter);
-  void tilemap_visible();
 
-  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y);
-  
   EditorController controller_;
 
-	Gtk::Box* root_;
-	
-	Gtk::ToolPalette* palette_;
-  Gtk::ToolItemGroup* tiles_group_;
-  Gtk::ToolItemGroup* control_group_;
-  Gtk::ToolItemGroup* misc_group_;
+  Gtk::Box *root_;
 
-  Gtk::ScrolledWindow* canvas_window_;
+  Gtk::ToolPalette *palette_;
+  Gtk::ToolItemGroup *tiles_group_;
+  Gtk::ToolItemGroup *control_group_;
+  Gtk::ToolItemGroup *misc_group_;
+
+  Gtk::ScrolledWindow *canvas_window_;
   EditorCanvas canvas_;
 
   Glib::RefPtr<Goocanvas::Item> dnd_item_;
@@ -67,7 +54,6 @@ class EditorWindow : public Gtk::Window {
   Glib::RefPtr<Gio::SimpleAction> action_tilemap_visible_;
   Glib::RefPtr<Gio::SimpleAction> action_objects_visible_;
   Glib::RefPtr<Gio::SimpleAction> action_controls_visible_;
-
 };
 
-#endif // BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H
+#endif  // BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H

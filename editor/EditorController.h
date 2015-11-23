@@ -1,5 +1,6 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H
+
 #include "EditorLayer.h"
 
 class EditorController {
