@@ -81,6 +81,18 @@ LocalServerProxy::LocalServerProxy() {
 LocalServerProxy::~LocalServerProxy() {
 }
 
+LocalServerProxy::LocalServerProxy() {
+  renderers_.push_back(new CharacterRenderer(engine_.game_objects().front()->transform().position()));
+  for (std::vector<GameObject*>::iterator game_object = engine_.game_objects().begin() + 1;
+       game_object != engine_.game_objects().end();
+       ++game_object) {
+    renderers_.push_back(new TurtleRenderer((*game_object)->transform().position()));
+  }
+}
+
+LocalServerProxy::~LocalServerProxy() {
+}
+
 // Nothing, it will be updated from other place
 std::map<char, Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
