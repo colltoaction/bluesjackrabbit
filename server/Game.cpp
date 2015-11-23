@@ -27,7 +27,6 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
     player_index_(0),
     in_game(false),
     game_name_(game_name),
-
     even(0) {
   add_player(admin);
 

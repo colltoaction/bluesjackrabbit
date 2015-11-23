@@ -20,8 +20,9 @@ uint32_t Message::read_uint32(Socket *socket) {
 }
 
 Vector Message::read_vector(Socket *socket) {
-  return Vector(read_double(socket),
-                read_double(socket));
+  double x = read_double(socket);
+  double y = read_double(socket);
+  return Vector(x, y);
 }
 
 char Message::read_char(Socket *socket) {
