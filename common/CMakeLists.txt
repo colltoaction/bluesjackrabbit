@@ -6,6 +6,10 @@ set(SOURCES
         Constants.h
         CreateGameMessage.cpp
         CreateGameMessage.h
+        GameInitMessage.cpp
+        GameInitMessage.h
+        GameObjectMessage.cpp
+        GameObjectMessage.h
         GamesMessage.cpp
         GamesMessage.h
         InvalidMessageException.cpp
@@ -16,6 +20,8 @@ set(SOURCES
         Lock.h
         Logger.cpp
         Logger.h
+        LoggerScope.cpp
+        LoggerScope.h
         MapsMessage.cpp
         MapsMessage.h
         Message.cpp
@@ -30,7 +36,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-        GameInitMessage.cpp GameInitMessage.h GameObjectMessage.cpp GameObjectMessage.h LoggerScope.cpp LoggerScope.h)
+)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})
