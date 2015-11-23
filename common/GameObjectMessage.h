@@ -11,10 +11,17 @@ class GameObjectMessage: public Message {
  public:
   explicit GameObjectMessage(Socket *socket);
 
+  static char type_id();
+
   /**
    * Reads a game object sent through the socket.
    */
   void read();
+
+  /**
+   * Sends a game object through the socket.
+   */
+  void send(uint32_t object_id, GameObject *position);
 
   /**
    * Returns the object id that has been read.
@@ -36,7 +43,10 @@ class GameObjectMessage: public Message {
    */
   const std::vector<Vector> &points() const;
 
-  void send(uint32_t object_id, GameObject *position);
+  /**
+   * Returns whether the object that has been read is alive.
+   */
+  bool alive() const;
 
  private:
   Socket *socket_;

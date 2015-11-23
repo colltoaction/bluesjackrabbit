@@ -3,6 +3,7 @@
 #include "GameInitMessage.h"
 #include "Constants.h"
 #include "MessageWriter.h"
+#include "MessageReader.h"
 
 
 GameInitMessage::GameInitMessage(Socket *socket)
@@ -26,10 +27,10 @@ char GameInitMessage::type() {
 }
 
 void GameInitMessage::read() {
-  char objects_size;
-  socket_->read_buffer(&objects_size, 1);
+  char objects_size = read_char(socket_);
+  MessageReader reader(socket_);
   for (char i = 0; i < objects_size; i++) {
-    GameObjectMessage *game_object_message = new GameObjectMessage(socket_);
+    GameObjectMessage *game_object_message = reader.read_game_object();
     game_object_message->read();
     objects_.push_back(game_object_message);
   }

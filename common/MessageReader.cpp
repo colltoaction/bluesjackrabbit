@@ -10,13 +10,15 @@ MessageReader::MessageReader(Socket *socket)
     : socket_(socket) {
 }
 
-Message * MessageReader::read_message() {
+Message *MessageReader::read_message() {
   char c = read_message_type();
   // GAME OPTIONS
   if (c == CreateGameMessage::type_id()) {
     return new CreateGameMessage(socket_);
   } else if (c == JoinGameMessage::type_id()) {
     return new JoinGameMessage(socket_);
+  } else if (c == GameInitMessage::type_id()) {
+    return new GameInitMessage(socket_);
   } else if (c == GamesMessage::type_id()) {
     return new GamesMessage(socket_);
   } else if (c == MapsMessage::type_id()) {
@@ -25,7 +27,9 @@ Message * MessageReader::read_message() {
   } else if (c == JUMP) {
   } else if (c == SHOOT) {
   } else {
-    throw InvalidMessageException(std::string("Unknown message with type ").append(1, c));
+    std::stringstream ss;
+    ss << "Unknown message with type " << static_cast<int>(c);
+    throw InvalidMessageException(ss.str());
   }
 
   // TODO(tinchou): make Message abstract
@@ -60,6 +64,11 @@ GameInitMessage MessageReader::read_game_init() {
 JoinGameMessage MessageReader::read_join_game() {
   validate_message_type(JoinGameMessage::type_id());
   return JoinGameMessage(socket_);
+}
+
+GameObjectMessage *MessageReader::read_game_object() {
+  validate_message_type(GameObjectMessage::type_id());
+  return new GameObjectMessage(socket_);
 }
 
 void MessageReader::validate_message_type(char expected) const {

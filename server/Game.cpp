@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-#define PLAYERS 2
+#define PLAYERS 1
 
 const double Game::step = 0.003;
 

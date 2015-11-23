@@ -59,14 +59,7 @@ class ClientProxy : public Thread {
   void join_game_call(JoinGameMessage *join_game);
   void list_games_call();
   void list_maps_call();
-  void send_object(uint32_t object_id, GameObject *object);
-  void send_object_size(char object_size);
   void send_object_id(uint32_t *object_id);
-  void send_object_position(uint32_t object_id, GameObject *object);
-  void send_object_type(GameObject *object);
-  void send_object_points(GameObject *object);
-  void send_object_alive(GameObject *object);
-  void send_double(double *value);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */

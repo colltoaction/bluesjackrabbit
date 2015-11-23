@@ -12,6 +12,13 @@ class MessageWriter {
   explicit MessageWriter(Socket *socket);
 
   /**
+   * Sends a handshake through the socket (char 'A').
+   * TODO(tinchou): send and read a message with the player id.
+   * @throws InvalidMessageException
+   */
+  void send_player_id();
+
+  /**
    * Sends a message containing the available maps through the socket.
    */
   void send_available_maps(const std::vector<char> &map_ids);
@@ -29,6 +36,7 @@ class MessageWriter {
   void send_game_object(uint32_t object_id, GameObject *game_object);
 
   void send_join_game(size_t game_id);
+
  private:
   Socket *socket_;
 };

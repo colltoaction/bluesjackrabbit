@@ -2,12 +2,6 @@
 #define BLUESJACKRABBIT_COMMON_CONSTANTS_H
 
 
-#define MAX_CHAR 256
-
-#define OPTION_LENGTH 1
-#define NOT 0x00
-#define OK 0xFF
-
 // GAME PROTOCOL CONSTANTS
 #define LEFT 0x1
 #define RIGHT 0x2
@@ -28,8 +22,6 @@
 
 #define TRUE_PROTOCOL 0x30
 #define FALSE_PROTOCOL 0x31
-
-#define MAP_ID_LENGTH 1
 
 
 #endif  // BLUESJACKRABBIT_COMMON_CONSTANTS_H

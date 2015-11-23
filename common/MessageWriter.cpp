@@ -11,6 +11,11 @@ MessageWriter::MessageWriter(Socket *socket)
     : socket_(socket) {
 }
 
+void MessageWriter::send_player_id() {
+  char c = 'A';
+  socket_->send_buffer(&c, CANT_BYTES);
+}
+
 void MessageWriter::send_available_maps(const std::vector<char> &map_ids) {
   char message_type = LIST_MAPS;
   socket_->send_buffer(&message_type, CANT_BYTES);
@@ -47,7 +52,7 @@ void MessageWriter::send_join_game(size_t game_id) {
 }
 
 void MessageWriter::send_game_object(uint32_t object_id, GameObject *game_object) {
-  char message_type = GAME_OBJECT;
+  char message_type = GameObjectMessage::type_id();
   socket_->send_buffer(&message_type, CANT_BYTES);
   GameObjectMessage game_object_m(socket_);
   game_object_m.send(object_id, game_object);

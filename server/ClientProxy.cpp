@@ -35,8 +35,9 @@ ClientProxy::~ClientProxy() {
 
 
 void ClientProxy::say_hello() {
-  char c = 'A';
-  socket_->send_buffer(&c, CANT_BYTES);
+  MessageWriter writer(socket_);
+  writer.send_player_id();
+  // TODO(tinchou): send the actual player ID
 }
 
 
@@ -137,12 +138,6 @@ void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
   // TODO(tinchou): don't use the "Init" class for every message
   MessageWriter writer(socket_);
   writer.send_game_init(game_objects);
-}
-
-void ClientProxy::send_double(double *value) {
-  size_t double_size = sizeof(double);
-  char *address = static_cast<char*>(static_cast<void*>(value));
-  socket_->send_buffer(address, double_size);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

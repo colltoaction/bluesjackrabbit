@@ -1,9 +1,14 @@
 #include "GameObjectMessage.h"
+#include "Constants.h"
 
 GameObjectMessage::GameObjectMessage(Socket *socket)
-    : Message('X')
+    : Message(GAME_OBJECT)
     , socket_(socket)
     , position_(Vector::zero())  /* will be read later */  {
+}
+
+char GameObjectMessage::type_id() {
+  return GAME_OBJECT;
 }
 
 void GameObjectMessage::read() {
@@ -54,4 +59,8 @@ const Vector &GameObjectMessage::position() const {
 
 const std::vector<Vector> &GameObjectMessage::points() const {
   return points_;
+}
+
+bool GameObjectMessage::alive() const {
+  return alive_;
 }

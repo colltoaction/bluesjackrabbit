@@ -56,6 +56,12 @@ class MessageReader {
    */
   JoinGameMessage read_join_game();
 
+  /**
+   * Reads a game object.
+   * @throws InvalidMessageException
+   */
+  GameObjectMessage *read_game_object();
+
  private:
   Socket *socket_;
   void validate_message_type(char expected) const;

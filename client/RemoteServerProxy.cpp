@@ -131,9 +131,10 @@ void RemoteServerProxy::read_object_id(uint32_t *object_id) {
 }
 
 void RemoteServerProxy::init_game() {
-  std::cout << "RemoteServerProxy::init_game\n";
+  Logger::info("RemoteServerProxy::init_game");
   MessageReader reader(socket_);
   GameInitMessage message = reader.read_game_init();
+  message.read();
   for (std::vector<GameObjectMessage *>::const_iterator i = message.objects().begin();
        i != message.objects().end(); i++) {
     create_object_renderer((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
