@@ -10,6 +10,8 @@
 #include "EditorLayer.h"
 #include "EditorController.h"
 #include "EditorCanvas.h"
+#include "CircleButton.h"
+#include "RectButton.h"
 #include "EditorWindow.h"
 #define GLADE_FILENAME "window.glade"
 #define MAIN_WINDOW_GLADE_ID "MainBox"
@@ -58,35 +60,12 @@ void EditorWindow::load_content_from_glade() {
 }
 
 void EditorWindow::init_palette() {
-  tiles_group_ = Gtk::manage(new Gtk::ToolItemGroup("Tiles"));
   control_group_ = Gtk::manage(new Gtk::ToolItemGroup("Control Objects"));
-  misc_group_ = Gtk::manage(new Gtk::ToolItemGroup("Miscellaneous"));
+  misc_group_ = Gtk::manage(new Gtk::ToolItemGroup("Visible Objects"));
+
+  std::string asset_filename;
 
   // TODO(Diego): pasar a inicializacion de Assets
-  // Asset 1 - Tileset - Brown Nature
-  std::string asset_filename = "assets/brown_nature.png";
-  Glib::RefPtr<Gdk::Pixbuf> tileset_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
-  // TODO(Diego): ideally, read properties from an Asset file
-  const int tile_width = 64;
-  const int tile_height = 64;
-  const int tile_qty_v = 8;
-  const int tile_qty_h = 8;
-  int tile_number = 0;
-  for (int cursor_v = 0; cursor_v < tile_qty_v; ++cursor_v) {
-    for (int cursor_h = 0; cursor_h < tile_qty_h; ++cursor_h) {
-      std::stringstream asset_uid_formatter_stream;
-      std::string asset_uid;
-      asset_uid_formatter_stream << "brown_nature.";
-      asset_uid_formatter_stream << std::setw(4) << std::setfill('0') << tile_number;
-      asset_uid_formatter_stream >> asset_uid;
-      Glib::RefPtr<Gdk::Pixbuf> pixbuf = Gdk::Pixbuf::create_subpixbuf(
-          tileset_pixbuf, tile_width * cursor_v, tile_height * cursor_h, tile_width, tile_height);
-      Gtk::Image* image = Gtk::manage(new Gtk::Image(pixbuf));
-      Glib::ustring icon_name = asset_uid;
-      Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
-      tiles_group_->insert(*button);
-    }
-  }
   // Asset 2 - Image - Barrel
   asset_filename = "assets/barrel.png";
   Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
@@ -96,7 +75,12 @@ void EditorWindow::init_palette() {
   Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
   misc_group_->insert(*button);
 
-  palette_->add(*tiles_group_);
+  // Special assets: rectangle and circle
+  button = Gtk::manage(new CircleButton("Circle"));
+  misc_group_->insert(*button);
+  button = Gtk::manage(new RectButton("Rectangle"));
+  misc_group_->insert(*button);
+
   palette_->add(*control_group_);
   palette_->add(*misc_group_);
 }
