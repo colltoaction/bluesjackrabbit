@@ -15,18 +15,15 @@ char GameObjectPlayer::game_object_type() {
 }
 
 bool GameObjectPlayer::can_shoot() {
-  return engine_steps_ >= MIN_ENGINE_STEPS_TO_SHOOT;
-}
-
-void GameObjectPlayer::increase_step() {
-  engine_steps_++;
+  return engine_steps_ - last_shot_ >= MIN_ENGINE_STEPS_TO_SHOOT;
 }
 
 void GameObjectPlayer::shot() {
-  engine_steps_ = 0;
+  last_shot_ = engine_steps_;
 }
 
 void GameObjectPlayer::update_fixed(Vector gravity) {
+  engine_steps_++;
   if (!normal_) {
     body().apply_force(gravity);
   } else {

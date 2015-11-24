@@ -53,7 +53,6 @@ void Engine::players_shots() {
   for (std::map<uint32_t, bool>::iterator it = player_shoot_.begin(); it != player_shoot_.end(); it++) {
     if (it->second) {
       GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[it->first]);
-      player->increase_step();
       if (player->can_shoot()) {
         // Create a new bullet
         Vector origin = game_objects_[it->first]->body().position();

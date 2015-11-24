@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_ENGINE_GAMEOBJECTPLAYER_H
 #define BLUESJACKRABBIT_ENGINE_GAMEOBJECTPLAYER_H
 
+#include <stdint.h>
 #include "GameObject.h"
 
 class GameObjectPlayer: public GameObject {
@@ -11,9 +12,6 @@ class GameObjectPlayer: public GameObject {
 
   /* Verifies if player has cooled down and can shoot again */
   bool can_shoot();
-
-  /* Increases engine step to know when a client can shoot again */
-  void increase_step();
 
   /* Let game player know it has shot a bullet and has to cool down */
   void shot();
@@ -34,7 +32,8 @@ class GameObjectPlayer: public GameObject {
   void new_direction(bool right);
 
  private:
-  int engine_steps_;
+  uint32_t engine_steps_;
+  uint32_t last_shot_;
   char lives_;
   char direction_;
   bool normal_;
