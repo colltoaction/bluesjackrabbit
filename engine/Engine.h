@@ -70,11 +70,6 @@ class Engine {
   void player_shoot(uint32_t object_id);
 
   /**
-   * Number of objects in game.
-   */
-  uint32_t objects_size();
-
-  /**
    * Removes from game object list all dead objects after proxy notifies client.
    */
   void clean_dead();
@@ -83,11 +78,6 @@ class Engine {
    * Applies forces and moves objects with (poor) artificial intelligence.
    * */
   void move_objects();
-
-  /**
-   * Updates player direction to shoot bullets.
-   * */
-  void update_player_direction(uint32_t object_id, bool right);
 
  private:
   uint32_t object_index_;

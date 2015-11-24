@@ -11,7 +11,7 @@
 #define SECOND_TO_MICROSECONDS 1000000.0
 #define TWENTY_MILLIS_IN_MICROSECONDS 20000.0
 
-const double GameRunner::step = 0.003;
+const double GameRunner::step = 0.006;
 
 GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
   : engine_(engine),
@@ -62,13 +62,10 @@ void GameRunner::notify_clients() {
 
 void GameRunner::action(uint32_t object_id, char option) {
   Lock lock(&engine_mutex_);
-  // std::cout << "Game::action apply force obj id: " << static_cast<int>(object_id) << std::endl;
   if (option == LEFT) {
     engine_->apply_force_(object_id, Vector(-step, 0));
-    engine_->update_player_direction(object_id, false);
   } else if (option == RIGHT) {
     engine_->apply_force_(object_id, Vector(step, 0));
-    engine_->update_player_direction(object_id, true);
   } else if (option == DOWN) {
     engine_->apply_force_(object_id, Vector(0, step));
   } else if (option == UP) {

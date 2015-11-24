@@ -28,12 +28,10 @@ class GameObjectPlayer: public GameObject {
   /* Indicates whether the bullet will be shot to right or left */
   char direction();
 
-  /* Changes the direction the player is looking at */
-  void new_direction(bool right);
-
  private:
   uint32_t engine_steps_;
   uint32_t last_shot_;
+  uint32_t last_dead_;
   char lives_;
   char direction_;
   bool normal_;

@@ -54,5 +54,5 @@ void GameObjectRedTurtle::impact(GameObject *other) {
 }
 
 bool GameObjectRedTurtle::alive() {
-  return lives_ != 0;
+  return lives_ > 0;
 }

@@ -85,7 +85,7 @@ void Engine::check_collisions(const std::map<uint32_t, GameObject *>::iterator &
       if (game_object->second->will_collide(*other->second)) {
         // Make them impact each other
         game_object->second->impact(other->second);
-//        other->second->impact(game_object->second);
+        other->second->impact(game_object->second);
       }
     }
   }
@@ -119,15 +119,5 @@ uint32_t Engine::add_game_object(GameObject *game_object) {
 void Engine::player_shoot(uint32_t object_id) {
   if (game_objects_.find(object_id) != game_objects_.end()) {
     player_shoot_[object_id] = true;
-  }
-}
-
-uint32_t Engine::objects_size() {
-  return static_cast<uint32_t>(game_objects_.size());
-}
-
-void Engine::update_player_direction(uint32_t object_id, bool right) {
-  if (game_objects_.find(object_id) != game_objects_.end()) {
-    static_cast<GameObjectPlayer*>(game_objects_[object_id])->new_direction(right);
   }
 }
