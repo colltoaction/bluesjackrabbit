@@ -7,8 +7,7 @@ GameObjectBullet::GameObjectBullet(Body *body, Collider *collider, char directio
 GameObjectBullet::~GameObjectBullet() {
 }
 
-void GameObjectBullet::update_fixed(Vector gravity) {
-  (void) gravity;
+void GameObjectBullet::update_fixed() {
   body().apply_force(Vector(0.003 * direction_, 0.0));
 }
 

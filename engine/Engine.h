@@ -90,11 +90,10 @@ class Engine {
   void update_player_direction(uint32_t object_id, bool right);
 
  private:
-  static const Vector gravity_;
   uint32_t object_index_;
   std::map<uint32_t, GameObject*> game_objects_;
   std::map<uint32_t, bool> player_shoot_;
-  bool will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object);
+  void check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object);
   void players_shots();
 };
 

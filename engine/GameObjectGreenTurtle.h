@@ -8,7 +8,7 @@ class GameObjectGreenTurtle: public GameObject {
  public:
   GameObjectGreenTurtle(Body *body, Collider *collider);
   virtual ~GameObjectGreenTurtle();
-  virtual void update_fixed(Vector gravity);
+  virtual void update_fixed();
   virtual char game_object_type();
   virtual void impact(GameObject *other);
   virtual bool alive();

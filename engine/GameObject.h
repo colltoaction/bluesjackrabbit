@@ -24,7 +24,7 @@ class GameObject {
   /**
    * This method should be called in each step of the engine to perform routine operations.
    */
-  virtual void update_fixed(Vector gravity);
+  virtual void update_fixed();
 
   /**
    * Returns true if this object's will collide with another after moving to its next position.
@@ -46,6 +46,7 @@ class GameObject {
   virtual bool alive();
 
  protected:
+  static const Vector gravity_;
   bool alive_;
   Body *body_;
   Collider *collider_;

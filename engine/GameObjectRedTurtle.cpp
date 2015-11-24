@@ -13,9 +13,9 @@ GameObjectRedTurtle::GameObjectRedTurtle(Body *body, Collider *collider)
 GameObjectRedTurtle::~GameObjectRedTurtle() {
 }
 
-void GameObjectRedTurtle::update_fixed(Vector gravity) {
+void GameObjectRedTurtle::update_fixed() {
   if (!normal_) {
-    body().apply_force(gravity);
+    body().apply_force(gravity_);
   } else {
     body().stop_y();
     body().apply_force(Vector(0, -0.1));

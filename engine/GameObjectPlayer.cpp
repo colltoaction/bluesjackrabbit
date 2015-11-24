@@ -22,10 +22,10 @@ void GameObjectPlayer::shot() {
   last_shot_ = engine_steps_;
 }
 
-void GameObjectPlayer::update_fixed(Vector gravity) {
+void GameObjectPlayer::update_fixed() {
   engine_steps_++;
   if (!normal_) {
-    body().apply_force(gravity);
+    body().apply_force(gravity_);
   } else {
     body().stop_y();
   }

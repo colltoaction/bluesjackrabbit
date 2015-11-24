@@ -23,7 +23,7 @@ class GameObjectPlayer: public GameObject {
   virtual bool alive();
 
   /* Moves player */
-  virtual void update_fixed(Vector gravity);
+  virtual void update_fixed();
 
   /* Indicates whether the bullet will be shot to right or left */
   char direction();
