@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-EditorController::EditorController() : unsaved_changes_(false), active_layer_(TILEMAP) {
+EditorController::EditorController() : unsaved_changes_(false) {
 }
 
 void EditorController::start_new_level() {
