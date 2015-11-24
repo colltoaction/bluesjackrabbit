@@ -12,6 +12,7 @@ void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
       Cairo::ImageSurface::create_from_png("static/sprites/Jazz.png");
   cr->translate(position_.x(), position_.y());
   cr->scale(1.0/image->get_width(), 1.0/image->get_height());
+  cr->translate(-image->get_width() / 2, -image->get_height() / 2);
   cr->set_source(image, 0, 0);
   cr->paint();
 }

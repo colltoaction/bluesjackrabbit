@@ -17,8 +17,6 @@
 
 #define PLAYERS 1
 
-const double Game::step = 0.003;
-
 Game::Game(ClientProxy *admin, const std::string &game_name) :
     engine_(),
     engine_mutex_(),

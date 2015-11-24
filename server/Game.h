@@ -22,7 +22,6 @@ class Game {
   void finalize();
 
  private:
-  static const double step;
   Engine engine_;
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> players_;
