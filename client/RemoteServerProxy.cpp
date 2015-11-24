@@ -7,13 +7,20 @@
 #include <unistd.h>
 
 #include <common/Lock.h>
+#include <common/MessageReader.h>
+#include <common/MapsMessage.h>
+#include <common/CreateGameMessage.h>
+#include <common/MessageWriter.h>
 
 #include "RemoteServerProxy.h"
 
 #include "BulletRenderer.h"
 #include "FloorRenderer.h"
 #include "CharacterRenderer.h"
-#include "Constants.h"
+#include <common/Constants.h>
+#include <common/Logger.h>
+#include <common/GameInitMessage.h>
+#include <common/GameObjectMessage.h>
 #include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
 
@@ -86,39 +93,31 @@ std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
   return renderers_;
 }
 
-// recibir and write.
-bool RemoteServerProxy::connect() {
+void RemoteServerProxy::connect() {
   socket_ = new Socket(config_["server_host"], config_["server_port"], 0);
   updater_.set_socket(socket_);
   socket_->connect_socket();
-  char c;
-  socket_->read_buffer(&c, CANT_BYTES);
-  return c == 'A';
+  MessageReader reader(socket_);
+  reader.read_player_id();  // TODO(tinchou): use player id
+  const std::string &peer_name_ = socket_->peer_name();
+  Logger::info(std::string("Server ").append(peer_name_).append(" conectado"));
 }
 
-
 bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
-  std::cout << "Start game with map id: " << map_id << std::endl;
-  char option = NEW_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  option = static_cast<char>(map_id);
-  socket_->send_buffer(&option, MAP_ID_LENGTH);
-  char game_name_length = static_cast<char>(game_name.size());
-  socket_->send_buffer(&game_name_length, CANT_BYTES);
-  socket_->send_buffer(game_name.c_str(), game_name_length);
+  MessageWriter writer(socket_);
+  writer.send_create_game(map_id, game_name);
+
   read_object_id(&object_id_);
   init_game();
   updater_.start();
+
   return true;
 }
 
-
 void RemoteServerProxy::join_game(size_t game_id) {
-  std::cout << "Join game with game id: " << game_id << std::endl;
-  char option = JOIN_GAME;
-  socket_->send_buffer(&option, OPTION_LENGTH);
-  char game = static_cast<char>(game_id);
-  socket_->send_buffer(&game, MAP_ID_LENGTH);
+  MessageWriter writer(socket_);
+  writer.send_join_game(game_id);
+
   read_object_id(&object_id_);
   init_game();
   updater_.start();
@@ -131,33 +130,19 @@ void RemoteServerProxy::read_object_id(uint32_t *object_id) {
   *object_id = ntohl(read);
 }
 
-
 void RemoteServerProxy::init_game() {
-  std::cout << "RemoteServerProxy::init_game\n";
-  char objects_size;
-  socket_->read_buffer(&objects_size, 1);
-  std::cout << "RemoteServerProxy::OBJECTS SIZE: " << static_cast<int>(objects_size) << "\n";
-  for (char i = 0; i < objects_size; i++) {
-    uint32_t object_id;
-    double x, y;
-    char type;
-    char alive;
-    read_object_id(&object_id);
-    read_object_position(&x, &y);
-    read_object_type(&type);
-    std::list<Vector> points = read_object_points();
-    read_alive(&alive);
-    create_object_renderer(object_id, type, Vector(x, y), points);
+  Logger::info("RemoteServerProxy::init_game");
+  MessageReader reader(socket_);
+  GameInitMessage message = reader.read_game_init();
+  message.read();
+  for (std::vector<GameObjectMessage *>::const_iterator i = message.objects().begin();
+       i != message.objects().end(); i++) {
+    create_object_renderer((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
   }
-  std::cout << "FIN INIT GAME\n";
-}
-
-void RemoteServerProxy::read_alive(char *alive) {
-  socket_->read_buffer(alive, CANT_BYTES);
 }
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
-                                               std::list<Vector> points) {
+                                               std::vector<Vector> points) {
   Renderer *render = NULL;
   if (object_type == 'r') {
     std::cout << "Llega la roja\n";
@@ -199,83 +184,30 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
     } else {
       renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
     }
+  } else if (object_id != object_id_) {
+    std::cout << "muere object: " << type << std::endl;
+    Renderer *render = renderers_[object_id];
+    renderers_.erase(object_id);
+    delete render;
   } else {
-    if (object_id != object_id_) {
-      std::cout << "muere object: " << type << std::endl;
-      Renderer *render = renderers_[object_id];
-      renderers_.erase(object_id);
-      delete render;
-    } else {
-      // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
-      std::cout << "te mataron\n";
-    }
+    // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
+    std::cout << "te mataron\n";
   }
 }
 
-
-void RemoteServerProxy::read_object_position(double *x, double *y) {
-  read_double(x);
-  read_double(y);
-}
-
-void RemoteServerProxy::read_object_type(char *type) {
-  socket_->read_buffer(type, CANT_BYTES);
-}
-
-std::list<Vector> RemoteServerProxy::read_object_points() {
-  char points_size;
-  socket_->read_buffer(&points_size, CANT_BYTES);
-  std::list<Vector> points;
-  for (char i = 0; i < points_size; i++) {
-    double x, y;
-    read_double(&x);
-    read_double(&y);
-    points.push_back(Vector(x, y));
-  }
-  return points;
-}
-
-void RemoteServerProxy::read_double(double *value) {
-  size_t double_size = sizeof(double);
-  char *address = static_cast<char *>(static_cast<void *>(value));
-  socket_->read_buffer(address, double_size);
-}
-
-// recibir and write
-std::map<size_t, std::string> RemoteServerProxy::list_maps() {
-  std::cout << "Comienza listado\n";
-  std::map<size_t, std::string> map;
+std::vector<char> RemoteServerProxy::list_maps() {
   char option = LIST_MAPS;
   socket_->send_buffer(&option, 1);
-  socket_->read_buffer(&option, CANT_BYTES);
-  for (char i = 0; i < option; i++) {
-    char map_number;
-    socket_->read_buffer(&map_number, CANT_BYTES);
-    map[map_number] = "Mapa algo...";
-  }
-  std::cout << "Fin listado\n";
-  return map;
+  MessageReader reader(socket_);
+  MapsMessage maps = reader.read_available_maps();
+  return maps.read();
 }
 
 std::map<size_t, std::string> RemoteServerProxy::list_games() {
-  std::cout << "Comienzo listado games\n";
-  std::map<size_t, std::string> map;
   char option = LIST_GAMES;
   socket_->send_buffer(&option, 1);
-  socket_->read_buffer(&option, CANT_BYTES);
-  std::cout << "Son " << static_cast<int>(option) << " juegos\n";
-  for (char i = 0; i < option; i++) {
-    std::cout << "Juego: " << static_cast<int>(i) << std::endl;
-    char game_number;
-    socket_->read_buffer(&game_number, CANT_BYTES);
-    char game_length;
-    socket_->read_buffer(&game_length, CANT_BYTES);
-    char game_name[MAX_CHAR];
-    socket_->read_buffer(game_name, game_length);
-    game_name[static_cast<size_t>(game_length)] = '\0';
-    map[game_number] = game_name;
-  }
-  std::cout << "Fin listado\n";
-  return map;
+  MessageReader reader(socket_);
+  GamesMessage games = reader.read_available_games();
+  return games.read();
 }
 

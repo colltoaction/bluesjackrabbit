@@ -2,16 +2,18 @@
 #define BLUESJACKRABBIT_SERVER_CLIENTPROXY_H
 
 #include <string>
-#include <list>
+#include <vector>
 
 #include <engine/Engine.h>
 #include <engine/GameObject.h>
 #include <common/Socket.h>
 #include <common/Thread.h>
+#include <common/CreateGameMessage.h>
+#include <common/JoinGameMessage.h>
 
 class ClientProxy;
 
-typedef std::list<char> ObjectList;
+typedef std::vector<char> ObjectList;
 typedef std::map<char, std::string> GameList;
 
 typedef sigc::slot<char, char, std::string, ClientProxy*> new_game_callback;
@@ -29,8 +31,7 @@ class ClientProxy : public Thread {
   ~ClientProxy();
   void run();
   void say_hello();
-  void send_object(uint32_t object_id, GameObject *object);
-  void send_object_size(char object_size);
+  void send_objects(std::map<uint32_t, GameObject *> *game_objects);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
   void add_shoot_functor(shoot_callback mv_callback);
@@ -51,19 +52,14 @@ class ClientProxy : public Thread {
 
   char game_id_;
   uint32_t object_id_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
+  static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   bool bullet_shot;
   void read_protocol();
-  void new_game_call();
-  void join_game_call();
+  void new_game_call(CreateGameMessage *create_game);
+  void join_game_call(JoinGameMessage *join_game);
   void list_games_call();
   void list_maps_call();
   void send_object_id(uint32_t *object_id);
-  void send_object_position(uint32_t object_id, GameObject *object);
-  void send_object_type(GameObject *object);
-  void send_object_points(GameObject *object);
-  void send_object_alive(GameObject *object);
-  void send_double(double *value);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_CLIENTPROXY_H */

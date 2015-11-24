@@ -1,7 +1,7 @@
 #ifndef BLUESJACKRABBIT_ENGINE_COLLIDER_H
 #define BLUESJACKRABBIT_ENGINE_COLLIDER_H
 
-#include <list>
+#include <vector>
 #include "Vector.h"
 #include "Body.h"
 
@@ -41,7 +41,7 @@ class Collider {
   /**
    * Returns a list of points (x, y) the client will use to render the object
    */
-  virtual std::list<Vector> characteristic_points() const = 0;
+  virtual std::vector<Vector> characteristic_points() const = 0;
 
   /**
    * Returns Right x position of object.

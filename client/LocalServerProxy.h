@@ -6,6 +6,7 @@
 #include <engine/Engine.h>
 #include <engine/GameObject.h>
 #include <map>
+#include <vector>
 #include <string>
 #include "ServerProxy.h"
 
@@ -21,8 +22,8 @@ class LocalServerProxy : public ServerProxy {
   virtual void shoot();
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
-  virtual bool connect();
-  virtual std::map<size_t, std::string> list_maps();
+  virtual void connect();
+  virtual std::vector<char> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();

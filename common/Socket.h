@@ -18,9 +18,10 @@ class Socket {
   bool connect_socket();
   bool send_string(std::string mensaje);
   std::string read_string();
-  bool send_buffer(const char *buffer, ssize_t tamanio);
+  bool send_buffer(const char *buffer, size_t tamanio);
   bool read_buffer(char *buffer, ssize_t tamanio);
   bool close_connection();
+  std::string peer_name();
  private:
   explicit Socket(int nuevoSocketFD);
   int socketFD;

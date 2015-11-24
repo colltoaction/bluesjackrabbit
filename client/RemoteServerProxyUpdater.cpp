@@ -1,7 +1,10 @@
 #include "RemoteServerProxyUpdater.h"
 
 #include <iostream>
-#include "Constants.h"
+#include <common/Constants.h>
+#include <common/MessageReader.h>
+#include <common/InvalidMessageException.h>
+#include <sstream>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(RendererUpdate update) :
@@ -19,63 +22,36 @@ RemoteServerProxyUpdater::~RemoteServerProxyUpdater() {
 
 void RemoteServerProxyUpdater::run() {
   while (keep_going_) {
-    // std::cout << "Running... esperando position\n";
-    uint32_t object_id;
-    double x, y;
-    char type;
-    char alive;
-    read_object_id(&object_id);
-    read_object_position(&x, &y);
-    read_object_type(&type);
-    std::list<Vector> points = read_object_points();
-    read_alive(&alive);
-    bool bool_alive = (alive == TRUE_PROTOCOL) ? true : false;
-    update_functor_(object_id, x, y, type, points, bool_alive);
+    MessageReader reader(socket_);
+    Message *message = reader.read_message();  // Need a pointer because of polymorphism
+    // TODO(tinchou): don't use the init message, create an update message
+    if (message->type() == GameInitMessage::type_id()) {
+      update_objects(dynamic_cast<GameInitMessage *>(message));
+      delete message;
+    } else {
+      std::stringstream ss;
+      ss << std::hex
+         << "Unexpected message in the RemoteServerProxyUpdater main loop with type 0x"
+         << static_cast<int>(message->type());
+      delete message;
+      throw InvalidMessageException(ss.str());
+    }
   }
-  std::cout << "RemoteServerProxyUpdater::run finished\n";
-}
-
-void RemoteServerProxyUpdater::read_alive(char *alive) {
-  socket_->read_buffer(alive, CANT_BYTES);
 }
 
 void RemoteServerProxyUpdater::shutdown() {
   keep_going_ = false;
 }
 
-
-void RemoteServerProxyUpdater::read_object_position(double *x, double *y) {
-  read_double(x);
-  read_double(y);
-}
-
-void RemoteServerProxyUpdater::read_object_type(char *type) {
-  socket_->read_buffer(type, CANT_BYTES);
-}
-
-void RemoteServerProxyUpdater::read_object_id(uint32_t *object_id) {
-  uint32_t read;
-  char *buffer = static_cast<char*>(static_cast<void*>(&read));
-  socket_->read_buffer(buffer, UINT32_T_LENGTH);
-  *object_id = ntohl(read);
-}
-
-std::list<Vector> RemoteServerProxyUpdater::read_object_points() {
-  char points_size;
-  socket_->read_buffer(&points_size, CANT_BYTES);
-  std::list<Vector> points;
-  for (char i = 0; i < points_size; i++) {
-    double x, y;
-    read_double(&x);
-    read_double(&y);
-    points.push_back(Vector(x, y));
+void RemoteServerProxyUpdater::update_objects(GameInitMessage *message) {
+  message->read();
+  for (std::vector<GameObjectMessage *>::const_iterator i = message->objects().begin();
+       i != message->objects().end(); i++) {
+    update_functor_((*i)->object_id(),
+                    (*i)->position().x(),
+                    (*i)->position().y(),
+                    (*i)->object_type(),
+                    (*i)->points(),
+                    (*i)->alive());
   }
-  return points;
-}
-
-
-void RemoteServerProxyUpdater::read_double(double *value) {
-  size_t double_size = sizeof(double);
-  char *address = static_cast<char*>(static_cast<void*>(value));
-  socket_->read_buffer(address, double_size);
 }

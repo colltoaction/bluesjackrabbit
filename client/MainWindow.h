@@ -10,6 +10,7 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
+#include <vector>
 
 #include "EventBus.h"
 #include "SceneRenderer.h"
@@ -74,6 +75,7 @@ class MainWindow: public Gtk::Window {
   Gtk::ComboBox *game_combo;
   void combo_map_changed();
   void combo_game_changed();
+  void load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::vector<char> map_ids);
   void load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names);
 };
 

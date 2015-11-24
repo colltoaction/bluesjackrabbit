@@ -9,6 +9,8 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/messagedialog.h>
+#include <common/InvalidMessageException.h>
+#include <common/Logger.h>
 
 #include "EventBus.h"
 #include "LocalServerProxy.h"
@@ -73,7 +75,7 @@ bool MainWindow::on_close_window(GdkEventAny* any_event) {
   (void)any_event;
   server_proxy_->shutdown();
   hide();
-  exit(0);
+//  exit(0);
   return true;  // Propagate event
 }
 
@@ -89,7 +91,7 @@ void MainWindow::main_game_view() {
 
 void MainWindow::new_game_click() {
   if (connected_) {
-    std::map<size_t, std::string> maps = server_proxy_->list_maps();
+    std::vector<char> maps = server_proxy_->list_maps();
     load_combo(&map_combo_model, maps);
     initial_screen_.hide();
     new_game_screen_.show();
@@ -143,14 +145,19 @@ void MainWindow::multiplayer_click() {
 }
 
 void MainWindow::init_server_proxy() {
-  connected_ = server_proxy_->connect();
-  if (!connected_) {
+  try {
+    server_proxy_->connect();
+  } catch (const InvalidMessageException &ex) {
+    Logger::info(ex.what());
+    connected_ = false;
     Gtk::MessageDialog dialog(*this, "Error al conectarse al servidor.");
     dialog.set_secondary_text("Hubo un error al conectarse al servidor. Asegurese que esta ejecutandose.");
     dialog.run();
     hide();
     return;
   }
+
+  connected_ = true;
   bus_.subscribeKeyPress(GDK_KEY_Up, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveUp)));
   bus_.subscribeKeyPress(GDK_KEY_Down, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveDown)));
   bus_.subscribeKeyPress(GDK_KEY_Left, sigc::hide(sigc::mem_fun(server_proxy_, &ServerProxy::MoveLeft)));
@@ -264,6 +271,15 @@ void MainWindow::init_join_game_screen() {
   game_combo->pack_start(columns.map_name);
 }
 
+
+void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::vector<char> map_ids) {
+  for (std::vector<char>::const_iterator it = map_ids.begin(); it != map_ids.end(); it++) {
+    Gtk::TreeModel::Row row = *((*model)->append());
+    row[columns.id] = *it;
+    row[columns.map_name] = "Map name should come from local files";
+    // map_combo->set_active(row);
+  }
+}
 
 void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names) {
   for (std::map<size_t, std::string>::const_iterator it = names.begin(); it != names.end(); it++) {

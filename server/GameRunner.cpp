@@ -5,7 +5,8 @@
 #include <unistd.h>
 #include <iostream>
 
-#include "Constants.h"
+#include <common/Constants.h>
+#include <common/MessageWriter.h>
 
 #define SECOND_TO_MICROSECONDS 1000000.0
 #define TWENTY_MILLIS_IN_MICROSECONDS 20000.0
@@ -25,7 +26,7 @@ GameRunner::~GameRunner() {
 
 void GameRunner::run() {
   while (keep_running_ && !game_finished_) {
-    notify_clients(true);
+    notify_clients();
     game_loop();
   }
 }
@@ -46,25 +47,16 @@ void GameRunner::game_loop() {
 void GameRunner::engine_step() {
   Lock lock(&engine_mutex_);
   engine_->FixedUpdate();
-  notify_clients(false);
+  notify_clients();
   // Because clients have to be notified, cant clean dead objects before
   engine_->clean_dead();
 }
 
-void GameRunner::notify_clients(bool notify_object_ids) {
+void GameRunner::notify_clients() {
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
       it != players_->end();
       it++) {
-    if (notify_object_ids) {
-      // Called the first time server notifies clients game objects
-      char object_size = static_cast<char>(engine_->game_objects().size());
-      it->second->send_object_size(object_size);
-    }
-    for (std::map<uint32_t, GameObject*>::iterator game_it = engine_->game_objects().begin();
-              game_it != engine_->game_objects().end();
-              game_it++) {
-      it->second->send_object(game_it->first, game_it->second);
-    }
+    it->second->send_objects(engine_->game_objects());
   }
 }
 

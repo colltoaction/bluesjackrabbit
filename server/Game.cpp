@@ -10,12 +10,12 @@
 #include <engine/GameObjectRedTurtle.h>
 #include <common/Lock.h>
 #include <iostream>
-#include "Constants.h"
+#include <common/Constants.h>
 
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-#define PLAYERS 2
+#define PLAYERS 1
 
 const double Game::step = 0.003;
 
@@ -27,7 +27,6 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
     player_index_(0),
     in_game(false),
     game_name_(game_name),
-
     even(0) {
   add_player(admin);
 
@@ -56,7 +55,6 @@ Game::~Game() {
 }
 
 void Game::add_player(ClientProxy *player) {
-  std::cout << "Game::addplayer\n";
   players_[player_index_] = player;
   player->add_move_functor(sigc::mem_fun(*this, &Game::action));
   player->add_shoot_functor(sigc::mem_fun(*this, &Game::shoot));

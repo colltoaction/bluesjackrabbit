@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <sigc++/functors/slot.h>
 
 #include <common/Configuration.h>
@@ -37,8 +38,16 @@ class RemoteServerProxy : public ServerProxy {
   virtual Vector character_position();
   virtual std::map<uint32_t, Renderer*> &renderers();
 
-  virtual bool connect();
-  virtual std::map<size_t, std::string> list_maps();
+  /**
+   * Initiates a connection to the server via sockets and initiates the connection.
+   * TODO(tinchou): read the player id.
+   */
+  virtual void connect();
+
+  /**
+   * Checks the server for available maps.
+   */
+  virtual std::vector<char> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name);
   virtual void init_game();
@@ -59,12 +68,7 @@ class RemoteServerProxy : public ServerProxy {
   static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
   void update_object(uint32_t object_id, double x, double y, char type, point_type points, bool alive);
-  void read_object_position(double *x, double *y);
-  void read_object_type(char *type);
-  std::list<Vector> read_object_points();
-  void read_alive(char *alive);
-  void read_double(double *value);
-  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::list<Vector> points);
+  void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::vector<Vector> points);
 };
 
 

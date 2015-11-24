@@ -1,5 +1,7 @@
 #include "Socket.h"
+#include "Logger.h"
 
+#include <arpa/inet.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string>
@@ -58,12 +60,17 @@ Socket::Socket(int nuevoSocketFD) {
 
 /* Asocia el FD socket a la direccion y puerto definidos por addrinfo */
 bool Socket::bind_socket() {
-  int resultado = bind(this->socketFD, &this->ai_addr, this->ai_addrlen);
-  if (resultado != 0) {
-    std::cerr << "ERROR AL BINDEAR SOCKET: " << gai_strerror(resultado)
-        << std::endl;
+  int yes = 1;
+  if ( setsockopt(socketFD, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ) {
+    Logger::error("Error in socket binding (when configuring to reuse address).");
     return false;
   }
+
+  if (bind(socketFD, &ai_addr, ai_addrlen) != 0) {
+    Logger::error("Error in socket binding.");
+    return false;
+  }
+
   return true;
 }
 
@@ -107,8 +114,8 @@ Socket* Socket::accept_connection() {
 }
 
 /* Envia del buffer 'tamanio' bytes a la otra punta */
-bool Socket::send_buffer(const char *buffer, ssize_t tamanio) {
-  ssize_t bytesEnviados = 0;
+bool Socket::send_buffer(const char *buffer, size_t tamanio) {
+  size_t bytesEnviados = 0;
   bool error = false, socketCerrado = false;
   while (bytesEnviados < tamanio && !closed) {
     ssize_t envioParcial = send(this->socketFD, buffer + bytesEnviados,
@@ -203,3 +210,27 @@ Socket::~Socket() {
   // close(this->socketFD);
 }
 
+std::string Socket::peer_name() {
+  socklen_t len;
+  struct sockaddr_storage addr;
+  char ipstr[INET6_ADDRSTRLEN];
+  int port;
+
+  len = sizeof addr;
+  getpeername(socketFD, (struct sockaddr*)&addr, &len);
+
+  // deal with both IPv4 and IPv6:
+  if (addr.ss_family == AF_INET) {
+    struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+    port = ntohs(s->sin_port);
+    inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+  } else {  // AF_INET6
+    struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+    port = ntohs(s->sin6_port);
+    inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+  }
+
+  std::stringstream ss;
+  ss << ipstr << ":" << port;
+  return ss.str();
+}

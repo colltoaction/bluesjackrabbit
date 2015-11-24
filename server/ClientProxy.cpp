@@ -1,11 +1,15 @@
 #include <iostream>
 #include <string>
-
 #include <sstream>
 #include <unistd.h>
+#include <common/MessageWriter.h>
+#include <common/MessageReader.h>
 
 #include "ClientProxy.h"
-#include "Constants.h"
+#include <common/Constants.h>
+#include <common/Logger.h>
+#include <common/JoinGameMessage.h>
+#include <common/InvalidMessageException.h>
 
 ClientProxy::ClientProxy(Socket *socket,
     new_game_callback ng_callback,
@@ -30,46 +34,54 @@ ClientProxy::~ClientProxy() {
 
 
 void ClientProxy::say_hello() {
-  char c = 'A';
-  socket_->send_buffer(&c, CANT_BYTES);
+  MessageWriter writer(socket_);
+  writer.send_player_id();
+  // TODO(tinchou): send the actual player ID
 }
 
 
 /* Se ejecuta en un hilo separado al del Socket que acepta socketes,
  * por eso tiene su propio Socket peer y referencias a Game para actualizar estados.
- * */
+ */
 void ClientProxy::run() {
   say_hello();
-  while (keep_reading_ && !finalized_) {
-    read_protocol();
+  const std::string &peer_name_ = socket_->peer_name();
+  Logger::info(std::string("Cliente ").append(peer_name_).append(" conectado"));
+  try {
+    while (keep_reading_ && !finalized_) {
+      read_protocol();
+    }
+
+    Logger::info(std::string("Cliente ").append(peer_name_).append(" desconectado"));
+  } catch (const InvalidMessageException &ex) {
+    Logger::info(std::string("Cliente ").append(peer_name_).append(" desconectado por protocolo inválido"));
+    Logger::info(std::string("Excepción: ").append(ex.what()));
   }
-  socket_->close_connection();
+
+  finalize();
 }
 
-
 void ClientProxy::read_protocol() {
-  char option;
-  keep_reading_ = socket_->read_buffer(&option, 1);
-  if (keep_reading_) {
-    // GAME OPTIONS
-    if (option == NEW_GAME) {
-      new_game_call();
-      start_functor_();
-    } else if (option == JOIN_GAME) {
-      join_game_call();
-      start_functor_();
-    } else if (option == LIST_GAMES) {
-      list_games_call();
-    } else if (option == LIST_MAPS) {
-      list_maps_call();
-    } else if (option == LEFT || option == RIGHT || option == DOWN || option == UP) {
-      move_functor_(object_id_, option);
-    } else if (option == JUMP) {
-      std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
-    } else if (option == SHOOT) {
-      shoot_functor_(object_id_);
-    }
+  MessageReader reader(socket_);
+  Message *message = reader.read_message();  // Need a pointer because of polymorphism
+  // GAME OPTIONS
+  if (message->type() == CreateGameMessage::type_id()) {
+    new_game_call(dynamic_cast<CreateGameMessage *>(message));
+  } else if (message->type() == JoinGameMessage::type_id()) {
+    join_game_call(dynamic_cast<JoinGameMessage *>(message));
+  } else if (message->type() == GamesMessage::type_id()) {
+    list_games_call();
+  } else if (message->type() == MapsMessage::type_id()) {
+    list_maps_call();
+  } else if (message->type() == LEFT || message->type() == RIGHT || message->type() == DOWN || message->type() == UP) {
+    move_functor_(object_id_, message->type());
+  } else if (message->type() == JUMP) {
+    std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
+  } else if (message->type() == SHOOT) {
+    shoot_functor_(object_id_);
   }
+
+  delete message;
 }
 
 void ClientProxy::add_move_functor(action_callback mv_callback) {
@@ -80,7 +92,6 @@ void ClientProxy::add_shoot_functor(shoot_callback shoot_callback) {
   shoot_functor_ = shoot_callback;
 }
 
-
 void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
@@ -90,120 +101,42 @@ void ClientProxy::add_object_id(uint32_t object_id) {
   object_id_ = object_id;
 }
 
-void ClientProxy::new_game_call() {
-  std::cout << "entra en new_game call\n";
-  char map_id;
-  socket_->read_buffer(&map_id, MAP_ID_LENGTH);
-  char game_name_length;
-  socket_->read_buffer(&game_name_length, CANT_BYTES);
-  char game_name[MAX_CHAR];
-  socket_->read_buffer(game_name, game_name_length);
-  game_name[static_cast<size_t>(game_name_length)] = '\0';
-  char game_id = create_new_game_functor_(map_id, std::string(game_name), this);
+void ClientProxy::new_game_call(CreateGameMessage *create_game) {
+  create_game->read();
+  char game_id = create_new_game_functor_(create_game->map_id(), create_game->game_name(), this);
   game_id_ = game_id;
-  std::cout << "Finaliza new game call con nombre: " << game_name << "\n";
   send_object_id(&object_id_);
+  start_functor_();
 }
 
-void ClientProxy::join_game_call() {
-  std::cout << "Entra en join_game call\n";
-  char game_id;
-  socket_->read_buffer(&game_id, MAP_ID_LENGTH);
-  join_game_functor_(game_id, this);
-  std::cout << "Finaliza join game call\n";
+void ClientProxy::join_game_call(JoinGameMessage *join_game) {
+  join_game->read();
+  join_game_functor_(join_game->game_id(), this);
   send_object_id(&object_id_);
+  start_functor_();
 }
 
 void ClientProxy::send_object_id(uint32_t *object_id) {
-  // std::cout << "Por enviar ID: " << (*object_id) << std::endl;
   uint32_t send_number = htonl(*object_id);
   char* buffer = static_cast<char*>(static_cast<void*>(&send_number));
   socket_->send_buffer(buffer, UINT32_T_LENGTH);
 }
 
-
-
 void ClientProxy::list_games_call() {
-  std::cout << "ClientProxy:: Entra en listar games\n";
-  std::map<char, std::string> game_ids = list_games_functor_();
-  char message_length = static_cast<char>(game_ids.size());
-  socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::map<char, std::string>::iterator it = game_ids.begin();
-      it != game_ids.end(); it++) {
-    char send = it->first;
-    std::cout << "ENVIANDO: " << static_cast<int>(send) << std::endl;
-    socket_->send_buffer(&send, CANT_BYTES);
-    char game_length = static_cast<char>(it->second.size());
-    socket_->send_buffer(&game_length, CANT_BYTES);
-    socket_->send_buffer(it->second.c_str(), game_length);
-  }
-  std::cout << "ClientProxy:: Finaliza listar games\n";
+  Logger::info("Sending available games");
+  MessageWriter writer(socket_);
+  writer.send_available_games(list_games_functor_());
 }
 
 void ClientProxy::list_maps_call() {
-  std::cout << "ClientProxy:: Entra en listar maps\n";
-  std::list<char> map_ids = list_maps_functor_();
-  char message_length = static_cast<char>(map_ids.size());
-  socket_->send_buffer(&message_length, CANT_BYTES);
-  for (std::list<char>::iterator it = map_ids.begin();
-      it != map_ids.end(); it++) {
-    socket_->send_buffer(&(*it), CANT_BYTES);
-  }
-  std::cout << "ClientProxy:: Finaliza listar maps\n";
+  MessageWriter writer(socket_);
+  writer.send_available_maps(list_maps_functor_());
 }
 
-void ClientProxy::send_object_size(char object_size) {
-  socket_->send_buffer(&object_size, CANT_BYTES);
-}
-
-void ClientProxy::send_object(uint32_t object_id, GameObject *object) {
-  send_object_position(object_id, object);
-  send_object_type(object);
-  send_object_points(object);
-  send_object_alive(object);
-}
-
-void ClientProxy::send_object_position(uint32_t object_id, GameObject *object) {
-  send_object_id(&object_id);
-  double x = object->body().position().x();
-  double y = object->body().position().y();
-  send_double(&x);
-  send_double(&y);
-}
-
-void ClientProxy::send_object_type(GameObject *object) {
-  char type = object->game_object_type();
-  socket_->send_buffer(&type, CANT_BYTES);
-}
-
-void ClientProxy::send_object_points(GameObject *object) {
-  std::list<Vector> points = object->characteristic_points();
-  char points_size = static_cast<char>(points.size());
-  socket_->send_buffer(&points_size, CANT_BYTES);
-  for (std::list<Vector>::iterator it = points.begin();
-      it != points.end();
-      it++) {
-    double x = it->x();
-    double y = it->y();
-    send_double(&x);
-    send_double(&y);
-  }
-}
-
-void ClientProxy::send_object_alive(GameObject *object) {
-  char alive;
-  if (object->alive()) {
-    alive = TRUE_PROTOCOL;
-  } else {
-    alive = FALSE_PROTOCOL;
-  }
-  socket_->send_buffer(&alive, CANT_BYTES);
-}
-
-void ClientProxy::send_double(double *value) {
-  size_t double_size = sizeof(double);
-  char *address = static_cast<char*>(static_cast<void*>(value));
-  socket_->send_buffer(address, double_size);
+void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
+  // TODO(tinchou): don't use the "Init" class for every message
+  MessageWriter writer(socket_);
+  writer.send_game_init(game_objects);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

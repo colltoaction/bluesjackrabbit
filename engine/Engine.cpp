@@ -23,9 +23,10 @@ Engine::~Engine() {
   }
 }
 
-std::map<uint32_t, GameObject*> &Engine::game_objects() {
-  return game_objects_;
+std::map<uint32_t, GameObject*> *Engine::game_objects() {
+  return &game_objects_;
 }
+
 void Engine::FixedUpdate() {
   players_shots();
   move_objects();
