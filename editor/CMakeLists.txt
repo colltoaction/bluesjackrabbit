@@ -46,4 +46,3 @@ target_link_libraries(${PROJECT_NAME} ${LIBXML_LIBRARIES})
 
 file(COPY window.glade
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
