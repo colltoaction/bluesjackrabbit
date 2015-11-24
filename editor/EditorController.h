@@ -7,6 +7,7 @@ class EditorController {
  public:
   EditorController();
   void start_new_level();
+  void start_new_level(const Glib::VariantBase&);
   void change_layer(int parameter);
   void tilemap_visible();
   EditorLayer active_layer() {return active_layer_;}

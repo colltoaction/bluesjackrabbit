@@ -101,20 +101,13 @@ void EditorWindow::init_palette() {
   palette_->add(*misc_group_);
 }
 
-void EditorWindow::change_layer(int parameter) {
-  action_active_layer_->change_state(parameter);
-  controller_.change_layer(parameter);
-}
-
 void EditorWindow::init_menus() {
   Glib::RefPtr<Gio::SimpleActionGroup> ag = Gio::SimpleActionGroup::create();
   /* Archivo */
-  ag->add_action("new", sigc::mem_fun(controller_, &EditorController::start_new_level));
+  Glib::RefPtr<Gio::SimpleAction> action_new = Gio::SimpleAction::create("new");
+  action_new->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::start_new_level));
+  ag->add_action(action_new);
   /* Ver */
-  action_active_layer_ = ag->add_action_radio_integer("activelayer",
-      sigc::mem_fun(*this, &EditorWindow::change_layer), TILEMAP);
-  action_tilemap_visible_ = ag->add_action_bool("viewtilemap",
-      sigc::mem_fun(controller_, &EditorController::tilemap_visible), true);
-
   insert_action_group("editor", ag);
 }

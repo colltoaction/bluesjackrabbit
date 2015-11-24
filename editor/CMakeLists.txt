@@ -18,6 +18,15 @@ set(SOURCES main.cpp EditorWindow.cpp EditorController.cpp EditorCanvas.cpp)
 include(CppLint)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_custom_command(
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/assets/brown_nature.png"
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/assets/brown_nature.png" "${CMAKE_CURRENT_BINARY_DIR}"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/assets/brown_nature.png"
+        COMMENT "Copying asset files: brown_nature.png")
+add_custom_target(copy_brown_nature.png DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/assets/brown_nature.png")
+add_dependencies(${PROJECT_NAME} copy_brown_nature.png)
+
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-lint)
 
@@ -27,3 +36,4 @@ target_link_libraries(${PROJECT_NAME} ${GOOCANVAS_LIBRARIES})
 
 file(COPY window.glade
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+

@@ -14,6 +14,10 @@ void EditorController::start_new_level() {
     std::cout << "Archivo -> Nuevo" << std::endl;
 }
 
+void EditorController::start_new_level(const Glib::VariantBase& /* parameter */) {
+  start_new_level();
+}
+
 void EditorController::change_layer(int parameter) {
   switch (static_cast<EditorLayer>(parameter)) {
   case TILEMAP:
