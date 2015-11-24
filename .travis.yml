@@ -1,14 +1,13 @@
-sudo: false
+sudo: required
+dist: trusty
 language: cpp
 compiler: gcc
 os: linux
 
-addons:
-  apt:
-    packages:
-      - libgtkmm-3.0-dev
-      - libcppunit-dev
-      - liblog4cpp5-dev
+before_install:
+  - export DEBIAN_FRONTEND=noninteractive
+  - sudo -E apt-get -yq update &>> ~/apt-get-update.log
+  - sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes install libgtkmm-3.0-dev libcppunit-dev liblog4cpp5-dev libgoocanvasmm-2.0-dev libxml++2.6-dev
 
 install:
   - mkdir build
