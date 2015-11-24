@@ -15,6 +15,8 @@ class TurtleRenderer : public Renderer {
  private:
   double radius_;
   bool green_type_;
+  // Cairo::RefPtr<Cairo::ImageSurface> image_;
+  Glib::RefPtr<Gdk::Pixbuf> image_;
 };
 
 
