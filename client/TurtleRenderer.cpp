@@ -2,16 +2,17 @@
 
 #include <cairomm/context.h>
 #include <gdkmm/general.h>
-// #include <gdkmm/pixbuf.h>
+#include <glibmm/fileutils.h>
 
 
 TurtleRenderer::TurtleRenderer(const Vector &position, double radius, char object_type)
     : Renderer(position), radius_(radius),
-      green_type_(object_type == 't') {
+      green_type_(object_type == 't'),
+      sprite_step_(0) {
   if (green_type_) {
-    image_ = Gdk::Pixbuf::create_from_file("static/sprites/green.png");
+    image_ = Cairo::ImageSurface::create_from_png("static/sprites/green.png");
   } else {
-    image_ = Gdk::Pixbuf::create_from_file("static/sprites/red.png");
+    image_ = Cairo::ImageSurface::create_from_png("static/sprites/red.png");
   }
 }
 
@@ -19,7 +20,8 @@ TurtleRenderer::~TurtleRenderer() {
 }
 
 void TurtleRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
-  /*if (green_type_) {
+  /*
+  if (green_type_) {
     cr->set_source_rgb(0.50, 0.25, 0.47);
   } else {
     cr->set_source_rgb(0.25, 0.50, 0.0);
@@ -30,11 +32,16 @@ void TurtleRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
           radius_,
           0.0,
           2.0 * M_PI);
-  cr->stroke();*/
+  cr->stroke();
+  */
 
+  unsigned int sprite_index = (sprite_step_ / 50) % 6;  // 50 steps
   cr->translate(position_.x(), position_.y());
-  Gdk::Cairo::set_source_pixbuf(cr, image_, 0, 0);
-  cr->rectangle(0, 0, image_->get_width(), image_->get_height());
-  cr->fill();
+  cr->scale(6.0 / image_->get_width(), 1.0 / image_->get_height());
+  cr->rectangle((image_->get_width() / 6) * sprite_index, 0, image_->get_width() / 6, image_->get_height());
+  cr->clip();
+  cr->set_source(image_, 0, 0);
+  cr->translate((image_->get_width() / 6.0) * sprite_index, 0);
   cr->paint();
+  sprite_step_++;
 }
