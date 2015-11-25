@@ -20,6 +20,7 @@ set(SOURCES main.cpp
 			EditorWindow.cpp
 			EditorController.cpp
 			EditorCanvas.cpp
+			CustomToolButton.cpp
 			CircleButton.cpp
 			RectButton.cpp)
 

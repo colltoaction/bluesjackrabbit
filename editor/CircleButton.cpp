@@ -5,30 +5,8 @@
 #include <iostream>
 
 CircleButton::CircleButton(const Glib::ustring& label, int width, int height)
-    : Gtk::ToolButton(label), width_(width), height_(height), icon_(width, height) {
+    : CustomToolButton(label, width, height), icon_(width, height) {
   set_icon_widget(icon_);
-}
-
-void CircleButton::get_preferred_width_vfunc(int& minimum_width, int& natural_width) const {
-  minimum_width = width_;
-  natural_width = width_;
-}
-
-void CircleButton::get_preferred_width_for_height_vfunc(int /* height */, int& minimum_width,
-    int& natural_width) const {
-  minimum_width = width_;
-  natural_width = width_;
-}
-
-void CircleButton::get_preferred_height_vfunc(int& minimum_height, int& natural_height) const {
-  minimum_height = height_;
-  natural_height = height_;
-}
-
-void CircleButton::get_preferred_height_for_width_vfunc(int /* width */, int& minimum_height,
-    int& natural_height) const {
-  minimum_height = height_;
-  natural_height = height_;
 }
 
 CircleButton::CircleIconWidget::CircleIconWidget(int width, int height) : width_(width),
