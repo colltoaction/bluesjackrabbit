@@ -23,6 +23,7 @@ Message *MessageReader::read_message() {
     return new GamesMessage(socket_);
   } else if (c == MapsMessage::type_id()) {
     return new MapsMessage(socket_);
+  } else if (c == DISCONNECT) {
   } else if (c == LEFT || c == RIGHT || c == DOWN || c == UP) {
   } else if (c == JUMP) {
   } else if (c == SHOOT) {
@@ -76,6 +77,10 @@ GameObjectMessage *MessageReader::read_game_object() {
   return new GameObjectMessage(socket_);
 }
 
+void MessageReader::read_disconnect() {
+  validate_message_type(DISCONNECT);
+}
+
 void MessageReader::validate_message_type(char expected) const {
   char c = read_message_type();
   if (c != expected) {
@@ -86,7 +91,6 @@ void MessageReader::validate_message_type(char expected) const {
     throw InvalidMessageException(ss.str());
   }
 }
-
 char MessageReader::read_message_type() const {
   char c;
   if (!socket_->read_buffer(&c, sizeof(char))) {

@@ -22,6 +22,7 @@ class Socket {
   bool read_buffer(char *buffer, size_t tamanio);
   bool close_connection();
   std::string peer_name();
+
  private:
   explicit Socket(int nuevoSocketFD);
   int socketFD;

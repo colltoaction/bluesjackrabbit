@@ -74,6 +74,8 @@ void ClientProxy::read_protocol() {
     list_games_call();
   } else if (message->type() == MapsMessage::type_id()) {
     list_maps_call();
+  } else if (message->type() == DISCONNECT) {
+    keep_reading_ = false;
   } else if (message->type() == LEFT || message->type() == RIGHT || message->type() == DOWN || message->type() == UP) {
     move_functor_(object_id_, message->type());
   } else if (message->type() == JUMP) {

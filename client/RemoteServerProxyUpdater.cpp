@@ -5,6 +5,7 @@
 #include <common/MessageReader.h>
 #include <common/InvalidMessageException.h>
 #include <sstream>
+#include <common/MessageWriter.h>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update)

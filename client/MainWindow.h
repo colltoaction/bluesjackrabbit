@@ -77,6 +77,7 @@ class MainWindow: public Gtk::Window {
   void combo_game_changed();
   void load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::vector<char> map_ids);
   void load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names);
+  void on_quit_requested();
 };
 
 #endif  // BLUESJACKRABBIT_CLIENT_MAINWINDOW_H
