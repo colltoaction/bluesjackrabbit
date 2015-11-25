@@ -12,6 +12,7 @@ class CharacterRenderer : public Renderer {
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
  private:
   double radius_;
+  Cairo::RefPtr<Cairo::ImageSurface> image_;
 };
 
 
