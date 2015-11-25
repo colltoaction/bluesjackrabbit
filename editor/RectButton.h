@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_EDITOR_RECTBUTTON_H
 #define BLUESJACKRABBIT_EDITOR_RECTBUTTON_H
 #include <cairomm/context.h>
+#include <gtkmm/drawingarea.h>
 #include "CustomToolButton.h"
 
 class RectButton : public CustomToolButton {

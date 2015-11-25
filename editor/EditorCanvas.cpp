@@ -3,7 +3,10 @@
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolpalette.h>
 #include <goocanvasmm/image.h>
+#include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
+#include "CircleButton.h"
+#include "RectButton.h"
 #include "EditorCanvas.h"
 
 #include <iostream>
@@ -42,20 +45,29 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   if (!button)
     return;
 
-  Gtk::Widget* icon = button->get_icon_widget();
+  DraggableObjectType obj_type;
+  Gtk::Widget* icon = NULL;
+  if (dynamic_cast<RectButton*>(button)) {
+    obj_type = RECTANGLE;
+  } else if (dynamic_cast<CircleButton*>(button)) {
+    obj_type = CIRCLE;
+  } else {
+    obj_type = IMAGE;
+    icon = button->get_icon_widget();
+  }
 
   /* This method is called from either drag_motion or drag_drop, and the DragContext has to be
   updated in consequence */
   if (requested_for_motion_) {
     if (!dnd_item_) {
-      dnd_item_ = create_canvas_item(item_x, item_y, icon);
+      dnd_item_ = create_canvas_item(item_x, item_y, icon, obj_type);
     }
     context->drag_status(Gdk::ACTION_COPY, timestamp);
     requested_for_motion_ = false;
   } else {
     dnd_item_->remove();
     dnd_item_.reset();
-    create_canvas_item(item_x, item_y, icon);
+    create_canvas_item(item_x, item_y, icon, obj_type);
     context->drag_finish(false, false, timestamp);
   }
 }
@@ -101,6 +113,20 @@ bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, i
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y,
+    Gtk::Widget* icon, DraggableObjectType obj_type) {
+  switch (obj_type) {
+  case CIRCLE:
+    return create_canvas_circle(x, y);
+  case RECTANGLE:
+    return create_canvas_rect(x, y);
+  case IMAGE:
+  default:
+    return create_canvas_image(x, y, icon);
+    break;
+  }
+}
+
+Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double y,
     Gtk::Widget* icon) {
   Gtk::Image* image = dynamic_cast<Gtk::Image*>(icon);
   Glib::RefPtr<Goocanvas::Item> img = Goocanvas::Image::create(image->get_pixbuf(), x, y);
@@ -108,10 +134,16 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
   return img;
 }
 
-// TODO(Diego): not needed anymore - kept for debug purposes
-Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y) {
-  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(x, y, 20, 20);
-  rect->set_property("fill_color", Glib::ustring("red"));
+Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
+  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(x, y, 64, 32);
+  rect->set_property("fill_color", Glib::ustring("blue"));
   get_root_item()->add_child(rect);
   return rect;
+}
+
+Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, double y) {
+  Glib::RefPtr<Goocanvas::Item> circle = Goocanvas::Ellipse::create(x, y, 32, 32);
+  circle->set_property("fill_color", Glib::ustring("blue"));
+  get_root_item()->add_child(circle);
+  return circle;
 }

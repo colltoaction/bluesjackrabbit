@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_EDITOR_CIRCLEBUTTON_H
 #define BLUESJACKRABBIT_EDITOR_CIRCLEBUTTON_H
 #include <cairomm/context.h>
+#include <gtkmm/drawingarea.h>
 #include "CustomToolButton.h"
 
 class CircleButton : public CustomToolButton {
