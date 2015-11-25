@@ -15,6 +15,10 @@ class TurtleRenderer : public Renderer {
  private:
   double radius_;
   bool green_type_;
+  unsigned int sprite_step_;
+  Glib::RefPtr<Gdk::Pixbuf> image_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_;
+  // std::vector<Cairo::RefPtr<Cairo::ImageSurface> > images_;
 };
 
 
