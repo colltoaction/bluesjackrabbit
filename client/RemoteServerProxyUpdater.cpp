@@ -7,10 +7,11 @@
 #include <sstream>
 
 
-RemoteServerProxyUpdater::RemoteServerProxyUpdater(RendererUpdate update) :
-  socket_(NULL),
-  keep_going_(true),
-  update_functor_(update) {
+RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update)
+  : socket_(NULL)
+  , keep_going_(true)
+  , lives_update_functor_(lives_update)
+  , update_functor_(update) {
 }
 
 void RemoteServerProxyUpdater::set_socket(Socket *socket) {
@@ -45,6 +46,7 @@ void RemoteServerProxyUpdater::shutdown() {
 
 void RemoteServerProxyUpdater::update_objects(GameInitMessage *message) {
   message->read();
+  lives_update_functor_(message->info().remaining_lives());
   for (std::vector<GameObjectMessage *>::const_iterator i = message->objects().begin();
        i != message->objects().end(); i++) {
     update_functor_((*i)->object_id(),

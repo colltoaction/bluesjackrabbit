@@ -64,3 +64,7 @@ char GameObjectPlayer::direction() {
     return direction_;  // last direction if it's still
   }
 }
+
+char GameObjectPlayer::remaining_lives() {
+  return lives_;
+}

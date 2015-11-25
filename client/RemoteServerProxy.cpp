@@ -25,8 +25,6 @@
 #include "TurtleRenderer.h"
 
 
-const double RemoteServerProxy::step = 0.003;
-
 void RemoteServerProxy::MoveUp() {
   Lock l(&mutex_);
   char move = UP;
@@ -66,7 +64,8 @@ void RemoteServerProxy::shoot() {
 RemoteServerProxy::RemoteServerProxy(const Configuration &config)
     : config_(config)
     , socket_(NULL)
-    , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_object))
+    , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
+               sigc::mem_fun(*this, &RemoteServerProxy::update_object))
     , object_id_(0)
     , alive_(true) {
 }
@@ -87,6 +86,10 @@ Vector RemoteServerProxy::character_position() {
   Vector ret = renderers_[object_id_]->position();
   // std::cout << "char position after\n";
   return ret;
+}
+
+LivesRenderer &RemoteServerProxy::lives_renderer() {
+  return lives_renderer_;
 }
 
 std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
@@ -135,6 +138,7 @@ void RemoteServerProxy::init_game() {
   MessageReader reader(socket_);
   GameInitMessage message = reader.read_game_init();
   message.read();
+  update_lives(message.info().remaining_lives());
   for (std::vector<GameObjectMessage *>::const_iterator i = message.objects().begin();
        i != message.objects().end(); i++) {
     create_object_renderer((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
@@ -172,6 +176,10 @@ void RemoteServerProxy::shutdown() {
   std::cout << "Shutdown de updater..\n";
   updater_.shutdown();
   updater_.join();
+}
+
+void RemoteServerProxy::update_lives(char remaining_lives) {
+  lives_renderer_.set(remaining_lives);
 }
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,

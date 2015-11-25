@@ -1,11 +1,13 @@
 #include <common/Constants.h>
 #include <engine/GameObject.h>
+#include <engine/GameObjectPlayer.h>
 #include "MessageWriter.h"
 #include "MapsMessage.h"
 #include "GamesMessage.h"
 #include "CreateGameMessage.h"
 #include "GameInitMessage.h"
 #include "JoinGameMessage.h"
+#include "PlayerInfoMessage.h"
 
 MessageWriter::MessageWriter(Socket *socket)
     : socket_(socket) {
@@ -37,11 +39,18 @@ void MessageWriter::send_create_game(size_t map_id, const std::string &game_name
   create_game.send(map_id, game_name);
 }
 
-void MessageWriter::send_game_init(std::map<uint32_t, GameObject *> *game_objects) {
+void MessageWriter::send_game_init(GameObjectPlayer *player, std::map<uint32_t, GameObject *> *game_objects) {
   char message_type = GAME_INIT;
   socket_->send_buffer(&message_type, CANT_BYTES);
   GameInitMessage game_init(socket_);
-  game_init.send(game_objects);
+  game_init.send(player, game_objects);
+}
+
+void MessageWriter::send_player_info(GameObjectPlayer *player) {
+  char message_type = PlayerInfoMessage::type_id();
+  socket_->send_buffer(&message_type, CANT_BYTES);
+  PlayerInfoMessage info(socket_);
+  info.send(player);
 }
 
 void MessageWriter::send_join_game(size_t game_id) {

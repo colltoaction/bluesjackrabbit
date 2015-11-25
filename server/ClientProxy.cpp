@@ -10,6 +10,7 @@
 #include <common/Logger.h>
 #include <common/JoinGameMessage.h>
 #include <common/InvalidMessageException.h>
+#include <engine/GameObjectPlayer.h>
 
 ClientProxy::ClientProxy(Socket *socket,
     new_game_callback ng_callback,
@@ -96,9 +97,10 @@ void ClientProxy::add_start_functor(start_callback start_cb) {
   start_functor_ = start_cb;
 }
 
-void ClientProxy::add_object_id(uint32_t object_id) {
+void ClientProxy::add_object_id(uint32_t object_id, GameObjectPlayer *player) {
   std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
   object_id_ = object_id;
+  player_ = player;
 }
 
 void ClientProxy::new_game_call(CreateGameMessage *create_game) {
@@ -119,7 +121,7 @@ void ClientProxy::join_game_call(JoinGameMessage *join_game) {
 void ClientProxy::send_object_id(uint32_t *object_id) {
   uint32_t send_number = htonl(*object_id);
   char* buffer = static_cast<char*>(static_cast<void*>(&send_number));
-  socket_->send_buffer(buffer, UINT32_T_LENGTH);
+  socket_->send_buffer(buffer, sizeof(uint32_t));
 }
 
 void ClientProxy::list_games_call() {
@@ -136,7 +138,7 @@ void ClientProxy::list_maps_call() {
 void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
   // TODO(tinchou): don't use the "Init" class for every message
   MessageWriter writer(socket_);
-  writer.send_game_init(game_objects);
+  writer.send_game_init(player_, game_objects);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

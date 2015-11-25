@@ -12,6 +12,8 @@ set(SOURCES
         EventBus.h
         FloorRenderer.cpp
         FloorRenderer.h
+        LivesRenderer.cpp
+        LivesRenderer.h
         LocalServerProxy.cpp
         LocalServerProxy.h
         MainWindow.cpp

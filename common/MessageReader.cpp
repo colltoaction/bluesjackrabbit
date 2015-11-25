@@ -61,6 +61,11 @@ GameInitMessage MessageReader::read_game_init() {
   return GameInitMessage(socket_);
 }
 
+PlayerInfoMessage *MessageReader::read_player_info() {
+  validate_message_type(PlayerInfoMessage::type_id());
+  return new PlayerInfoMessage(socket_);
+}
+
 JoinGameMessage MessageReader::read_join_game() {
   validate_message_type(JoinGameMessage::type_id());
   return JoinGameMessage(socket_);

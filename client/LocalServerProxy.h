@@ -21,6 +21,7 @@ class LocalServerProxy : public ServerProxy {
   virtual void jump();
   virtual void shoot();
   virtual Vector character_position();
+  virtual LivesRenderer &lives_renderer();
   virtual std::map<uint32_t, Renderer*> &renderers();
   virtual void connect();
   virtual std::vector<char> list_maps();
@@ -34,6 +35,7 @@ class LocalServerProxy : public ServerProxy {
   static const double step;
   static const double jump_force;
   Engine engine_;
+  LivesRenderer lives_renderer_;
   std::map<uint32_t, Renderer*> renderers_;
   bool engine_step();
 };

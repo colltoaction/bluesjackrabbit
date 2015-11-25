@@ -82,7 +82,7 @@ void Game::place_player(ClientProxy *player) {
   RigidBody *body = new RigidBody(pos);
   GameObjectPlayer *object = new GameObjectPlayer(body, new CircleCollider(*body, 0.5));
   object_id = engine_.add_game_object(object);
-  player->add_object_id(object_id);
+  player->add_object_id(object_id, object);
   even++;
 }
 
