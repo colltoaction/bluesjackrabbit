@@ -16,8 +16,7 @@ bool RectangleCollider::will_collide(const CircleCollider &other) const {
   return other.will_collide(*this);
 }
 
-bool RectangleCollider::will_collide(const RectangleCollider &other) const {
-  (void)other;  // UNUSED
+bool RectangleCollider::will_collide(const RectangleCollider &/* other */) const {
   return false;
 }
 

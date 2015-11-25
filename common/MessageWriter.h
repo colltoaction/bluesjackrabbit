@@ -40,6 +40,8 @@ class MessageWriter {
 
   void send_join_game(size_t game_id);
 
+  void send_disconnect();
+
  private:
   Socket *socket_;
 };

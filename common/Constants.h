@@ -20,6 +20,7 @@
 #define GAME_INIT 0x24
 #define GAME_OBJECT 0x25
 #define PLAYER_INFO 0x26
+#define DISCONNECT 0x27
 
 #define TRUE_PROTOCOL 0x30
 #define FALSE_PROTOCOL 0x31

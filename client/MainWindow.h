@@ -39,13 +39,13 @@ class MainWindow: public Gtk::Window {
   static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);
-
+  void on_quit_requested();
   Glib::RefPtr<Gtk::Builder> load_from_glade(std::string file_name, Gtk::Box *parent);
   void init_main_game_screen();
   void init_connect_screen();
   void init_new_game_screen();
-  void init_join_game_screen();
 
+  void init_join_game_screen();
   void main_game_view();
   void new_game_click();
   void init_click();
@@ -54,6 +54,7 @@ class MainWindow: public Gtk::Window {
   void singleplayer_click();
   void multiplayer_click();
   void init_server_proxy();
+
   void connect_bus_signals();
 
   // Tree model columns:
@@ -66,11 +67,10 @@ class MainWindow: public Gtk::Window {
       Gtk::TreeModelColumn<size_t> id;
       Gtk::TreeModelColumn<std::string> map_name;
   };
-
   ModelColumns columns;
   Glib::RefPtr<Gtk::ListStore> map_combo_model;
-  Glib::RefPtr<Gtk::ListStore> game_combo_model;
 
+  Glib::RefPtr<Gtk::ListStore> game_combo_model;
   Gtk::ComboBox *map_combo;
   Gtk::ComboBox *game_combo;
   void combo_map_changed();

@@ -34,8 +34,7 @@ std::vector<Vector> GameObject::characteristic_points() const {
   return collider_->characteristic_points();
 }
 
-void GameObject::impact(GameObject *other) {
-  (void) other;  // UNUSED
+void GameObject::impact(GameObject */* other */) {
 }
 
 bool GameObject::alive() {

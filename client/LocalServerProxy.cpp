@@ -125,14 +125,12 @@ std::map<size_t, std::string> LocalServerProxy::list_games() {
   return map;
 }
 
-bool LocalServerProxy::start_game(size_t map_id, std::string game_name) {
-  (void)map_id;  // UNUSED
-  (void)game_name;  // UNUSED
+bool LocalServerProxy::start_game(size_t /* map_id */, std::string /* game_name */) {
   return true;
 }
 
-void LocalServerProxy::join_game(size_t game_id) {
-  (void)game_id;  // UNUSED
+void LocalServerProxy::join_game(size_t /* game_id */) {
 }
+
 void LocalServerProxy::shutdown() {
 }

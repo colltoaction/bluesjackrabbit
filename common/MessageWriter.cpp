@@ -66,3 +66,8 @@ void MessageWriter::send_game_object(uint32_t object_id, GameObject *game_object
   GameObjectMessage game_object_m(socket_);
   game_object_m.send(object_id, game_object);
 }
+
+void MessageWriter::send_disconnect() {
+  char message_type = DISCONNECT;
+  socket_->send_buffer(&message_type, CANT_BYTES);
+}
