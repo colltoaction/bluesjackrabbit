@@ -17,6 +17,7 @@ class TurtleRenderer : public Renderer {
   bool green_type_;
   unsigned int sprite_step_;
   Cairo::RefPtr<Cairo::ImageSurface> image_;
+  std::vector<Cairo::RefPtr<Cairo::ImageSurface> > images_;
 };
 
 
