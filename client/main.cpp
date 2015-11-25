@@ -4,9 +4,8 @@
 #include <gtkmm/application.h>
 #include "MainWindow.h"
 
-int main(int argc, char *argv[]) {
+int main(int /* argc */, char *argv[]) {
   try {
-    (void) argc;  // UNUSED
     int argc1 = 1;
     Glib::RefPtr<Gtk::Application> app =
         Gtk::Application::create(argc1,  // Hide the parameters from GTK

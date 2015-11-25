@@ -69,11 +69,11 @@ MainWindow::~MainWindow() {
   }
 }
 
-bool MainWindow::on_close_window(GdkEventAny* any_event) {
-  (void) any_event;  // UNUSED
+bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
   on_quit_requested();
   return true;  // Stop propagating event
 }
+
 void MainWindow::on_quit_requested() {
   server_proxy_->shutdown();
   hide();
