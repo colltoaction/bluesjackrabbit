@@ -56,7 +56,6 @@ MainWindow::MainWindow(const Configuration &config)
         sigc::bind_return(sigc::mem_fun(&scene_, &SceneRenderer::update), true),
         render_step);
 
-
   show_all();
   scene_.hide();
   initial_screen_.hide();
@@ -70,13 +69,14 @@ MainWindow::~MainWindow() {
   }
 }
 
-// TODO(tomas) No puede ser que no se pueda cerrar sin exit
-bool MainWindow::on_close_window(GdkEventAny* any_event) {
-  (void)any_event;
+bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
+  on_quit_requested();
+  return true;  // Stop propagating event
+}
+
+void MainWindow::on_quit_requested() {
   server_proxy_->shutdown();
   hide();
-//  exit(0);
-  return true;  // Propagate event
 }
 
 void MainWindow::main_game_view() {
@@ -200,7 +200,7 @@ void MainWindow::init_main_game_screen() {
   button = NULL;
   builder->get_widget("buttonExit", button);
   if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::hide));
+    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_quit_requested));
   }
 }
 

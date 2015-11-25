@@ -173,7 +173,9 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
 }
 
 void RemoteServerProxy::shutdown() {
-  std::cout << "Shutdown de updater..\n";
+  Logger::info("Shutdown de updater");
+  MessageWriter writer(socket_);
+  writer.send_disconnect();
   updater_.shutdown();
   updater_.join();
 }

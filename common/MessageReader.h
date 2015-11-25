@@ -63,7 +63,17 @@ class MessageReader {
    */
   GameObjectMessage *read_game_object();
 
+  /**
+   * Reads the player info, like the remaining lives.
+   * @throws InvalidMessageException
+   */
   PlayerInfoMessage *read_player_info();
+
+  /**
+   * Reads a disconnect signal from the client.
+   * @throws InvalidMessageException
+   */
+  void read_disconnect();
 
  private:
   Socket *socket_;
