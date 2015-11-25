@@ -1,4 +1,9 @@
 #include "GameObject.h"
+#include "Engine.h"
+
+const Vector GameObject::gravity_ = Vector(0, 0.0000098) *
+                                    Engine::fixed_update_step *
+                                    Engine::fixed_update_step;  // in m/ms²
 
 GameObject::GameObject(Body *body, Collider *collider)
   : alive_(true), body_(body), collider_(collider) {
@@ -18,8 +23,7 @@ Body &GameObject::body() {
   return *body_;
 }
 
-void GameObject::update_fixed(Vector gravity) {
-  (void) gravity;  // UNUSED
+void GameObject::update_fixed() {
 }
 
 char GameObject::game_object_type() {

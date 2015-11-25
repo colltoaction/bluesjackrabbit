@@ -1,5 +1,7 @@
 #include "GameObjectPlayer.h"
-#define MIN_ENGINE_STEPS_TO_SHOOT 50
+
+#define MIN_ENGINE_STEPS_TO_SHOOT 50  // One second
+#define MIN_ENGINE_STEPS_TO_DIE 50  // One second
 #define LIVES 4
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
@@ -15,20 +17,17 @@ char GameObjectPlayer::game_object_type() {
 }
 
 bool GameObjectPlayer::can_shoot() {
-  return engine_steps_ >= MIN_ENGINE_STEPS_TO_SHOOT;
-}
-
-void GameObjectPlayer::increase_step() {
-  engine_steps_++;
+  return engine_steps_ - last_shot_ >= MIN_ENGINE_STEPS_TO_SHOOT;
 }
 
 void GameObjectPlayer::shot() {
-  engine_steps_ = 0;
+  last_shot_ = engine_steps_;
 }
 
-void GameObjectPlayer::update_fixed(Vector gravity) {
+void GameObjectPlayer::update_fixed() {
+  engine_steps_++;
   if (!normal_) {
-    body().apply_force(gravity);
+    body().apply_force(gravity_);
   } else {
     body().stop_y();
   }
@@ -43,19 +42,25 @@ void GameObjectPlayer::impact(GameObject *other) {
     case 'b':
     case 't':
     case 'r':
-      lives_--;
+      // prevent dying immediately after dying
+      if (engine_steps_ - last_dead_ >= MIN_ENGINE_STEPS_TO_DIE) {
+        lives_--;
+        last_dead_ = engine_steps_;
+      }
       break;
   }
 }
 
 bool GameObjectPlayer::alive() {
-  return lives_ != 0;
+  return lives_ > 0;
 }
 
 char GameObjectPlayer::direction() {
-  return direction_;
-}
-
-void GameObjectPlayer::new_direction(bool right) {
-  direction_ = (right) ? 1 : -1;
+  if (body().velocity().x() > 0) {
+    return (direction_ = 1);  // update and return
+  } else if (body().velocity().x() < 0) {
+    return (direction_ = -1);  // update and return
+  } else {
+    return direction_;  // last direction if it's still
+  }
 }

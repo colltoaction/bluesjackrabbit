@@ -17,8 +17,6 @@
 
 #define PLAYERS 1
 
-const double Game::step = 0.003;
-
 Game::Game(ClientProxy *admin, const std::string &game_name) :
     engine_(),
     engine_mutex_(),
@@ -38,7 +36,7 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
   GameObjectFloor *floor2 = new GameObjectFloor(body2, new RectangleCollider(*body2));
   engine_.add_game_object(floor2);
 
-  RigidBody *r_body = new RigidBody(new Vector(0, -10));
+  RigidBody *r_body = new RigidBody(new Vector(2, -10));
   GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(*r_body, 0.5));
   engine_.add_game_object(turtle);
 
@@ -46,7 +44,7 @@ Game::Game(ClientProxy *admin, const std::string &game_name) :
   GameObjectRedTurtle *turtle_red = new GameObjectRedTurtle(r_body2, new CircleCollider(*r_body2, 0.5));
   engine_.add_game_object(turtle_red);
 
-  RigidBody *r_body3 = new RigidBody(new Vector(0, 8));
+  RigidBody *r_body3 = new RigidBody(new Vector(2, 8));
   GameObjectRedTurtle *turtle_red2 = new GameObjectRedTurtle(r_body3, new CircleCollider(*r_body3, 0.5));
   engine_.add_game_object(turtle_red2);
 }
@@ -77,7 +75,7 @@ void Game::place_player(ClientProxy *player) {
   Vector *pos = NULL;
   uint32_t object_id;
   if (even % 2 == 0) {
-    pos = new Vector(0, 0);
+    pos = new Vector(-2, 0);
   } else {
     pos = new Vector(5, -15);
   }

@@ -10,8 +10,6 @@
 
 #include <iostream>
 
-const Vector Engine::gravity_ = Vector(0, 0.0000098) * fixed_update_step * fixed_update_step;  // in m/ms²
-
 Engine::Engine() : object_index_(0) {
 }
 
@@ -53,7 +51,6 @@ void Engine::players_shots() {
   for (std::map<uint32_t, bool>::iterator it = player_shoot_.begin(); it != player_shoot_.end(); it++) {
     if (it->second) {
       GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[it->first]);
-      player->increase_step();
       if (player->can_shoot()) {
         // Create a new bullet
         Vector origin = game_objects_[it->first]->body().position();
@@ -73,34 +70,25 @@ void Engine::move_objects() {
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
-    // Gravity no more applied here
-    // apply_force(game_object->second, gravity_);
-    if (will_collide(game_object)) {
-      // This is not done anymore because it depends with what you are colliding
-      // game_object->second->body().stop();
-    }
-    // This applies all forces to the object
-    game_object->second->update_fixed(gravity_);
+    check_collisions(game_object);
+    game_object->second->update_fixed();
     // With all forces applied, new position is calculated
     game_object->second->body().update_fixed();
   }
 }
 
-bool Engine::will_collide(const std::map<uint32_t, GameObject*>::iterator &game_object) {
-  bool collides = false;
+void Engine::check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object) {
   for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
        other != game_objects_.end();
        ++other) {
     if (game_object != other) {
       if (game_object->second->will_collide(*other->second)) {
-        // Make them impact each other (Cpp does not have multiple dispatch)
+        // Make them impact each other
         game_object->second->impact(other->second);
         other->second->impact(game_object->second);
-        collides = true;
       }
     }
   }
-  return collides;
 }
 
 void Engine::apply_force(GameObject *game_object, Vector force) {
@@ -131,15 +119,5 @@ uint32_t Engine::add_game_object(GameObject *game_object) {
 void Engine::player_shoot(uint32_t object_id) {
   if (game_objects_.find(object_id) != game_objects_.end()) {
     player_shoot_[object_id] = true;
-  }
-}
-
-uint32_t Engine::objects_size() {
-  return static_cast<uint32_t>(game_objects_.size());
-}
-
-void Engine::update_player_direction(uint32_t object_id, bool right) {
-  if (game_objects_.find(object_id) != game_objects_.end()) {
-    static_cast<GameObjectPlayer*>(game_objects_[object_id])->new_direction(right);
   }
 }
