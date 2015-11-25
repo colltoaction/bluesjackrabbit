@@ -10,6 +10,7 @@
 #include <common/Thread.h>
 #include <common/CreateGameMessage.h>
 #include <common/JoinGameMessage.h>
+#include <engine/GameObjectPlayer.h>
 
 class ClientProxy;
 
@@ -36,7 +37,7 @@ class ClientProxy : public Thread {
   void add_move_functor(action_callback mv_callback);
   void add_shoot_functor(shoot_callback mv_callback);
   void add_start_functor(start_callback start_cb);
-  void add_object_id(uint32_t object_id);
+  void add_object_id(uint32_t object_id, GameObjectPlayer *pPlayer);
 
  private:
   Socket *socket_;
@@ -52,7 +53,7 @@ class ClientProxy : public Thread {
 
   char game_id_;
   uint32_t object_id_;
-  static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
+  GameObjectPlayer *player_;
   bool bullet_shot;
   void read_protocol();
   void new_game_call(CreateGameMessage *create_game);

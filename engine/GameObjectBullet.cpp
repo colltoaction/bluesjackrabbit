@@ -8,7 +8,7 @@ GameObjectBullet::~GameObjectBullet() {
 }
 
 void GameObjectBullet::update_fixed() {
-  body().apply_force(Vector(0.003 * direction_, 0.0));
+  body().apply_force(Vector(0.01 * direction_, 0.0));
 }
 
 char GameObjectBullet::game_object_type() {

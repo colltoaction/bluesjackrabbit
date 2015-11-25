@@ -8,6 +8,7 @@
 #include "Socket.h"
 #include "GameInitMessage.h"
 #include "JoinGameMessage.h"
+#include "PlayerInfoMessage.h"
 
 class MessageReader {
  public:
@@ -61,6 +62,8 @@ class MessageReader {
    * @throws InvalidMessageException
    */
   GameObjectMessage *read_game_object();
+
+  PlayerInfoMessage *read_player_info();
 
  private:
   Socket *socket_;

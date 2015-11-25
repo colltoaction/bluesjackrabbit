@@ -32,6 +32,8 @@ set(SOURCES
         MessageWriter.h
         Mutex.cpp
         Mutex.h
+        PlayerInfoMessage.cpp
+        PlayerInfoMessage.h
         Socket.cpp
         Socket.h
         Thread.cpp

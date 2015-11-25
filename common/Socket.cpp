@@ -139,10 +139,10 @@ bool Socket::send_buffer(const char *buffer, size_t tamanio) {
   return !closed;
 }
 
-bool Socket::read_buffer(char *buffer, ssize_t tamanio) {
+bool Socket::read_buffer(char *buffer, size_t tamanio) {
   bool error = false, socketCerrado = false;
   memset(buffer, 0, tamanio);
-  ssize_t recibidoParcial = 0;
+  size_t recibidoParcial = 0;
   while (recibidoParcial < tamanio && !closed) {
     ssize_t r = recv(this->socketFD, buffer + recibidoParcial, tamanio - recibidoParcial, MSG_NOSIGNAL);
     if (r < 0 && !closed) {

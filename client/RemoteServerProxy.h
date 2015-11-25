@@ -17,6 +17,7 @@
 #include "ServerProxy.h"
 #include "RemoteServerProxyUpdater.h"
 #include "Renderer.h"
+#include "LivesRenderer.h"
 
 
 /**
@@ -36,6 +37,7 @@ class RemoteServerProxy : public ServerProxy {
   virtual void jump();
   virtual void shoot();
   virtual Vector character_position();
+  virtual LivesRenderer &lives_renderer();
   virtual std::map<uint32_t, Renderer*> &renderers();
 
   /**
@@ -58,6 +60,7 @@ class RemoteServerProxy : public ServerProxy {
   static const double step;
   // Engine engine_;
   const Configuration &config_;
+  LivesRenderer lives_renderer_;
   std::map<uint32_t, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
@@ -65,8 +68,9 @@ class RemoteServerProxy : public ServerProxy {
   Mutex mutex_;
   uint32_t object_id_;
   bool alive_;
-  static const ssize_t UINT32_T_LENGTH = sizeof(uint32_t);
+  static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
+  void update_lives(char remaining_lives);
   void update_object(uint32_t object_id, double x, double y, char type, point_type points, bool alive);
   void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::vector<Vector> points);
 };

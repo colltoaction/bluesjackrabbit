@@ -6,6 +6,7 @@
 #include <vector>
 #include "Socket.h"
 #include <engine/GameObject.h>
+#include <engine/GameObjectPlayer.h>
 
 class MessageWriter {
  public:
@@ -31,9 +32,11 @@ class MessageWriter {
 
   void send_create_game(size_t map_id, const std::string &game_name);
 
-  void send_game_init(std::map<uint32_t, GameObject *> *pMap);
+  void send_game_init(GameObjectPlayer *pMap, std::map<uint32_t, GameObject *> *pMap1);
 
   void send_game_object(uint32_t object_id, GameObject *game_object);
+
+  void send_player_info(GameObjectPlayer *player);
 
   void send_join_game(size_t game_id);
 

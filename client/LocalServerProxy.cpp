@@ -97,6 +97,10 @@ Vector LocalServerProxy::character_position() {
 void LocalServerProxy::init_game() {
 }
 
+LivesRenderer &LocalServerProxy::lives_renderer() {
+  return lives_renderer_;
+}
+
 // Nothing, it will be updated from other place
 std::map<uint32_t, Renderer*> &LocalServerProxy::renderers() {
   return renderers_;
@@ -130,6 +134,5 @@ bool LocalServerProxy::start_game(size_t map_id, std::string game_name) {
 void LocalServerProxy::join_game(size_t game_id) {
   (void)game_id;  // UNUSED
 }
-
 void LocalServerProxy::shutdown() {
 }
