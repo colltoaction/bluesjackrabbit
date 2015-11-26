@@ -40,7 +40,7 @@ void MapLoader::load() {
 }
 
 void MapLoader::place_player(ClientProxy *player) {
-  Vector *pos = player_spawn_point();
+  Vector *pos = player_start_point();
   RigidBody *body = new RigidBody(pos);
   GameObjectPlayer *object = new GameObjectPlayer(body, new CircleCollider(*body, 0.5));
   uint32_t object_id = engine_->add_game_object(object);
@@ -48,7 +48,7 @@ void MapLoader::place_player(ClientProxy *player) {
   even_ = !even_;
 }
 
-Vector *MapLoader::player_spawn_point() const {
+Vector *MapLoader::player_start_point() const {
   if (even_) {
     return new Vector(-2, 0);
   } else {

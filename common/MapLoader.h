@@ -15,7 +15,7 @@ class MapLoader {
  private:
   Engine *engine_;
   bool even_;
-  Vector *player_spawn_point() const;
+  Vector *player_start_point() const;
 };
 
 #endif  // BLUESJACKRABBIT_COMMON_MAPLOADER_H
