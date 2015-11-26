@@ -18,7 +18,8 @@ class CharacterRenderer : public Renderer {
   bool first_render_;
   // Cairo::RefPtr<Cairo::ImageSurface> image_;
   Glib::RefPtr<Gdk::Pixbuf> image_;
-  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_right_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_left_;
 };
 
 

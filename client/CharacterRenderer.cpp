@@ -15,17 +15,22 @@ CharacterRenderer::CharacterRenderer(const Vector &position, double radius)
   image_ = Gdk::Pixbuf::create_from_file("static/sprites/blues.png");
 
   // Stood
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33));
+  Glib::RefPtr<Gdk::Pixbuf> sprite = Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33);
 
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 42, 8, 33, 32));
+  images_right_.push_back(sprite);
+  images_left_.push_back(sprite->flip(true));
 
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 75, 8, 30, 32));
+  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 42, 8, 33, 32));
 
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 105, 8, 30, 32));
+  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 75, 8, 30, 32));
 
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 135, 8, 30, 32));
+  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 105, 8, 30, 32));
 
-  images_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 165, 8, 30, 32));
+  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 135, 8, 30, 32));
+
+  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 165, 8, 30, 32));
+
+  image_->flip(true);
 }
 
 CharacterRenderer::~CharacterRenderer() {
@@ -43,9 +48,9 @@ void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
   }
 
   cr->translate(position_.x(), position_.y());
-  cr->scale(1.0 / images_[sprite_index]->get_width(), 1.0 / images_[sprite_index]->get_height());
-  cr->translate(-images_[sprite_index]->get_width() / 2, -images_[sprite_index]->get_height() / 2);
-  Gdk::Cairo::set_source_pixbuf(cr, images_[sprite_index], 0, 0);
+  cr->scale(1.0 / images_right_[sprite_index]->get_width(), 1.0 / images_right_[sprite_index]->get_height());
+  cr->translate(-images_right_[sprite_index]->get_width() / 2, -images_right_[sprite_index]->get_height() / 2);
+  Gdk::Cairo::set_source_pixbuf(cr, images_right_[sprite_index], 0, 0);
   cr->paint();
   sprite_step_++;
   last_x_ = position_.x();
