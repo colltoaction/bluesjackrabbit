@@ -80,7 +80,6 @@ void ClientProxy::read_protocol() {
     move_functor_(object_id_, message->type());
   } else if (message->type() == JUMP || message->type() == UP) {
     jump_functor_(object_id_);
-    std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
   } else if (message->type() == SHOOT) {
     shoot_functor_(object_id_);
   }
