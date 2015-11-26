@@ -26,13 +26,15 @@ void ClientProxyAcceptor::listen_connections() {
   while (keep_going_) {
     if (keep_going_) {
       Socket *new_connection = socket_.accept_connection();
-      ClientProxy *proxy = new ClientProxy(new_connection,
-          sigc::mem_fun(*game_monitor_, &GameMonitor::create_game),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::join_game),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::list_games),
-          sigc::mem_fun(*game_monitor_, &GameMonitor::list_maps));
-      threads_.push_back(proxy);
-      proxy->start();
+      if (new_connection != NULL) {
+        ClientProxy *proxy = new ClientProxy(new_connection,
+            sigc::mem_fun(*game_monitor_, &GameMonitor::create_game),
+            sigc::mem_fun(*game_monitor_, &GameMonitor::join_game),
+            sigc::mem_fun(*game_monitor_, &GameMonitor::list_games),
+            sigc::mem_fun(*game_monitor_, &GameMonitor::list_maps));
+        threads_.push_back(proxy);
+        proxy->start();
+      }
     }
   }
 

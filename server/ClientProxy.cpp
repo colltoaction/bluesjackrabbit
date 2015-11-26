@@ -26,6 +26,7 @@ ClientProxy::ClientProxy(Socket *socket,
     list_maps_functor_(lm_callback),
     game_id_(0),
     object_id_(0),
+    player_(NULL),
     bullet_shot(false) {
 }
 
