@@ -11,7 +11,7 @@
 #define SECOND_TO_MICROSECONDS 1000000.0
 #define TWENTY_MILLIS_IN_MICROSECONDS 20000.0
 
-const double GameRunner::step = 0.01;
+const double GameRunner::step = 0.003;
 
 GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
   : engine_(engine),
