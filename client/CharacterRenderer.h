@@ -13,6 +13,9 @@ class CharacterRenderer : public Renderer {
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
  private:
   double radius_;
+  unsigned int sprite_step_;
+  double last_x_;
+  bool first_render_;
   // Cairo::RefPtr<Cairo::ImageSurface> image_;
   Glib::RefPtr<Gdk::Pixbuf> image_;
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_;
