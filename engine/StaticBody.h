@@ -14,6 +14,7 @@ class StaticBody : public Body {
   virtual ~StaticBody();
   virtual const Vector &velocity() const;
   virtual void apply_force(const Vector &vector);
+  virtual void apply_jump_force();
   virtual Vector position() const;
   virtual Vector next_position() const;
   virtual void update_fixed();

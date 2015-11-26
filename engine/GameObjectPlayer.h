@@ -11,6 +11,16 @@ class GameObjectPlayer: public GameObject {
   virtual char game_object_type();
 
   /**
+   * Verifies if the player has touched the floor so he can jump again
+   */
+  bool can_jump();
+
+  /**
+   * Tell the player to jump
+   */
+  void jump();
+
+  /**
    * Verifies if player has cooled down and can shoot again
    */
   bool can_shoot();
@@ -47,6 +57,7 @@ class GameObjectPlayer: public GameObject {
 
  private:
   uint32_t engine_steps_;
+  bool can_jump_;
   uint32_t last_shot_;
   uint32_t last_dead_;
   char lives_;

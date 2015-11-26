@@ -76,9 +76,10 @@ void ClientProxy::read_protocol() {
     list_maps_call();
   } else if (message->type() == DISCONNECT) {
     keep_reading_ = false;
-  } else if (message->type() == LEFT || message->type() == RIGHT || message->type() == DOWN || message->type() == UP) {
+  } else if (message->type() == LEFT || message->type() == RIGHT || message->type() == DOWN) {
     move_functor_(object_id_, message->type());
-  } else if (message->type() == JUMP) {
+  } else if (message->type() == JUMP || message->type() == UP) {
+    jump_functor_(object_id_);
     std::cout << "Llego un jump del jugador: " << static_cast<int>(object_id_) << std::endl;
   } else if (message->type() == SHOOT) {
     shoot_functor_(object_id_);
@@ -89,6 +90,10 @@ void ClientProxy::read_protocol() {
 
 void ClientProxy::add_move_functor(action_callback mv_callback) {
   move_functor_ = mv_callback;
+}
+
+void ClientProxy::add_jump_functor(jump_callback jump_callback) {
+  jump_functor_ = jump_callback;
 }
 
 void ClientProxy::add_shoot_functor(shoot_callback shoot_callback) {

@@ -33,6 +33,7 @@ Game::~Game() {
 void Game::add_player(ClientProxy *player) {
   players_[player_index_] = player;
   player->add_move_functor(sigc::mem_fun(*this, &Game::action));
+  player->add_jump_functor(sigc::mem_fun(*this, &Game::jump));
   player->add_shoot_functor(sigc::mem_fun(*this, &Game::shoot));
   player->add_start_functor(sigc::mem_fun(*this, &Game::start_game));
   map_loader_.place_player(player);
@@ -51,6 +52,10 @@ void Game::start_game() {
 
 void Game::action(uint32_t object_id, char option) {
   runner_.action(object_id, option);
+}
+
+void Game::jump(uint32_t object_id) {
+  runner_.jump(object_id);
 }
 
 void Game::shoot(uint32_t object_id) {
