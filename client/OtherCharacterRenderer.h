@@ -14,8 +14,10 @@ class OtherCharacterRenderer: public Renderer {
   unsigned int sprite_step_;
   double last_x_;
   bool first_render_;
+  bool right_direction_;
   Glib::RefPtr<Gdk::Pixbuf> image_;
-  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_right_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_left_;
 };
 
 #endif /* BLUESJACKRABBIT_CLIENT_OTHERCHARACTERRENDERER_H */
