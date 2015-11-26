@@ -46,8 +46,10 @@ include(CppLint)
 add_library(${PROJECT_NAME} ${SOURCES})
 add_style_check_target(${PROJECT_NAME}-lint "${SOURCES}")
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-lint)
+add_dependencies(${PROJECT_NAME} engine)
 
 target_link_libraries(${PROJECT_NAME} ${LIBXML_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${LOG4CPP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${PROJECT_NAME} engine)
 

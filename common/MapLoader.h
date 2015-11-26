@@ -3,15 +3,19 @@
 
 #include <string>
 #include <engine/Engine.h>
+#include <server/ClientProxy.h>
 
 class MapLoader {
  public:
-  MapLoader(std::string file_name, Engine *engine);
+  explicit MapLoader(Engine *engine);
   virtual ~MapLoader();
   void load();
+  void place_player(ClientProxy *player);
+
  private:
-  std::string file_name_;
   Engine *engine_;
+  bool even_;
+  Vector *player_spawn_point() const;
 };
 
-#endif /* BLUESJACKRABBIT_COMMON_MAPLOADER_H */
+#endif  // BLUESJACKRABBIT_COMMON_MAPLOADER_H
