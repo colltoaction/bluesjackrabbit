@@ -15,6 +15,7 @@ class GameRunner: public Thread {
   virtual ~GameRunner();
   virtual void run();
   void action(uint32_t object_id, char option);
+  void jump(uint32_t object_id);
   void shoot(uint32_t object_id);
   void finalize();
 

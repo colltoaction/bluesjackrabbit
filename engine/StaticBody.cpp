@@ -14,8 +14,10 @@ const Vector &StaticBody::velocity() const {
   return velocity_;
 }
 
-void StaticBody::apply_force(const Vector &force) {
-  (void)force;  // Ignore parameter
+void StaticBody::apply_force(const Vector & /* force */) {
+}
+
+void StaticBody::apply_jump_force() {
 }
 
 Vector StaticBody::position() const {

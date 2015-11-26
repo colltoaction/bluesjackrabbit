@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_ENGINE_ENGINE_H
 
 #include <map>
+#include <set>
 #include <sigc++/functors/slot.h>
 #include "Body.h"
 #include "Collider.h"
@@ -65,6 +66,11 @@ class Engine {
   uint32_t add_game_object(GameObject *game_object);
 
   /**
+   * Player with object id tries to jump.
+   */
+  void player_jump(uint32_t object_id);
+
+  /**
    * Player with object id shot a bullet.
    */
   void player_shoot(uint32_t object_id);
@@ -82,8 +88,10 @@ class Engine {
  private:
   uint32_t object_index_;
   std::map<uint32_t, GameObject*> game_objects_;
+  std::set<uint32_t> player_jump_;
   std::map<uint32_t, bool> player_shoot_;
   void check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object);
+  void players_jumps();
   void players_shots();
 };
 

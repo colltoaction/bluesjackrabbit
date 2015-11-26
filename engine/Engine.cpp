@@ -26,6 +26,7 @@ std::map<uint32_t, GameObject*> *Engine::game_objects() {
 }
 
 void Engine::FixedUpdate() {
+  players_jumps();
   players_shots();
   move_objects();
 }
@@ -44,6 +45,19 @@ void Engine::clean_dead() {
     game_objects_.erase(*it);
     delete object;
   }
+}
+
+void Engine::players_jumps() {
+  // Player shoot keeps record of which players shot in this engine step
+  for (std::set<uint32_t>::iterator it = player_jump_.begin();
+       it != player_jump_.end(); it++) {
+      GameObjectPlayer *player = static_cast<GameObjectPlayer*>(game_objects_[*it]);
+    if (player->can_jump()) {
+      player->jump();
+    }
+  }
+
+  player_jump_.clear();
 }
 
 void Engine::players_shots() {
@@ -116,8 +130,10 @@ uint32_t Engine::add_game_object(GameObject *game_object) {
   return to_return;
 }
 
+void Engine::player_jump(uint32_t object_id) {
+  player_jump_.insert(object_id);
+}
+
 void Engine::player_shoot(uint32_t object_id) {
-  if (game_objects_.find(object_id) != game_objects_.end()) {
-    player_shoot_[object_id] = true;
-  }
+  player_shoot_[object_id] = true;
 }

@@ -5,8 +5,11 @@
 #define LIVES 4
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
-  : GameObject(body, collider), engine_steps_(0), lives_(LIVES), direction_(1),
-    normal_(false) {
+  : GameObject(body, collider)
+  , can_jump_(true)
+  , lives_(LIVES)
+  , direction_(1)
+  , normal_(false) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {
@@ -14,6 +17,15 @@ GameObjectPlayer::~GameObjectPlayer() {
 
 char GameObjectPlayer::game_object_type() {
   return 'p';
+}
+
+bool GameObjectPlayer::can_jump() {
+  return can_jump_;
+}
+
+void GameObjectPlayer::jump() {
+  can_jump_ = false;
+  body().apply_jump_force();
 }
 
 bool GameObjectPlayer::can_shoot() {
@@ -37,6 +49,7 @@ void GameObjectPlayer::update_fixed() {
 void GameObjectPlayer::impact(GameObject *other) {
   switch (other->game_object_type()) {
     case 'f':
+      can_jump_ = true;
       normal_ = true;
       break;
     case 'b':

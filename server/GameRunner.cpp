@@ -73,6 +73,11 @@ void GameRunner::action(uint32_t object_id, char option) {
   }
 }
 
+void GameRunner::jump(uint32_t object_id) {
+  Lock lock(&engine_mutex_);
+  engine_->player_jump(object_id);
+}
+
 void GameRunner::shoot(uint32_t object_id) {
   Lock lock(&engine_mutex_);
   engine_->player_shoot(object_id);

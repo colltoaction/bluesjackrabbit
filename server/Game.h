@@ -17,6 +17,7 @@ class Game {
   void add_player(ClientProxy *player);
   bool can_join();
   void action(uint32_t object_id, char option);
+  void jump(uint32_t object_id);
   void shoot(uint32_t object_id);
   std::string name();
 

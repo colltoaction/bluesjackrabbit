@@ -23,6 +23,12 @@ class Body {
   virtual void apply_force(const Vector &vector) = 0;
 
   /**
+   * Apply a jump force to this object. Calls apply_force internally with a predefined
+   * jump force.
+   */
+  virtual void apply_jump_force() = 0;
+
+  /**
    * The current position of the body.
    */
   virtual Vector position() const = 0;
