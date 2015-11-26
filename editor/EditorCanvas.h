@@ -4,6 +4,12 @@
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
 
+typedef enum DraggableObjectType_ {
+  IMAGE,
+  RECTANGLE,
+  CIRCLE
+} DraggableObjectType;
+
 class EditorCanvas : public Goocanvas::Canvas {
 public:
   EditorCanvas(Gtk::ScrolledWindow*& parent);
@@ -29,8 +35,12 @@ private:
    */
   virtual bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
       guint time);
-  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon);
-  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y);
+
+  Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon,
+      DraggableObjectType obj_type);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_image(double x, double y, Gtk::Widget* icon);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
 
   Gtk::ScrolledWindow*& canvas_window_;
   Glib::RefPtr<Goocanvas::Item> dnd_item_;

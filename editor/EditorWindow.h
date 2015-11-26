@@ -49,11 +49,6 @@ class EditorWindow: public Gtk::Window {
 
   Glib::RefPtr<Goocanvas::Item> dnd_item_;
   bool requested_for_motion_;
-
-  Glib::RefPtr<Gio::SimpleAction> action_active_layer_;
-  Glib::RefPtr<Gio::SimpleAction> action_tilemap_visible_;
-  Glib::RefPtr<Gio::SimpleAction> action_objects_visible_;
-  Glib::RefPtr<Gio::SimpleAction> action_controls_visible_;
 };
 
 #endif  // BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H

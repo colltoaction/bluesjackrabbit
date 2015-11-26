@@ -43,3 +43,6 @@ install_manifest.txt
 # CLion
 .idea/
 
+# Temporary glade files
+*.glade~
+
