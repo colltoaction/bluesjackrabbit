@@ -23,6 +23,8 @@
 #include <common/GameObjectMessage.h>
 #include "OtherCharacterRenderer.h"
 #include "TurtleRenderer.h"
+#include "GreenTurtleRenderer.h"
+#include "RedTurtleRenderer.h"
 
 
 void RemoteServerProxy::MoveUp() {
@@ -157,10 +159,10 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
       }
       break;
     case 't':
-      render = new TurtleRenderer(position, points.front().x(), object_type);
+      render = new GreenTurtleRenderer(position, points.front().x());
       break;
     case 'r':
-      render = new TurtleRenderer(position, points.front().x(), object_type);
+      render = new RedTurtleRenderer(position, points.front().x());
       break;
     case 'f':
     case 'w':
