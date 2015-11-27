@@ -48,7 +48,7 @@ void RemoteServerProxyUpdater::run() {
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
   message->read();
   Logger::info(message->won() ? "User WON" : "User LOST");
-//      keep_going_ = false;
+  keep_going_ = false;
 }
 
 void RemoteServerProxyUpdater::shutdown() {
