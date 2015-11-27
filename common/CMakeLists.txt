@@ -6,6 +6,8 @@ set(SOURCES
         Constants.h
         CreateGameMessage.cpp
         CreateGameMessage.h
+        GameFinishedMessage.cpp
+        GameFinishedMessage.h
         GameInitMessage.cpp
         GameInitMessage.h
         GameObjectMessage.cpp
@@ -40,7 +42,7 @@ set(SOURCES
         Socket.h
         Thread.cpp
         Thread.h
-        GameFinishedMessage.cpp GameFinishedMessage.h)
+)
 include(CppLint)
 
 add_library(${PROJECT_NAME} ${SOURCES})
