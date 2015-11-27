@@ -1,8 +1,5 @@
 #include "CharacterRenderer.h"
-#include <common/Logger.h>
-
 #include <gdkmm/general.h>
-
 #include <cmath>
 
 CharacterRenderer::CharacterRenderer(const Vector &position, double radius)
