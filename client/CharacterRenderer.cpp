@@ -18,6 +18,10 @@ CharacterRenderer::~CharacterRenderer() {
 void CharacterRenderer::load_sprites() {
 }
 
+char CharacterRenderer::sprites_moving_size() {
+  return 4;
+}
+
 void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
   unsigned int sprite_index = 0;
   if (first_render_) {
@@ -28,7 +32,7 @@ void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > *images;
 
   if (std::abs(last_x_ - position_.x()) > 0.01) {
-    sprite_index = ((sprite_step_ / 3) % 4) + 1;
+    sprite_index = ((sprite_step_ / 3) % sprites_moving_size()) + 1;
     if (last_x_ - position_.x() > 0.0) {
       right_direction_ = false;
     } else {
