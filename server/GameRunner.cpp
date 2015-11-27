@@ -14,27 +14,19 @@
 const double GameRunner::step = 0.003;
 
 GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
-  : engine_(engine),
-    engine_mutex_(),
-    players_(players),
-    keep_running_(true),
-    game_finished_(false) {
+  : engine_(engine)
+  , engine_mutex_()
+  , players_(players)
+  , keep_running_(true) {
 }
 
 GameRunner::~GameRunner() {
 }
 
 void GameRunner::run() {
-  while (keep_running_ && !game_finished_) {
-    notify_clients();
-    game_loop();
-  }
-}
-
-void GameRunner::game_loop() {
   while (keep_running_) {
     clock_t start = clock();
-    engine_step();
+    engine_step();  // notifies clients inside
     clock_t stop = clock();
     double elapsed = static_cast<double>(stop - start)* SECOND_TO_MICROSECONDS / CLOCKS_PER_SEC;
     if (elapsed > TWENTY_MILLIS_IN_MICROSECONDS) {
@@ -47,17 +39,9 @@ void GameRunner::game_loop() {
 void GameRunner::engine_step() {
   Lock lock(&engine_mutex_);
   engine_->FixedUpdate();
-  notify_clients();
+  update_clients();
   // Because clients have to be notified, cant clean dead objects before
   engine_->clean_dead();
-}
-
-void GameRunner::notify_clients() {
-  for (std::map<char, ClientProxy*>::iterator it = players_->begin();
-      it != players_->end();
-      it++) {
-    it->second->send_objects(engine_->game_objects());
-  }
 }
 
 void GameRunner::action(uint32_t object_id, char option) {
@@ -83,6 +67,28 @@ void GameRunner::shoot(uint32_t object_id) {
   engine_->player_shoot(object_id);
 }
 
+void GameRunner::notify_winner(GameObjectPlayer *winner) {
+  // do not lock
+  notify_winner_to_clients(winner);
+  finalize();
+}
+
 void GameRunner::finalize() {
   keep_running_ = false;
+}
+
+void GameRunner::update_clients() {
+  for (std::map<char, ClientProxy*>::iterator it = players_->begin();
+       it != players_->end();
+       it++) {
+    it->second->send_objects(engine_->game_objects());
+  }
+}
+
+void GameRunner::notify_winner_to_clients(GameObjectPlayer *winner) {
+  for (std::map<char, ClientProxy*>::iterator it = players_->begin();
+       it != players_->end();
+       it++) {
+    it->second->send_winner(winner);
+  }
 }

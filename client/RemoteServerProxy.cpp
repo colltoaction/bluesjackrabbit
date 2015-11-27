@@ -168,6 +168,9 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
     case 'f':
       render = new FloorRenderer(position, points);
       break;
+    case 'o':
+      render = new FloorRenderer(position, points);
+      break;
   }
   renderers_[object_id] = render;
 }

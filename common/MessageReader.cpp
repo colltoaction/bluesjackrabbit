@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Message.h"
 #include "JoinGameMessage.h"
+#include "GameFinishedMessage.h"
 
 MessageReader::MessageReader(Socket *socket)
     : socket_(socket) {
@@ -23,6 +24,8 @@ Message *MessageReader::read_message() {
     return new GamesMessage(socket_);
   } else if (c == MapsMessage::type_id()) {
     return new MapsMessage(socket_);
+  } else if (c == GameFinishedMessage::type_id()) {
+    return new GameFinishedMessage(socket_);
   } else if (c == DISCONNECT) {
   } else if (c == LEFT || c == RIGHT || c == DOWN || c == UP) {
   } else if (c == JUMP) {
@@ -43,17 +46,17 @@ void MessageReader::read_player_id() {
 }
 
 MapsMessage MessageReader::read_available_maps() {
-  validate_message_type(0x23);
+  validate_message_type(MapsMessage::type_id());
   return MapsMessage(socket_);
 }
 
 GamesMessage MessageReader::read_available_games() {
-  validate_message_type(LIST_GAMES);
+  validate_message_type(GamesMessage::type_id());
   return GamesMessage(socket_);
 }
 
 CreateGameMessage MessageReader::read_create_game() {
-  validate_message_type(0x20);
+  validate_message_type(CreateGameMessage::type_id());
   return CreateGameMessage(socket_);
 }
 

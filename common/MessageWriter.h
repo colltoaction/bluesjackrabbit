@@ -42,6 +42,8 @@ class MessageWriter {
 
   void send_disconnect();
 
+  void send_game_finished(bool won);
+
  private:
   Socket *socket_;
 };

@@ -6,6 +6,8 @@
 #include <common/InvalidMessageException.h>
 #include <sstream>
 #include <common/MessageWriter.h>
+#include <common/GameFinishedMessage.h>
+#include <common/Logger.h>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update)
@@ -30,6 +32,9 @@ void RemoteServerProxyUpdater::run() {
     if (message->type() == GameInitMessage::type_id()) {
       update_objects(dynamic_cast<GameInitMessage *>(message));
       delete message;
+    } else if (message->type() == GameFinishedMessage::type_id()) {
+      handle_game_finished(dynamic_cast<GameFinishedMessage *>(message));
+      delete message;
     } else {
       std::stringstream ss;
       ss << std::hex
@@ -39,6 +44,11 @@ void RemoteServerProxyUpdater::run() {
       throw InvalidMessageException(ss.str());
     }
   }
+}
+void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
+  message->read();
+  Logger::info(message->won() ? "User WON" : "User LOST");
+//      keep_going_ = false;
 }
 
 void RemoteServerProxyUpdater::shutdown() {

@@ -17,6 +17,7 @@ class GameRunner: public Thread {
   void action(uint32_t object_id, char option);
   void jump(uint32_t object_id);
   void shoot(uint32_t object_id);
+  void notify_winner(GameObjectPlayer* winner);
   void finalize();
 
  private:
@@ -24,12 +25,11 @@ class GameRunner: public Thread {
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> *players_;
   bool keep_running_;
-  bool game_finished_;
   static const double step;
 
-  void game_loop();
   void engine_step();
-  void notify_clients();
+  void update_clients();
+  void notify_winner_to_clients(GameObjectPlayer *winner);
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */

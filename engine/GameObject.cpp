@@ -27,6 +27,7 @@ void GameObject::update_fixed() {
 }
 
 char GameObject::game_object_type() {
+  // TODO(tinchou): make virtual and use 'g' for goal
   return 'g';
 }
 

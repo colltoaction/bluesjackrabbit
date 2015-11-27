@@ -1,4 +1,5 @@
 #include <engine/GameObjectFloor.h>
+#include <engine/GameObjectGoal.h>
 #include <engine/GameObjectGreenTurtle.h>
 #include <engine/GameObjectRedTurtle.h>
 #include <engine/RectangleCollider.h>
@@ -7,8 +8,9 @@
 #include "MapLoader.h"
 #include "Logger.h"
 
-MapLoader::MapLoader(Engine *engine)
+MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
+  , winner_notifier_(winner_notifier)
   , even_(false) {
 }
 
@@ -17,6 +19,12 @@ MapLoader::~MapLoader() {
 
 void MapLoader::load() {
   Logger::info("Loading hardcoded map");
+
+  StaticBody *goal_body = new StaticBody(new Vector(15, 5));
+  GameObjectGoal *goal = new GameObjectGoal(goal_body,
+                                            new RectangleCollider(*goal_body),
+                                            winner_notifier_);
+  engine_->add_game_object(goal);
 
   StaticBody *body = new StaticBody(new Vector(3, 5));
   GameObjectFloor *floor = new GameObjectFloor(body, new RectangleCollider(*body));
