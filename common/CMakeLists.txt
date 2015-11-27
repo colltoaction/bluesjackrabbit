@@ -6,6 +6,8 @@ set(SOURCES
         Constants.h
         CreateGameMessage.cpp
         CreateGameMessage.h
+        GameFinishedMessage.cpp
+        GameFinishedMessage.h
         GameInitMessage.cpp
         GameInitMessage.h
         GameObjectMessage.cpp

@@ -34,6 +34,7 @@ class ClientProxy : public Thread {
   void run();
   void say_hello();
   void send_objects(std::map<uint32_t, GameObject *> *game_objects);
+  void send_winner(GameObjectPlayer *winner);
   bool finalize();
   void add_move_functor(action_callback mv_callback);
   void add_jump_functor(jump_callback jump_callback);

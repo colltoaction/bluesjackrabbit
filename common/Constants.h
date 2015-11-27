@@ -1,29 +1,25 @@
 #ifndef BLUESJACKRABBIT_COMMON_CONSTANTS_H
 #define BLUESJACKRABBIT_COMMON_CONSTANTS_H
 
-
 // GAME PROTOCOL CONSTANTS
-#define LEFT 0x1
-#define RIGHT 0x2
-#define DOWN 0x3
-#define UP 0x4
-#define JUMP 0x5
-#define SHOOT 0x6
+#define LEFT 0x01
+#define RIGHT 0x02
+#define DOWN 0x03
+#define UP 0x04
+#define JUMP 0x05
+#define SHOOT 0x06
 
-#define CANT_BYTES 1
-
-// MENU PROTOCOL CONSTANTS
-#define NEW_GAME 0x20
-#define JOIN_GAME 0x21
-#define LIST_GAMES 0x22
-#define LIST_MAPS 0x23
-#define GAME_INIT 0x24
-#define GAME_OBJECT 0x25
-#define PLAYER_INFO 0x26
-#define DISCONNECT 0x27
+#define NEW_GAME 0x10
+#define JOIN_GAME 0x11
+#define LIST_GAMES 0x12
+#define LIST_MAPS 0x13
+#define GAME_INIT 0x14
+#define GAME_OBJECT 0x15
+#define PLAYER_INFO 0x16
+#define DISCONNECT 0x17
+#define GAME_FINISHED 0x18
 
 #define TRUE_PROTOCOL 0x30
 #define FALSE_PROTOCOL 0x31
-
 
 #endif  // BLUESJACKRABBIT_COMMON_CONSTANTS_H

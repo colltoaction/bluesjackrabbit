@@ -25,10 +25,10 @@ class Game {
 
  private:
   Engine engine_;
-  MapLoader map_loader_;
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> players_;
   GameRunner runner_;
+  MapLoader map_loader_;
   char player_index_;
   bool in_game;
   std::string game_name_;

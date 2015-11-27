@@ -15,6 +15,8 @@ set(SOURCES
         GameObjectBullet.h
         GameObjectFloor.cpp
         GameObjectFloor.h
+        GameObjectGoal.cpp
+        GameObjectGoal.h
         GameObjectGreenTurtle.cpp
         GameObjectGreenTurtle.h
         GameObjectPlayer.cpp

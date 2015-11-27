@@ -11,14 +11,14 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-#define PLAYERS 1
+#define PLAYERS 2
 
 Game::Game(ClientProxy *admin, const std::string &game_name)
     : engine_()
-    , map_loader_(&engine_)
     , engine_mutex_()
     , players_()
     , runner_(&engine_, &players_)
+    , map_loader_(&engine_, sigc::mem_fun(runner_, &GameRunner::notify_winner))
     , player_index_(0)
     , in_game(false)
     , game_name_(game_name)
