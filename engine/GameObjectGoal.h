@@ -17,6 +17,7 @@ class GameObjectGoal: public GameObject {
   virtual bool alive();
 
  private:
+  bool has_winner_;
   WinnerNotifier winner_notifier_;
 };
 
