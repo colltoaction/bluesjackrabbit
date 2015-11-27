@@ -12,32 +12,13 @@ CharacterRenderer::CharacterRenderer(const Vector &position, double radius)
       last_x_(0),
       first_render_(true),
       right_direction_(true) {
-  // image_ = Cairo::ImageSurface::create_from_png("static/sprites/Jazz.png");
-  image_ = Gdk::Pixbuf::create_from_file("static/sprites/blues.png");
-
-  // Stood
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33)->flip(true));
-
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 42, 8, 33, 32));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 42, 8, 33, 32)->flip(true));
-
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 75, 8, 30, 32));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 75, 8, 30, 32)->flip(true));
-
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 105, 8, 30, 32));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 105, 8, 30, 32)->flip(true));
-
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 135, 8, 30, 32));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 135, 8, 30, 32)->flip(true));
-
-  images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 165, 8, 30, 32));
-  images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 165, 8, 30, 32)->flip(true));
-
-  // image_->flip(true);
+  load_sprites();
 }
 
 CharacterRenderer::~CharacterRenderer() {
+}
+
+void CharacterRenderer::load_sprites() {
 }
 
 void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
