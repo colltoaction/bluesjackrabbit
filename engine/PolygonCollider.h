@@ -1,15 +1,14 @@
-#ifndef BLUESJACKRABBIT_ENGINE_CIRCLECOLLIDER_H
-#define BLUESJACKRABBIT_ENGINE_CIRCLECOLLIDER_H
+#ifndef BLUESJACKRABBIT_ENGINE_POLYGONCOLLIDER_H
+#define BLUESJACKRABBIT_ENGINE_POLYGONCOLLIDER_H
 
-#include <list>
+
 #include "Body.h"
 #include "Collider.h"
-#include "PolygonCollider.h"
-#include "Line.h"
+#include "CircleCollider.h"
 
-class CircleCollider : public Collider {
+class PolygonCollider: public Collider {
  public:
-  explicit CircleCollider(const Body &body, double radius);
+  PolygonCollider(const Body &body, const std::vector<Vector> &points);
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const PolygonCollider &other) const;
@@ -17,12 +16,13 @@ class CircleCollider : public Collider {
   virtual std::vector<Vector> points() const;
   virtual double right_x() const;
   virtual double left_x() const;
-  double radius() const;
 
  private:
-  double radius_;
+  std::vector<Vector> points_;
   const Body &body_;
+  double left_x_;
+  double right_x_;
 };
 
 
-#endif  // BLUESJACKRABBIT_ENGINE_CIRCLECOLLIDER_H
+#endif  // BLUESJACKRABBIT_ENGINE_POLYGONCOLLIDER_H

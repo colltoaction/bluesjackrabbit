@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-#define PLAYERS 2
+#define PLAYERS 1
 
 Game::Game(ClientProxy *admin, const std::string &game_name)
     : engine_()

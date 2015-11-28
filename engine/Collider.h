@@ -6,7 +6,7 @@
 #include "Body.h"
 
 class CircleCollider;  // Circular reference
-class RectangleCollider;  // Circular reference
+class PolygonCollider;  // Circular reference
 
 /*
  * Base class providing collision detection.
@@ -31,7 +31,7 @@ class Collider {
    * Returns true if the next position of this collider's body will collide with a rectangle collider.
    * Actual implementation.
    */
-  virtual bool will_collide(const RectangleCollider &other) const = 0;
+  virtual bool will_collide(const PolygonCollider &other) const = 0;
 
   /**
    * Returns the body of this collider.
@@ -41,7 +41,7 @@ class Collider {
   /**
    * Returns a list of points (x, y) the client will use to render the object
    */
-  virtual std::vector<Vector> characteristic_points() const = 0;
+  virtual std::vector<Vector> points() const = 0;
 
   /**
    * Returns Right x position of object.

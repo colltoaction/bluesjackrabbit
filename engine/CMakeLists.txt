@@ -7,6 +7,8 @@ set(SOURCES
         CircleCollider.h
         Collider.cpp
         Collider.h
+        CollisionsHelper.cpp
+        CollisionsHelper.h
         Engine.cpp
         Engine.h
         GameObject.cpp
@@ -23,8 +25,10 @@ set(SOURCES
         GameObjectPlayer.h
         GameObjectRedTurtle.cpp
         GameObjectRedTurtle.h
-        RectangleCollider.cpp
-        RectangleCollider.h
+        Line.cpp
+        Line.h
+        PolygonCollider.cpp
+        PolygonCollider.h
         RigidBody.cpp
         RigidBody.h
         StaticBody.cpp

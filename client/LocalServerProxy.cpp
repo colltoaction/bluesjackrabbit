@@ -3,7 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <engine/CircleCollider.h>
-#include <engine/RectangleCollider.h>
+#include <engine/PolygonCollider.h>
 #include <engine/RigidBody.h>
 #include <engine/StaticBody.h>
 
@@ -24,8 +24,13 @@ LocalServerProxy::LocalServerProxy() {
   StaticBody *b1 = new StaticBody(new Vector(5, 0));
   engine_.add_game_object(b1, new CircleCollider(*b1, 5));
 
+  std::vector<Vector> floor_points;
+  floor_points.push_back(Vector(17, 8));
+  floor_points.push_back(Vector(17, 4));
+  floor_points.push_back(Vector(12, 4));
+  floor_points.push_back(Vector(12, 8));
   StaticBody *b2 = new StaticBody(new Vector(0, 5));
-  engine_.add_game_object(b2, new RectangleCollider(*b2));
+  engine_.add_game_object(b2, new PolygonCollider(*b2, floor_points));
 
   (*engine_.game_objects())[0]->body().position();
   renderers_[0] = new CharacterRenderer((*engine_.game_objects())[0]->body().position(), 0.5);

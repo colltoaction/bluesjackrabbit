@@ -32,7 +32,7 @@ char GameObject::game_object_type() {
 }
 
 std::vector<Vector> GameObject::characteristic_points() const {
-  return collider_->characteristic_points();
+  return collider_->points();
 }
 
 void GameObject::impact(GameObject */* other */) {
