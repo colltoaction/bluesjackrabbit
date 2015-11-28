@@ -22,8 +22,8 @@ void MapLoader::load() {
 
   std::vector<Vector> goal_points;
   goal_points.push_back(Vector(17, 8));
-  goal_points.push_back(Vector(17, 4));
-  goal_points.push_back(Vector(12, 4));
+  goal_points.push_back(Vector(17, 7));
+  goal_points.push_back(Vector(12, 7));
   goal_points.push_back(Vector(12, 8));
   StaticBody *goal_body = new StaticBody(new Vector(15, 5));
   GameObjectGoal *goal = new GameObjectGoal(goal_body,
@@ -41,10 +41,10 @@ void MapLoader::load() {
   engine_->add_game_object(floor);
 
   std::vector<Vector> floor2_points;
-  floor2_points.push_back(Vector(5, 13));
+  floor2_points.push_back(Vector(5, 12));
   floor2_points.push_back(Vector(5, 9));
-  floor2_points.push_back(Vector(0, 9));
-  floor2_points.push_back(Vector(0, 13));
+  floor2_points.push_back(Vector(-2, 7));
+  floor2_points.push_back(Vector(-10, 12));
   StaticBody *body2 = new StaticBody(new Vector(3, 10));
   GameObjectFloor *floor2 = new GameObjectFloor(body2, new RectangleCollider(*body2, floor2_points));
   engine_->add_game_object(floor2);

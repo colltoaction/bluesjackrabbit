@@ -40,9 +40,10 @@ double CircleCollider::left_x() const {
 }
 
 // source: http://paulbourke.net/geometry/pointlineplane/source.c
+// use next position because it's only used within RectangleCollider::will_collide
 bool CircleCollider::intersect(const Line &line) const {
   double line_length = line.length();
-  double U = ((body_.position() - line.a()) * (line.b() - line.a())) /
+  double U = ((body_.next_position() - line.a()) * (line.b() - line.a())) /
               (line_length * line_length);
 
   if (U < 0.0 || U > 1.0) {
@@ -50,5 +51,5 @@ bool CircleCollider::intersect(const Line &line) const {
   }
 
   Vector intersection = line.a() + (line.b() - line.a()) * U;
-  return body_.position().distance(intersection) < radius_;
+  return body_.next_position().distance(intersection) < radius_;
 }
