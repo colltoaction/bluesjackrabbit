@@ -2,16 +2,20 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolpalette.h>
-#include <goocanvasmm/image.h>
 #include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
 #include "CircleButton.h"
+#include "EditorController.h"
+#include "ImageItem.h"
 #include "RectButton.h"
 #include "EditorCanvas.h"
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
-EditorCanvas::EditorCanvas(Gtk::ScrolledWindow*& parent) : canvas_window_(parent) {
+EditorCanvas::EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller) :
+    canvas_window_(parent), controller_(controller) {
   std::cout << parent << std::endl;
 }
 
@@ -52,7 +56,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   } else if (dynamic_cast<CircleButton*>(button)) {
     obj_type = CIRCLE;
   } else {
-    obj_type = IMAGE;
+    obj_type = GENERIC_IMAGE;
     icon = button->get_icon_widget();
   }
 
@@ -67,8 +71,25 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   } else {
     dnd_item_->remove();
     dnd_item_.reset();
-    create_canvas_item(item_x, item_y, icon, obj_type);
-    context->drag_finish(false, false, timestamp);
+    switch (obj_type) {
+    case CIRCLE:
+    case RECTANGLE:
+    case GENERIC_IMAGE:
+    default:
+      LevelObject* object = new LevelObject(create_canvas_item(item_x, item_y, icon, obj_type));
+
+      // TODO(Diego): debug - borrar
+      std::stringstream ss;
+      ss << "Prueba";
+      ss << n_borrar_es_para_pruebas++;
+      std::string meta_prueba;
+      ss >> meta_prueba;
+      object->set_property("meta.prueba", meta_prueba);
+
+      controller_->register_object(object);
+      break;
+    }
+        context->drag_finish(false, false, timestamp);
   }
 }
 
@@ -114,22 +135,26 @@ bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, i
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y,
     Gtk::Widget* icon, DraggableObjectType obj_type) {
+  Glib::RefPtr<Goocanvas::Item> canvas_item;
   switch (obj_type) {
   case CIRCLE:
-    return create_canvas_circle(x, y);
+    canvas_item = create_canvas_circle(x, y);
+    break;
   case RECTANGLE:
-    return create_canvas_rect(x, y);
-  case IMAGE:
+    canvas_item = create_canvas_rect(x, y);
+    break;
+  case GENERIC_IMAGE:
   default:
-    return create_canvas_image(x, y, icon);
+    canvas_item = create_canvas_image(x, y, icon);
     break;
   }
+  return canvas_item;
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double y,
     Gtk::Widget* icon) {
   Gtk::Image* image = dynamic_cast<Gtk::Image*>(icon);
-  Glib::RefPtr<Goocanvas::Item> img = Goocanvas::Image::create(image->get_pixbuf(), x, y);
+  Glib::RefPtr<Goocanvas::Item> img = ImageItem::create(controller_, image->get_pixbuf(), x, y);
   get_root_item()->add_child(img);
   return img;
 }

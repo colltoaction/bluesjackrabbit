@@ -5,14 +5,19 @@
 #include <goocanvasmm/canvas.h>
 
 typedef enum DraggableObjectType_ {
-  IMAGE,
+  /* Generic objects */
+  GENERIC_IMAGE,
   RECTANGLE,
-  CIRCLE
+  CIRCLE,
+  /* Control objects */
+  START_POINT,
+  SPAWN_POINT,
+  GOAL
 } DraggableObjectType;
 
 class EditorCanvas : public Goocanvas::Canvas {
 public:
-  EditorCanvas(Gtk::ScrolledWindow*& parent);
+  EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller);
   virtual ~EditorCanvas();
 
 private:
@@ -43,9 +48,12 @@ private:
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
 
   Gtk::ScrolledWindow*& canvas_window_;
+  EditorController* controller_;
   Glib::RefPtr<Goocanvas::Item> dnd_item_;
   bool requested_for_motion_;
 
+  // TODO(Diego)
+  int n_borrar_es_para_pruebas;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H

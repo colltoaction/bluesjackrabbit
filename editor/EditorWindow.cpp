@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow() : canvas_(canvas_window_) {
+EditorWindow::EditorWindow() : canvas_(canvas_window_, &controller_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
