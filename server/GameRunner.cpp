@@ -72,16 +72,20 @@ void GameRunner::notify_winner(GameObjectPlayer *winner) {
   Logger::info("Notifing");
   // do not lock
   notify_winner_to_clients(winner);
-  finalize();
+  next_level();
 }
 
-void GameRunner::finalize() {
+void GameRunner::next_level() {
   keep_running_ = load_level_();
   if (keep_running_) {
     update_clients();
   } else {
     Logger::info("Game finished");
   }
+}
+
+void GameRunner::finalize() {
+  keep_running_ = false;
 }
 
 void GameRunner::update_clients() {
