@@ -15,8 +15,7 @@ char GameObjectBullet::game_object_type() {
   return 'b';
 }
 
-void GameObjectBullet::impact(GameObject *other) {
-  (void) other;
+void GameObjectBullet::impact(GameObject * /*other*/) {
   alive_ = false;
 }
 

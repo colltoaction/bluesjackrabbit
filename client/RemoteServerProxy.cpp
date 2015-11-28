@@ -17,6 +17,7 @@
 #include "BulletRenderer.h"
 #include "FloorRenderer.h"
 #include "MeCharacterRenderer.h"
+#include "NewLifeRenderer.h"
 #include <common/Constants.h>
 #include <common/Logger.h>
 #include <common/GameInitMessage.h>
@@ -171,6 +172,9 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
     case 'o':
       render = new FloorRenderer(position, points);
       break;
+    case 'l':
+      render = new NewLifeRenderer(position, points.front().x());
+      break;
   }
   renderers_[object_id] = render;
 }
@@ -195,7 +199,11 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
     } else {
-      renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+      if (type == 'b') {
+        renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+      } else if (type == 'l') {
+        renderers_[object_id] = new NewLifeRenderer(Vector(x, y), points.front().x());
+      }
     }
   } else if (object_id != object_id_) {
     if (renderers_.find(object_id) != renderers_.end()) {
