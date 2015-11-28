@@ -5,9 +5,6 @@
 
 FloorRenderer::FloorRenderer(const Vector &position, const std::vector<Vector> &points)
     : Renderer(position), points_(points) {
-  if (points_.size() != 4) {
-    Logger::error("FLOOR RENDERER NO TIENE 4 PUNTOS");
-  }
 }
 
 FloorRenderer::~FloorRenderer() {

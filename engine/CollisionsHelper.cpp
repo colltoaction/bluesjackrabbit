@@ -2,7 +2,8 @@
 #include "CollisionsHelper.h"
 #include "Line.h"
 
-bool CollisionsHelper::circles_intersect(const Vector &p1, double r1, const Vector &p2, double r2) {
+bool CollisionsHelper::circles_intersect(const Vector &p1, double r1,
+                                         const Vector &p2, double r2) {
   double distance = p1.distance(p2);
   return distance < r1 + r2;
 }
@@ -18,7 +19,7 @@ bool CollisionsHelper::circle_polygon_intersect(const Vector &p1, double r1,
 
 // PNPOLY
 bool CollisionsHelper::polygon_contains_point(const std::vector<Vector> &polygon_points,
-                                                Vector const &p) {
+                                              Vector const &p) {
   bool contains = false;
   for (size_t i = 0, j = polygon_points.size() - 1;
        i < polygon_points.size();
@@ -40,10 +41,10 @@ bool CollisionsHelper::circle_line_intersect(const Vector &p1, double r1,
                                              const Line &line) {
   double line_length = line.length();
   double U = ((p1 - line.start()) * (line.end() - line.start())) /
-      (line_length * line_length);
+             (line_length * line_length);
 
   if (U < 0.0 || U > 1.0) {
-    return false;   // closest point does not fall within the line segment
+    return false;  // closest point does not fall within the line segment
   }
 
   Vector intersection = line.start() + (line.end() - line.start()) * U;

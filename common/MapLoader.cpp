@@ -33,6 +33,7 @@ void MapLoader::load() {
 
   std::vector<Vector> floor_points;
   floor_points.push_back(Vector(5, 8));
+  floor_points.push_back(Vector(3, 6));
   floor_points.push_back(Vector(5, 4));
   floor_points.push_back(Vector(0, 4));
   floor_points.push_back(Vector(0, 8));
