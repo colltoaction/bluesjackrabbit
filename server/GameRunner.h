@@ -34,6 +34,7 @@ class GameRunner: public Thread {
   void engine_step();
   void update_clients();
   void notify_winner_to_clients(GameObjectPlayer *winner);
+  void next_level();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */
