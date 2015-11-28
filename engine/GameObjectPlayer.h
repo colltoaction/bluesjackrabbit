@@ -61,12 +61,16 @@ class GameObjectPlayer: public GameObject {
    * */
   void reset_lives();
 
+  void increment_lives();
+
  private:
   uint32_t engine_steps_;
   uint32_t last_shot_;
   uint32_t last_dead_;
   char lives_;
   char direction_;
+  bool normal_;
+  bool picked_life_;
 };
 
 #endif /* BLUESJACKRABBIT_ENGINE_GAMEOBJECTPLAYER_H */
