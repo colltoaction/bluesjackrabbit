@@ -27,8 +27,8 @@ set(SOURCES
         GameObjectRedTurtle.h
         Line.cpp
         Line.h
-        RectangleCollider.cpp
-        RectangleCollider.h
+        PolygonCollider.cpp
+        PolygonCollider.h
         RigidBody.cpp
         RigidBody.h
         StaticBody.cpp

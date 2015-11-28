@@ -16,20 +16,20 @@ bool CircleCollider::will_collide(const CircleCollider &other) const {
                                              other.body().position(), other.radius_);
 }
 
-bool CircleCollider::will_collide(const RectangleCollider &other) const {
+bool CircleCollider::will_collide(const PolygonCollider &other) const {
   return CollisionsHelper::circle_polygon_intersect(
       body_.next_position(), radius_,
-      other.characteristic_points());
+      other.points());
 }
 
 const Body &CircleCollider::body() const {
   return body_;
 }
 
-std::vector<Vector> CircleCollider::characteristic_points() const {
-  std::vector<Vector> point_list;
-  point_list.push_back(Vector(radius_, radius_));
-  return point_list;
+std::vector<Vector> CircleCollider::points() const {
+  std::vector<Vector> points;
+  points.push_back(Vector(radius_, radius_));
+  return points;
 }
 
 double CircleCollider::right_x() const {
