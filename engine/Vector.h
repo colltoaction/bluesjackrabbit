@@ -1,5 +1,5 @@
-#ifndef BLUESJACKRABBIT_ENGINE_POINT_H
-#define BLUESJACKRABBIT_ENGINE_POINT_H
+#ifndef BLUESJACKRABBIT_ENGINE_VECTOR_H
+#define BLUESJACKRABBIT_ENGINE_VECTOR_H
 
 /**
  * A 2-dimensional vector with many useful operations and operator overloads.
@@ -58,6 +58,11 @@ class Vector {
   Vector operator*(const double &factor) const;
 
   /**
+   * Dot product.
+   */
+  double operator*(const Vector &other) const;
+
+  /**
    * Addition operation. Returns a new vector.
    */
   Vector operator+(const Vector &other) const;
@@ -74,4 +79,4 @@ class Vector {
 };
 
 
-#endif  // BLUESJACKRABBIT_ENGINE_POINT_H
+#endif  // BLUESJACKRABBIT_ENGINE_VECTOR_H

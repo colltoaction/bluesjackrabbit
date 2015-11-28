@@ -44,6 +44,10 @@ Vector Vector::operator*(const double &factor) const {
   return Vector(x_ * factor, y_ * factor);
 }
 
+double Vector::operator*(const Vector &other) const {
+  return x_ * other.x_ + y_ * other.y_;
+}
+
 Vector Vector::operator+(const Vector &other) const {
   return Vector(x_ + other.x_, y_ + other.y_);
 }

@@ -23,6 +23,8 @@ set(SOURCES
         GameObjectPlayer.h
         GameObjectRedTurtle.cpp
         GameObjectRedTurtle.h
+        Line.cpp
+        Line.h
         RectangleCollider.cpp
         RectangleCollider.h
         RigidBody.cpp

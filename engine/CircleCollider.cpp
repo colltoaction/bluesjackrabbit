@@ -16,20 +16,9 @@ bool CircleCollider::will_collide(const CircleCollider &other) const {
   return distance < radius_ + other.radius_;
 }
 
-// Only axis-aligned rectangles
 bool CircleCollider::will_collide(const RectangleCollider &other) const {
-  Vector next_position = body_.next_position();
-  Vector circleDistance = Vector(std::abs(next_position.x() - other.body().position().x()),
-                                 std::abs(next_position.y() - other.body().position().y()));
-
-  if (circleDistance.x() > (other.width() / 2 + radius_)) { return false; }
-  if (circleDistance.y() > (other.height() / 2 + radius_)) { return false; }
-
-  if (circleDistance.x() <= (other.width() / 2)) { return true; }
-  if (circleDistance.y() <= (other.height() / 2)) { return true; }
-
-  double cornerDistance = circleDistance.distance(Vector(other.width() / 2, other.height() / 2));
-  return cornerDistance <= radius_;
+  // Implemented in RectangleCollider
+  return other.will_collide(*this);
 }
 
 const Body &CircleCollider::body() const {
@@ -48,4 +37,18 @@ double CircleCollider::right_x() const {
 
 double CircleCollider::left_x() const {
   return body().position().x();
+}
+
+// source: http://paulbourke.net/geometry/pointlineplane/source.c
+bool CircleCollider::intersect(const Line &line) const {
+  double line_length = line.length();
+  double U = ((body_.position() - line.a()) * (line.b() - line.a())) /
+              (line_length * line_length);
+
+  if (U < 0.0 || U > 1.0) {
+    return false;   // closest point does not fall within the line segment
+  }
+
+  Vector intersection = line.a() + (line.b() - line.a()) * U;
+  return body_.position().distance(intersection) < radius_;
 }

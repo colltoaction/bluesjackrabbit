@@ -5,6 +5,7 @@
 #include "Body.h"
 #include "Collider.h"
 #include "RectangleCollider.h"
+#include "Line.h"
 
 class CircleCollider : public Collider {
  public:
@@ -16,6 +17,8 @@ class CircleCollider : public Collider {
   virtual std::vector<Vector> characteristic_points() const;
   virtual double right_x() const;
   virtual double left_x() const;
+
+  bool intersect(const Line &line) const;
 
  private:
   double radius_;

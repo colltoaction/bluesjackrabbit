@@ -8,7 +8,7 @@
 
 class RectangleCollider : public Collider {
  public:
-  explicit RectangleCollider(const Body &body);
+  RectangleCollider(const Body &body, const std::vector<Vector> &point_list);
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const RectangleCollider &other) const;
@@ -17,13 +17,12 @@ class RectangleCollider : public Collider {
   virtual double right_x() const;
   virtual double left_x() const;
 
-  double width() const;
-  double height() const;
-
  private:
-  double width_;
-  double height_;
+  std::vector<Vector> point_list_;
   const Body &body_;
+  double left_x_;
+  double right_x_;
+  bool contains(const Vector &point) const;
 };
 
 
