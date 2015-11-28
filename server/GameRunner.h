@@ -9,9 +9,11 @@
 
 #include "ClientProxy.h"
 
+typedef sigc::slot<bool> LoadNextLevelCall;
+
 class GameRunner: public Thread {
  public:
-  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players);
+  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players, LoadNextLevelCall load_level_functor);
   virtual ~GameRunner();
   virtual void run();
   void action(uint32_t object_id, char option);
@@ -25,7 +27,9 @@ class GameRunner: public Thread {
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> *players_;
   bool keep_running_;
+  LoadNextLevelCall load_level_;
   static const double step;
+
 
   void engine_step();
   void update_clients();
