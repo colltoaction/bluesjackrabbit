@@ -1,17 +1,18 @@
 #include "Line.h"
 
-Line::Line(const Vector &a, const Vector &b)
-  : a_(a)
-  , b_(b) {
+Line::Line(const Vector &start, const Vector &end)
+  : start_(start)
+  , end_(end) {
 }
 
 double Line::length() const {
-  return a_.distance(b_);
+  return start_.distance(end_);
 }
 
-const Vector &Line::a() const {
-  return a_;
+const Vector &Line::start() const {
+  return start_;
 }
-const Vector &Line::b() const {
-  return b_;
+
+const Vector &Line::end() const {
+  return end_;
 }

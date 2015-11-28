@@ -2,6 +2,7 @@
 #include "RectangleCollider.h"
 #include "CircleCollider.h"
 #include "Line.h"
+#include "CollisionsHelper.h"
 
 // this collider receives a list of points so it can't be moved as it is right now
 RectangleCollider::RectangleCollider(const Body &body, const std::vector<Vector> &point_list)
@@ -23,13 +24,12 @@ bool RectangleCollider::will_collide(const Collider &other) const {
 }
 
 bool RectangleCollider::will_collide(const CircleCollider &other) const {
-  return contains(other.body().next_position()) ||
-      other.intersect(Line(point_list_[0], point_list_[1])) ||
-      other.intersect(Line(point_list_[1], point_list_[2])) ||
-      other.intersect(Line(point_list_[2], point_list_[3])) ||
-      other.intersect(Line(point_list_[3], point_list_[0]));
+  return CollisionsHelper::circle_polygon_intersect(
+      other.body().position(), other.radius(),
+      point_list_);
 }
 
+// TODO(tinchou): implement polygon_polygon_intersect
 bool RectangleCollider::will_collide(const RectangleCollider &/* other */) const {
   return false;
 }
@@ -48,22 +48,4 @@ double RectangleCollider::right_x() const {
 
 double RectangleCollider::left_x() const {
   return left_x_;
-}
-
-// PNPOLY
-bool RectangleCollider::contains(Vector const& p) const {
-  bool contains = false;
-  for (size_t i = 0, j = point_list_.size() - 1;
-       i < point_list_.size();
-       j = i++) {
-    Vector p1 = point_list_[i];
-    Vector p2 = point_list_[j];
-    if (((p1.y() > p.y()) != (p2.y() > p.y())) &&
-        (p.x() < (p2.x() - p1.x()) *
-            (p.y() - p1.y()) / (p2.y() - p1.y()) + p1.x())) {
-      contains = !contains;
-    }
-  }
-
-  return contains;
 }

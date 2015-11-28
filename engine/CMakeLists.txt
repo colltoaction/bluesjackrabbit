@@ -7,6 +7,8 @@ set(SOURCES
         CircleCollider.h
         Collider.cpp
         Collider.h
+        CollisionsHelper.cpp
+        CollisionsHelper.h
         Engine.cpp
         Engine.h
         GameObject.cpp

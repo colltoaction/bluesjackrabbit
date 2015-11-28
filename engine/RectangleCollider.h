@@ -22,7 +22,6 @@ class RectangleCollider : public Collider {
   const Body &body_;
   double left_x_;
   double right_x_;
-  bool contains(const Vector &point) const;
 };
 
 

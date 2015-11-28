@@ -1,5 +1,6 @@
 #include <cmath>
 #include "CircleCollider.h"
+#include "CollisionsHelper.h"
 
 CircleCollider::CircleCollider(const Body &body, double radius)
     : radius_(radius), body_(body) {
@@ -11,14 +12,14 @@ bool CircleCollider::will_collide(const Collider &other) const {
 }
 
 bool CircleCollider::will_collide(const CircleCollider &other) const {
-  Vector next_position = body_.next_position();
-  double distance = next_position.distance(other.body().position());
-  return distance < radius_ + other.radius_;
+  return CollisionsHelper::circles_intersect(body_.next_position(), radius_,
+                                             other.body().position(), other.radius_);
 }
 
 bool CircleCollider::will_collide(const RectangleCollider &other) const {
-  // Implemented in RectangleCollider
-  return other.will_collide(*this);
+  return CollisionsHelper::circle_polygon_intersect(
+      body_.next_position(), radius_,
+      other.characteristic_points());
 }
 
 const Body &CircleCollider::body() const {
@@ -39,17 +40,6 @@ double CircleCollider::left_x() const {
   return body().position().x();
 }
 
-// source: http://paulbourke.net/geometry/pointlineplane/source.c
-// use next position because it's only used within RectangleCollider::will_collide
-bool CircleCollider::intersect(const Line &line) const {
-  double line_length = line.length();
-  double U = ((body_.next_position() - line.a()) * (line.b() - line.a())) /
-              (line_length * line_length);
-
-  if (U < 0.0 || U > 1.0) {
-    return false;   // closest point does not fall within the line segment
-  }
-
-  Vector intersection = line.a() + (line.b() - line.a()) * U;
-  return body_.next_position().distance(intersection) < radius_;
+double CircleCollider::radius() const {
+  return radius_;
 }

@@ -17,8 +17,7 @@ class CircleCollider : public Collider {
   virtual std::vector<Vector> characteristic_points() const;
   virtual double right_x() const;
   virtual double left_x() const;
-
-  bool intersect(const Line &line) const;
+  double radius() const;
 
  private:
   double radius_;

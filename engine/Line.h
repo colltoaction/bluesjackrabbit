@@ -8,17 +8,17 @@
  */
 class Line {
  public:
-  Line(const Vector &a, const Vector &b);
+  Line(const Vector &start, const Vector &end);
 
   double length() const;
 
-  const Vector &a() const;
+  const Vector &start() const;
 
-  const Vector &b() const;
+  const Vector &end() const;
 
  private:
-  const Vector &a_;
-  const Vector &b_;
+  const Vector &start_;
+  const Vector &end_;
 };
 
 
