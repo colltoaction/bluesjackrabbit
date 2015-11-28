@@ -5,24 +5,21 @@
 #include <engine/Vector.h>
 #include <engine/CircleCollider.h>
 #include <common/Lock.h>
-#include <iostream>
 #include <common/Constants.h>
+#include <common/Logger.h>
 
 #include <unistd.h>
 #include <engine/StaticBody.h>
-
-#define PLAYERS 1
 
 Game::Game(ClientProxy *admin, const std::string &game_name)
     : engine_()
     , engine_mutex_()
     , players_()
-    , runner_(&engine_, &players_)
+    , runner_(&engine_, &players_, sigc::mem_fun(*this, &Game::load_next_level))
     , map_loader_(&engine_, sigc::mem_fun(runner_, &GameRunner::notify_winner))
     , player_index_(0)
     , in_game(false)
-    , game_name_(game_name)
-    , even(0) {
+    , game_name_(game_name) {
   map_loader_.load();
   add_player(admin);
 }
@@ -42,8 +39,7 @@ void Game::add_player(ClientProxy *player) {
 
 void Game::start_game() {
   std::cout << "GAME: STARTGAME\n";
-  // TODO(tomas) MAGIC! CON ESTE NUMERO ES LA CANTIDAD DE JUGADORES QUE SE CONECTAN
-  if (player_index_ == PLAYERS) {
+  if (player_index_ == map_loader_.needed_players()) {
     in_game = true;
     std::cout << "RUNNER START\n";
     runner_.start();
@@ -73,4 +69,23 @@ std::string Game::name() {
 void Game::finalize() {
   runner_.finalize();
   runner_.join();
+}
+
+void Game::reset_players_lives() {
+  for (std::map<char, ClientProxy*>::iterator it = players_.begin();
+      it != players_.end();
+      it++) {
+  }
+}
+
+bool Game::load_next_level() {
+  Logger::info("llamando a has more levels");
+  if (map_loader_.has_more_levels()) {
+    map_loader_.load_next_level();
+    sleep(5);
+    Logger::info("Supuestamente cargado el nuevo nivel");
+    return true;
+  } else {
+    return false;
+  }
 }

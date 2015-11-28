@@ -12,7 +12,8 @@
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
   , winner_notifier_(winner_notifier)
-  , even_(false) {
+  , even_(false),
+  level_index_(0) {
 }
 
 MapLoader::~MapLoader() {
@@ -20,7 +21,11 @@ MapLoader::~MapLoader() {
 
 void MapLoader::load() {
   Logger::info("Loading hardcoded map");
+  load_level();
+}
 
+void MapLoader::load_level() {
+  Logger::info("Cargando nivel");
   std::vector<Vector> goal_points;
   goal_points.push_back(Vector(17, 8));
   goal_points.push_back(Vector(17, 7));
@@ -61,15 +66,27 @@ void MapLoader::load() {
   RigidBody *r_body3 = new RigidBody(new Vector(2, 8));
   GameObjectRedTurtle *turtle_red2 = new GameObjectRedTurtle(r_body3, new CircleCollider(r_body3, 0.5));
   engine_->add_game_object(turtle_red2);
+
+  level_index_++;
 }
 
 void MapLoader::place_player(ClientProxy *player) {
   Vector *pos = player_start_point();
   RigidBody *body = new RigidBody(pos);
   GameObjectPlayer *object = new GameObjectPlayer(body, new CircleCollider(body, 0.5));
-  uint32_t object_id = engine_->add_game_object(object);
+  uint32_t object_id = engine_->add_game_object_player(object);
   player->add_object_id(object_id, object);
+  players_[object_id] = player;
   even_ = !even_;
+}
+
+void MapLoader::reposition_players() {
+  even_ = false;
+  for (std::map<uint32_t, ClientProxy*>::iterator it= players_.begin();
+      it != players_.end();
+      it++) {
+    engine_->move_game_object_player(it->first, player_start_point());
+  }
 }
 
 Vector *MapLoader::player_start_point() const {
@@ -78,4 +95,20 @@ Vector *MapLoader::player_start_point() const {
   } else {
     return new Vector(5, -15);
   }
+}
+
+char MapLoader::needed_players() {
+  // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
+  return 2;
+}
+
+bool MapLoader::has_more_levels() {
+  // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
+  return level_index_ < 2;
+}
+
+void MapLoader::load_next_level() {
+  engine_->clean_objects();
+  reposition_players();
+  load_level();
 }

@@ -3,7 +3,6 @@
 #include <common/Lock.h>
 #include <common/Logger.h>
 #include <unistd.h>
-#include <iostream>
 
 #include <common/Constants.h>
 #include <common/MessageWriter.h>
@@ -13,11 +12,13 @@
 
 const double GameRunner::step = 0.003;
 
-GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
+GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players,
+    LoadNextLevelCall load_level_functor)
   : engine_(engine)
   , engine_mutex_()
   , players_(players)
-  , keep_running_(true) {
+  , keep_running_(true),
+  load_level_(load_level_functor) {
 }
 
 GameRunner::~GameRunner() {
@@ -68,13 +69,19 @@ void GameRunner::shoot(uint32_t object_id) {
 }
 
 void GameRunner::notify_winner(GameObjectPlayer *winner) {
+  Logger::info("Notifing");
   // do not lock
   notify_winner_to_clients(winner);
   finalize();
 }
 
 void GameRunner::finalize() {
-  keep_running_ = false;
+  keep_running_ = load_level_();
+  if (keep_running_) {
+    update_clients();
+  } else {
+    Logger::info("Game finished");
+  }
 }
 
 void GameRunner::update_clients() {
