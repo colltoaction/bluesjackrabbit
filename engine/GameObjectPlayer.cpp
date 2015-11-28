@@ -18,7 +18,7 @@ char GameObjectPlayer::game_object_type() {
 }
 
 bool GameObjectPlayer::can_jump() {
-  return body_->velocity().y() == 0;
+  return alive() && body_->velocity().y() == 0;
 }
 
 void GameObjectPlayer::jump() {
@@ -26,7 +26,7 @@ void GameObjectPlayer::jump() {
 }
 
 bool GameObjectPlayer::can_shoot() {
-  return engine_steps_ - last_shot_ >= MIN_ENGINE_STEPS_TO_SHOOT;
+  return alive() && (engine_steps_ - last_shot_ >= MIN_ENGINE_STEPS_TO_SHOOT);
 }
 
 void GameObjectPlayer::shot() {
@@ -67,4 +67,8 @@ char GameObjectPlayer::direction() {
 
 char GameObjectPlayer::remaining_lives() {
   return lives_;
+}
+
+void GameObjectPlayer::reset_lives() {
+  lives_ = LIVES;
 }

@@ -45,6 +45,8 @@ class GameObject {
 
   virtual bool alive();
 
+  void reposition_object(Vector *new_position);
+
  protected:
   bool alive_;
   Body *body_;

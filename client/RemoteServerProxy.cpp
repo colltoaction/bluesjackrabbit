@@ -198,13 +198,12 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
       renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
     }
   } else if (object_id != object_id_) {
-    std::cout << "muere object: " << type << std::endl;
-    Renderer *render = renderers_[object_id];
-    renderers_.erase(object_id);
-    delete render;
+    if (renderers_.find(object_id) != renderers_.end()) {
+      Renderer *render = renderers_[object_id];
+      renderers_.erase(object_id);
+      delete render;
+    }
   } else {
-    // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
-    std::cout << "te mataron\n";
   }
 }
 

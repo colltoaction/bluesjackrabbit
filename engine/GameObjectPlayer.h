@@ -55,6 +55,12 @@ class GameObjectPlayer: public GameObject {
    */
   char remaining_lives();
 
+  /**
+   * Should be called only when starting a new level.
+   * Resets player lives.
+   * */
+  void reset_lives();
+
  private:
   uint32_t engine_steps_;
   uint32_t last_shot_;

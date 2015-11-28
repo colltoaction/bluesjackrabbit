@@ -19,6 +19,10 @@ Body &GameObject::body() {
   return *body_;
 }
 
+void GameObject::reposition_object(Vector *new_position) {
+  body_->reposition(new_position);
+}
+
 void GameObject::update_fixed() {
 }
 

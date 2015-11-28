@@ -17,6 +17,7 @@ class RigidBody : public Body {
   virtual void set_velocity(const Vector &velocity);
   virtual void apply_jump_force();
   virtual Vector position() const;
+  virtual void reposition(Vector *reposition);
   virtual Vector next_position() const;
   virtual void update_fixed();
   virtual void stop();
