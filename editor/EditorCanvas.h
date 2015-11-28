@@ -1,8 +1,10 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 
+#include <vector>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
+#include "EditorController.h"
 
 typedef enum DraggableObjectType_ {
   /* Generic objects */
@@ -19,6 +21,12 @@ class EditorCanvas : public Goocanvas::Canvas {
 public:
   EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller);
   virtual ~EditorCanvas();
+  bool on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventMotion* event);
 
 private:
   /**
@@ -46,14 +54,16 @@ private:
   Glib::RefPtr<Goocanvas::Item> create_canvas_image(double x, double y, Gtk::Widget* icon);
   Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
+  void move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y);
 
   Gtk::ScrolledWindow*& canvas_window_;
   EditorController* controller_;
-  Glib::RefPtr<Goocanvas::Item> dnd_item_;
+  
+  Glib::RefPtr<Goocanvas::Item> item_being_moved_;
+  std::vector<Glib::RefPtr<Goocanvas::Item> > selected_items_;
   bool requested_for_motion_;
-
-  // TODO(Diego)
-  int n_borrar_es_para_pruebas;
+  gdouble original_x_;
+  gdouble original_y_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H

@@ -9,26 +9,19 @@
 #include "ImageItem.h"
 #include "RectButton.h"
 #include "EditorCanvas.h"
-
+#define LEFT_BUTTON 1
 #include <iostream>
 #include <sstream>
 #include <string>
 
 EditorCanvas::EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller) :
     canvas_window_(parent), controller_(controller) {
-  std::cout << parent << std::endl;
 }
 
 EditorCanvas::~EditorCanvas() {}
 
 void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& context,
     int x, int y, const Gtk::SelectionData& selection_data, guint /* info */, guint timestamp) {
-    std::cout << selection_data.get_length() << std::endl;
-
-  double item_x = x + canvas_window_->get_hadjustment()->get_value();
-  double item_y = y + canvas_window_->get_vadjustment()->get_value();
-  convert_from_pixels(item_x, item_y);
-
   /* The following chunk was taken from GNOME Developer's site - gtkmm ToolPalette Tutorial:
   https://developer.gnome.org/gtkmm-tutorial/stable/toolpalette-example.html.en
   in order to get the ToolItem which started the DnD operation */
@@ -63,28 +56,20 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   /* This method is called from either drag_motion or drag_drop, and the DragContext has to be
   updated in consequence */
   if (requested_for_motion_) {
-    if (!dnd_item_) {
-      dnd_item_ = create_canvas_item(item_x, item_y, icon, obj_type);
+    if (!item_being_moved_) {
+      item_being_moved_ = create_canvas_item(x, y, icon, obj_type);
     }
     context->drag_status(Gdk::ACTION_COPY, timestamp);
     requested_for_motion_ = false;
   } else {
-    dnd_item_->remove();
-    dnd_item_.reset();
+    item_being_moved_->remove();
+    item_being_moved_.reset();
     switch (obj_type) {
     case CIRCLE:
     case RECTANGLE:
     case GENERIC_IMAGE:
     default:
-      LevelObject* object = new LevelObject(create_canvas_item(item_x, item_y, icon, obj_type));
-
-      // TODO(Diego): debug - borrar
-      std::stringstream ss;
-      ss << "Prueba";
-      ss << n_borrar_es_para_pruebas++;
-      std::string meta_prueba;
-      ss >> meta_prueba;
-      object->set_property("meta.prueba", meta_prueba);
+      LevelObject* object = new LevelObject(create_canvas_item(x, y, icon, obj_type));
 
       controller_->register_object(object);
       break;
@@ -104,13 +89,8 @@ bool EditorCanvas::on_drag_motion(const Glib::RefPtr<Gdk::DragContext>& context,
   drag_highlight();
 
   /* If item exists, we're supposed to move it and call drag_status() */
-  if (dnd_item_) {
-    double item_x = x;  // + canvas_window_->get_hadjustment()->get_value();
-    double item_y = y;  // + canvas_window_->get_vadjustment()->get_value();
-    convert_from_pixels(item_x, item_y); /* scale to canvas units */
-    gdouble t_x, t_y, t_scale, t_rotation;
-    dnd_item_->get_simple_transform(t_x, t_y, t_scale, t_rotation);
-    dnd_item_->set_simple_transform(item_x, item_y, t_scale, t_rotation);
+  if (item_being_moved_) {
+    move_item(item_being_moved_, x, y);
     context->drag_status(Gdk::ACTION_COPY, timestamp);
   } else {
     /* If item doesn't exist, we should get it's data from the source and create it. It's achieved
@@ -122,9 +102,8 @@ bool EditorCanvas::on_drag_motion(const Glib::RefPtr<Gdk::DragContext>& context,
   return true;
 }
 
-bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
-    guint timestamp) {
-  std::cout << "on_canvas_drag_drop " << x << ", " << y << std::endl;
+bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context,
+    int /* x */, int /* y */, guint timestamp) {
   const Glib::ustring target = drag_dest_find_target(context);
   if (target.empty()) {
     return false;
@@ -135,17 +114,21 @@ bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, i
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y,
     Gtk::Widget* icon, DraggableObjectType obj_type) {
+  double item_x = x + canvas_window_->get_hadjustment()->get_value();
+  double item_y = y + canvas_window_->get_vadjustment()->get_value();
+  convert_from_pixels(item_x, item_y);
+
   Glib::RefPtr<Goocanvas::Item> canvas_item;
   switch (obj_type) {
   case CIRCLE:
-    canvas_item = create_canvas_circle(x, y);
+    canvas_item = create_canvas_circle(item_x, item_y);
     break;
   case RECTANGLE:
-    canvas_item = create_canvas_rect(x, y);
+    canvas_item = create_canvas_rect(item_x, item_y);
     break;
   case GENERIC_IMAGE:
   default:
-    canvas_item = create_canvas_image(x, y, icon);
+    canvas_item = create_canvas_image(item_x, item_y, icon);
     break;
   }
   return canvas_item;
@@ -154,7 +137,8 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double y,
     Gtk::Widget* icon) {
   Gtk::Image* image = dynamic_cast<Gtk::Image*>(icon);
-  Glib::RefPtr<Goocanvas::Item> img = ImageItem::create(controller_, image->get_pixbuf(), x, y);
+  Glib::RefPtr<Goocanvas::Item> img = ImageItem::create(this, controller_, image->get_pixbuf(),
+      x, y);
   get_root_item()->add_child(img);
   return img;
 }
@@ -171,4 +155,53 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, doubl
   circle->set_property("fill_color", Glib::ustring("blue"));
   get_root_item()->add_child(circle);
   return circle;
+}
+
+void EditorCanvas::move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y) {
+  gdouble t_x, t_y, t_scale, t_rotation;
+  item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
+  /*
+  item->set_simple_transform(x, y, t_scale, t_rotation);
+  */
+  item->translate(x - t_x, y - t_y);
+}
+
+bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventButton* event) {
+  if (event->type == GDK_BUTTON_PRESS) {
+    selected_items_.clear();
+    selected_items_.push_back(item);
+    if (event->button == LEFT_BUTTON) {
+      item_being_moved_ = item;
+      original_x_ = event->x;
+      original_y_ = event->y;
+      convert_from_pixels(original_x_, original_y_);
+    }
+  }
+  return true;
+}
+
+bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventButton* event) {
+  if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
+    item_being_moved_.reset();
+  }
+  return true;
+}
+
+bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventMotion* event) {
+  gdouble item_x = event->x;
+  gdouble item_y = event->y;
+  convert_from_pixels(item_x, item_y);
+  if (item == item_being_moved_) {
+    gdouble delta_x = item_x - original_x_;
+    gdouble delta_y = item_y - original_y_;
+    gdouble t_x, t_y, t_scale, t_rotation;
+    item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
+    move_item(item, t_x + delta_x, t_y + delta_y);
+    std::cout << "x: " << item_x << " t_x: " << t_x << " y: " << item_y << " t_y: " << t_y
+        << std::endl;
+  }
+  return true;
 }
