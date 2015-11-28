@@ -7,7 +7,9 @@
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
   : GameObject(body, collider)
   , lives_(LIVES)
-  , direction_(1) {
+  , direction_(1)
+  , normal_(false)
+  , picked_life_(false) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {
@@ -48,6 +50,9 @@ void GameObjectPlayer::impact(GameObject *other) {
         last_dead_ = engine_steps_;
       }
       break;
+    case 'l':
+      picked_life_ = true;
+      break;
   }
 }
 
@@ -56,6 +61,10 @@ bool GameObjectPlayer::alive() {
 }
 
 char GameObjectPlayer::direction() {
+  // TODO(tomas) Esto esta mal porque si me voy deteniendo de a poco.
+  // mi velocidad sigue siendo positiva por ej, pero estoy tratando de mirar
+  // hacia el otro lado (cosa que deberia poder disparar inmediatamente)
+  // Creo que hay que usar position en vez de velocidad, como creo que estaba hecho antes.
   if (body().velocity().x() > 0) {
     return (direction_ = 1);  // update and return
   } else if (body().velocity().x() < 0) {
@@ -71,4 +80,11 @@ char GameObjectPlayer::remaining_lives() {
 
 void GameObjectPlayer::reset_lives() {
   lives_ = LIVES;
+}
+
+void GameObjectPlayer::increment_lives() {
+  if (picked_life_ && lives_ < LIVES) {
+    lives_++;
+  }
+  picked_life_ = false;
 }

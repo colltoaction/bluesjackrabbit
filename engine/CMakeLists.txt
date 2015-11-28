@@ -21,6 +21,8 @@ set(SOURCES
         GameObjectGoal.h
         GameObjectGreenTurtle.cpp
         GameObjectGreenTurtle.h
+        GameObjectNewLife.cpp
+        GameObjectNewLife.h
         GameObjectPlayer.cpp
         GameObjectPlayer.h
         GameObjectRedTurtle.cpp

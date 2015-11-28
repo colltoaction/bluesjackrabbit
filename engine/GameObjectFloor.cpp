@@ -11,8 +11,7 @@ char GameObjectFloor::game_object_type() {
   return 'f';
 }
 
-void GameObjectFloor::impact(GameObject *other) {
-  (void) other;
+void GameObjectFloor::impact(GameObject * /*other*/) {
 }
 
 bool GameObjectFloor::alive() {

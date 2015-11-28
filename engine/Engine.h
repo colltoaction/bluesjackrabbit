@@ -104,10 +104,15 @@ class Engine {
    * */
   void clean_objects();
 
+  /**
+   * Verifies game objects who have died and if they leave rewards or not.
+   * */
+  void rewards();
+
  private:
   uint32_t object_index_;
   std::map<uint32_t, GameObject*> game_objects_;
-  std::map<uint32_t, GameObject*> game_objects_player_ids_;
+  std::map<uint32_t, GameObjectPlayer*> game_objects_player_ids_;
   std::set<uint32_t> player_jump_;
   std::map<uint32_t, bool> player_shoot_;
   void check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object);

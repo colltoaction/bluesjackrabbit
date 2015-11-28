@@ -2,12 +2,11 @@
 #include <vector>
 #include "Engine.h"
 #include "GameObjectBullet.h"
+#include "GameObjectNewLife.h"
 #include "RigidBody.h"
 #include "StaticBody.h"
 #include "CircleCollider.h"
 #include "GameObject.h"
-
-#include <iostream>
 
 Engine::Engine() : object_index_(0) {
 }
@@ -28,6 +27,26 @@ void Engine::FixedUpdate() {
   players_jumps();
   players_shots();
   move_objects();
+  rewards();
+}
+
+void Engine::rewards() {
+  for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
+      other != game_objects_.end();
+      ++other) {
+    if (!other->second->alive() && (other->second->game_object_type() == 't'
+        || other->second->game_object_type() == 'r')) {
+        Vector *position = new Vector(other->second->body().position().x(), other->second->body().position().y());
+        StaticBody *body = new StaticBody(position);
+        GameObjectNewLife *life = new GameObjectNewLife(body, new CircleCollider(body, 0.1));
+        add_game_object(life);
+    }
+  }
+  for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
+      it != game_objects_player_ids_.end();
+      it++) {
+    it->second->increment_lives();
+  }
 }
 
 void Engine::clean_dead() {
