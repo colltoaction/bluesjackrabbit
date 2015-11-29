@@ -35,7 +35,7 @@ void GameRunner::run() {
     if (elapsed > TWENTY_MILLIS_IN_MICROSECONDS) {
       Logger::warning("Engine too slow to run in 20 milliseconds");
     }
-    if (notify_winner_) {
+    if (notify_winner_ || engine_->level_finished()) {
       really_notify_winner();
     }
     usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
@@ -78,8 +78,8 @@ void GameRunner::notify_winner(GameObjectPlayer *winner) {
   notify_winner_to_clients(winner);
 }
 
-void GameRunner::next_level() {
-  keep_running_ = load_level_();
+void GameRunner::next_level(bool there_was_winner) {
+  keep_running_ = load_level_(there_was_winner);
   if (keep_running_) {
     // update_clients();
   } else {
@@ -112,5 +112,5 @@ void GameRunner::really_notify_winner() {
     it->second->send_winner(winner_);
   }
   notify_winner_ = false;
-  next_level();
+  next_level(winner_ != NULL);
 }

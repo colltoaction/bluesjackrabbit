@@ -34,7 +34,7 @@ class Game {
   std::string game_name_;
 
   void start_game();
-  bool load_next_level();
+  bool load_next_level(bool there_was_winner);
   void reset_players_lives();
 };
 

@@ -34,6 +34,18 @@ void Engine::FixedUpdate() {
   rewards();
 }
 
+bool Engine::level_finished() {
+  bool finished = true;
+  for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
+      it != game_objects_player_ids_.end();
+      it++) {
+    if (it->second->alive()) {
+      finished = false;
+    }
+  }
+  return finished;
+}
+
 void Engine::rewards() {
   for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
       other != game_objects_.end();
