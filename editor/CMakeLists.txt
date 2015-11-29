@@ -18,7 +18,9 @@ set(SOURCES main.cpp
 			GenericImageLevelObject.cpp
 			ImageItem.cpp
 			LevelObject.cpp
-			RectButton.cpp)
+			RectButton.cpp
+			RectItem.cpp
+			RectangleLevelObject.cpp)
 
 include(CppLint)
 

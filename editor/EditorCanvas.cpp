@@ -11,8 +11,12 @@
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 #include "RectButton.h"
+#include "RectangleLevelObject.h"
+#include "RectItem.h"
 #include "EditorCanvas.h"
 #define LEFT_BUTTON 1
+#define DEFAULT_WIDTH 64
+#define DEFAULT_HEIGHT 32
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -77,6 +81,11 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     switch (obj_type) {
     case CIRCLE:
     case RECTANGLE:
+      obj_representation = RectItem::create(this, item_x, item_y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      object = new RectangleLevelObject(item_x, item_y, DEFAULT_WIDTH, DEFAULT_HEIGHT,
+          obj_representation);
+      controller_->register_object(object);
+      break;
     case GENERIC_IMAGE:
       obj_representation = ImageItem::create(this, icon, item_x, item_y);
       object = new GenericImageLevelObject(item_x, item_y, obj_representation);
@@ -157,10 +166,7 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
-  Glib::RefPtr<Goocanvas::Item> rect = Goocanvas::Rect::create(x, y, 64, 32);
-  rect->set_property("fill_color", Glib::ustring("blue"));
-  get_root_item()->add_child(rect);
-  return rect;
+  return RectItem::create(this, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, double y) {

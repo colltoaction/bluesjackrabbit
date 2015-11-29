@@ -1,8 +1,6 @@
 #ifndef BLUESJACKRABBIT_EDITOR_GENERICIMAGELEVELOBJECT_H
 #define BLUESJACKRABBIT_EDITOR_GENERICIMAGELEVELOBJECT_H
-#include <gtkmm/widget.h>
-#include "EditorCanvas.h"
-#include "EditorController.h"
+#include <goocanvasmm/item.h>
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 
@@ -12,6 +10,7 @@ class GenericImageLevelObject : public LevelObject {
 
   LevelObjectType object_type() const;
 
+  void set_rotation_angle(double angle);
   double rotation_angle() const;
 
  private:

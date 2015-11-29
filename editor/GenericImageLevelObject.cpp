@@ -1,7 +1,4 @@
-#include <gtkmm/widget.h>
-#include "EditorCanvas.h"
-#include "EditorController.h"
-#include "ImageItem.h"
+#include <goocanvasmm/item.h>
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 #include "GenericImageLevelObject.h"
@@ -13,6 +10,10 @@ GenericImageLevelObject::GenericImageLevelObject(double x, double y,
 
 LevelObjectType GenericImageLevelObject::object_type() const {
   return GENERIC_IMAGE;
+}
+
+void GenericImageLevelObject::set_rotation_angle(double angle) {
+  rotation_angle_ = angle;
 }
 
 double GenericImageLevelObject::rotation_angle() const {

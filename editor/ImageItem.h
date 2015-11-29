@@ -5,7 +5,6 @@
 #include <goocanvasmm/bounds.h>
 #include <gtkmm/widget.h>
 #include "EditorCanvas.h"
-#include "LevelObject.h"
 
 class ImageItem : public Goocanvas::Image {
  public:
