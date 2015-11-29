@@ -7,9 +7,7 @@
 #include "StaticBody.h"
 #include "CircleCollider.h"
 #include "GameObject.h"
-
 #include <common/Lock.h>
-
 
 #include <iostream>
 
@@ -29,13 +27,11 @@ std::map<uint32_t, GameObject*> *Engine::game_objects() {
 }
 
 void Engine::FixedUpdate() {
-  std::cout << "Engine::FixedUpdate\n";
   Lock l(&mutex_);
   players_jumps();
   players_shots();
   move_objects();
   rewards();
-  std::cout << "FIN Engine::FixedUpdate\n";
 }
 
 void Engine::rewards() {
@@ -63,7 +59,7 @@ void Engine::clean_dead() {
          other != game_objects_.end();
          ++other) {
     if (!other->second->alive() && other->second->game_object_type() != 'p') {
-       ids.push_back(other->first);
+      ids.push_back(other->first);
     }
   }
   for (std::list<uint32_t>::iterator it = ids.begin(); it != ids.end(); it++) {
@@ -108,7 +104,6 @@ void Engine::players_shots() {
 }
 
 void Engine::move_objects() {
-  std::cout << "Engine::move_objects\n";
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
@@ -117,7 +112,6 @@ void Engine::move_objects() {
     // With all forces applied, new position is calculated
     game_object->second->body().update_fixed();
   }
-  std::cout << "FIN Engine::move_objects\n";
 }
 
 void Engine::check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object) {
@@ -175,7 +169,6 @@ void Engine::move_game_object_player(uint32_t object_id, Vector *new_position) {
 void Engine::move_object_index() {
   object_index_++;
   while (game_objects_player_ids_.find(object_index_) != game_objects_player_ids_.end()) {
-    std::cout << "HAY UN object_index_ que pertenece al player\n";
     object_index_++;
   }
 }
@@ -189,9 +182,7 @@ void Engine::player_shoot(uint32_t object_id) {
 }
 
 void Engine::clean_objects() {
-  std::cout << "Engine::clean_objects\n";
   Lock l(&mutex_);
-  std::cout << "ARRANCA ENGINE::CLEAN OBJECTS " << game_objects_.size() << std::endl;
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
          game_object != game_objects_.end();
          ++game_object) {
@@ -201,19 +192,12 @@ void Engine::clean_objects() {
       delete object;
     }
   }
-  std::cout << "FIN ENGINE::CLEAN OBJECTS " << game_objects_.size() << std::endl;
   reset_object_index();
 }
 
 void Engine::reset_object_index() {
   object_index_ = 0;
-  for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
-      it != game_objects_player_ids_.end();
-      it++) {
-    std::cout << "Player id: " << it->first << std::endl;
-  }
   while (game_objects_player_ids_.find(object_index_) != game_objects_player_ids_.end()) {
-    std::cout << "Engine::reset_object_index El cero estaba ocupado ameo....\n";
     object_index_++;
   }
 }

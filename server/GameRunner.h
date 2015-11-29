@@ -32,7 +32,6 @@ class GameRunner: public Thread {
   LoadNextLevelCall load_level_;
   static const double step;
 
-  bool log_;
   void engine_step();
   void update_clients();
   void notify_winner_to_clients(GameObjectPlayer *winner);
