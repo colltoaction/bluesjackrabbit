@@ -7,6 +7,7 @@
 #include <engine/Vector.h>
 #include <vector>
 #include <common/GameInitMessage.h>
+#include <common/LevelFinishedMessage.h>
 #include <common/GameFinishedMessage.h>
 
 typedef std::vector<Vector> point_type;
@@ -32,8 +33,8 @@ class RemoteServerProxyUpdater : public Thread {
   CleanRenderer cleaner_functor_;
   CreateObjectRenderer create_object_renderer_functor_;
   void update_objects(GameInitMessage *pMessage);
-  void handle_game_finished(const GameFinishedMessage *finished_message) const;
-  void handle_game_finished(GameFinishedMessage *message);
+  void handle_game_finished(const LevelFinishedMessage *finished_message) const;
+  void handle_game_finished(LevelFinishedMessage *message);
 };
 
 #endif /* BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H */

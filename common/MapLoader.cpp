@@ -101,7 +101,7 @@ Vector *MapLoader::player_start_point() {
 
 char MapLoader::needed_players() {
   // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
-  return 2;
+  return 1;
 }
 
 bool MapLoader::has_more_levels() {

@@ -6,6 +6,7 @@
 #include <common/InvalidMessageException.h>
 #include <sstream>
 #include <common/MessageWriter.h>
+#include <common/LevelFinishedMessage.h>
 #include <common/GameFinishedMessage.h>
 #include <common/Logger.h>
 
@@ -35,8 +36,8 @@ void RemoteServerProxyUpdater::run() {
     if (message->type() == GameInitMessage::type_id()) {
       update_objects(dynamic_cast<GameInitMessage *>(message));
       delete message;
-    } else if (message->type() == GameFinishedMessage::type_id()) {
-      handle_game_finished(dynamic_cast<GameFinishedMessage *>(message));
+    } else if (message->type() == LevelFinishedMessage::type_id()) {
+      handle_game_finished(dynamic_cast<LevelFinishedMessage *>(message));
       delete message;
 
       MessageReader new_level_reader(socket_);
@@ -47,6 +48,7 @@ void RemoteServerProxyUpdater::run() {
            i != mes.objects().end(); i++) {
         create_object_renderer_functor_((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
       }
+    } else if (message->type() == GameFinishedMessage::type_id()) {
     } else {
       std::stringstream ss;
       ss << std::hex
@@ -58,7 +60,7 @@ void RemoteServerProxyUpdater::run() {
   }
 }
 
-void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
+void RemoteServerProxyUpdater::handle_game_finished(LevelFinishedMessage *message) {
   message->read();
   Logger::info(message->won() ? "User WON" : "User LOST");
 }

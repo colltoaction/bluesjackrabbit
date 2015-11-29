@@ -44,6 +44,8 @@ class MessageWriter {
 
   void send_game_finished(bool won);
 
+  void send_level_finished(bool won);
+
  private:
   Socket *socket_;
 };
