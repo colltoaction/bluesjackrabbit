@@ -27,14 +27,3 @@ void EditorController::register_object(LevelObject* object) {
   objects_.push_back(object);
   obj_by_rep_lookup_table[object->representation()] = object;
 }
-
-bool EditorController::prueba(const Glib::RefPtr<Goocanvas::Item>& item,
-    GdkEventButton* /* event */) {
-  LevelObject* obj = obj_by_rep_lookup_table[item];
-  std::vector<std::pair<std::string, std::string> > meta = obj->metadata();
-  for (std::vector<std::pair<std::string, std::string> >::iterator it = meta.begin();
-      it != meta.end(); ++it) {
-    std::cout << it->first << " -> " << it->second << std::endl;
-  }
-  return true;
-}

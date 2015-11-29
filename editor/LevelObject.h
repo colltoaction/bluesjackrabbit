@@ -5,16 +5,24 @@
 #include <string>
 #include <vector>
 #include <goocanvasmm/item.h>
+#include "LevelObjectType.h"
 
 class LevelObject {
 public:
-  LevelObject(Glib::RefPtr<Goocanvas::Item> representation);
+  LevelObject(double x, double y, Glib::RefPtr<Goocanvas::Item> representation);
   virtual ~LevelObject() {}
+  virtual LevelObjectType object_type() const = 0;
+
+  double x() const;
+  double y() const;
+
   std::vector<std::pair<std::string, std::string> > metadata();
   void set_property(std::string property, std::string value);
-  const Glib::RefPtr<Goocanvas::Item> representation() {return representation_;}
+  const Glib::RefPtr<Goocanvas::Item> representation() const {return representation_;}
 
 private:
+  double x_;
+  double y_;
   std::map<std::string, std::string> metadata_;
   Glib::RefPtr<Goocanvas::Item> representation_;
 };

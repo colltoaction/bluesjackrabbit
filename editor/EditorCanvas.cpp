@@ -6,7 +6,10 @@
 #include <goocanvasmm/rect.h>
 #include "CircleButton.h"
 #include "EditorController.h"
+#include "GenericImageLevelObject.h"
 #include "ImageItem.h"
+#include "LevelObject.h"
+#include "LevelObjectType.h"
 #include "RectButton.h"
 #include "EditorCanvas.h"
 #define LEFT_BUTTON 1
@@ -42,7 +45,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   if (!button)
     return;
 
-  DraggableObjectType obj_type;
+  LevelObjectType obj_type;
   Gtk::Widget* icon = NULL;
   if (dynamic_cast<RectButton*>(button)) {
     obj_type = RECTANGLE;
@@ -64,17 +67,25 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   } else {
     item_being_moved_->remove();
     item_being_moved_.reset();
+
+    LevelObject* object = NULL;
+    Glib::RefPtr<Goocanvas::Item> obj_representation;
+    double item_x = x;
+    double item_y = y;
+    convert_to_canvas_coordinates(item_x, item_y);
+
     switch (obj_type) {
     case CIRCLE:
     case RECTANGLE:
     case GENERIC_IMAGE:
-    default:
-      LevelObject* object = new LevelObject(create_canvas_item(x, y, icon, obj_type));
-
+      obj_representation = ImageItem::create(this, icon, item_x, item_y);
+      object = new GenericImageLevelObject(item_x, item_y, obj_representation);
       controller_->register_object(object);
       break;
+    default:
+      break;
     }
-        context->drag_finish(false, false, timestamp);
+    context->drag_finish(false, false, timestamp);
   }
 }
 
@@ -112,11 +123,17 @@ bool EditorCanvas::on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context,
   return true;
 }
 
+void EditorCanvas::convert_to_canvas_coordinates(double &x, double &y) {
+  x += canvas_window_->get_hadjustment()->get_value();
+  y += canvas_window_->get_vadjustment()->get_value();
+  convert_from_pixels(x, y);
+}
+
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double y,
-    Gtk::Widget* icon, DraggableObjectType obj_type) {
-  double item_x = x + canvas_window_->get_hadjustment()->get_value();
-  double item_y = y + canvas_window_->get_vadjustment()->get_value();
-  convert_from_pixels(item_x, item_y);
+    Gtk::Widget* icon, LevelObjectType obj_type) {
+  double item_x = x;
+  double item_y = y;
+  convert_to_canvas_coordinates(item_x, item_y);
 
   Glib::RefPtr<Goocanvas::Item> canvas_item;
   switch (obj_type) {
@@ -136,11 +153,7 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double y,
     Gtk::Widget* icon) {
-  Gtk::Image* image = dynamic_cast<Gtk::Image*>(icon);
-  Glib::RefPtr<Goocanvas::Item> img = ImageItem::create(this, controller_, image->get_pixbuf(),
-      x, y);
-  get_root_item()->add_child(img);
-  return img;
+  return ImageItem::create(this, icon, x, y);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
@@ -160,10 +173,8 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, doubl
 void EditorCanvas::move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y) {
   gdouble t_x, t_y, t_scale, t_rotation;
   item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
-  /*
-  item->set_simple_transform(x, y, t_scale, t_rotation);
-  */
   item->translate(x - t_x, y - t_y);
+  // controller_->update_object(item, )
 }
 
 bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
@@ -200,8 +211,6 @@ bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& it
     gdouble t_x, t_y, t_scale, t_rotation;
     item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
     move_item(item, t_x + delta_x, t_y + delta_y);
-    std::cout << "x: " << item_x << " t_x: " << t_x << " y: " << item_y << " t_y: " << t_y
-        << std::endl;
   }
   return true;
 }

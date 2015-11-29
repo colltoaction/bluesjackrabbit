@@ -12,7 +12,7 @@ class EditorController {
   void start_new_level();
   void start_new_level(const Glib::VariantBase&);
   void register_object(LevelObject* object);
-  bool prueba(const Glib::RefPtr<Goocanvas::Item>& item, GdkEventButton* event);
+  // void update_object(Glib::RefPtr<Goocanvas::Item>, int x, )
 
  private:
   // Level level_;

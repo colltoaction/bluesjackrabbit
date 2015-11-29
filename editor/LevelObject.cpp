@@ -5,8 +5,16 @@
 #include <goocanvasmm/item.h>
 #include "LevelObject.h"
 
-LevelObject::LevelObject(Glib::RefPtr<Goocanvas::Item> representation) :
-    representation_(representation) {
+LevelObject::LevelObject(double x, double y, Glib::RefPtr<Goocanvas::Item> representation) :
+    x_(x), y_(y), representation_(representation) {
+}
+
+double LevelObject::x() const {
+  return x_;
+}
+
+double LevelObject::y() const {
+  return y_;
 }
 
 std::vector<std::pair<std::string, std::string> > LevelObject::metadata() {

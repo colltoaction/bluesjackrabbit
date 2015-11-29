@@ -15,6 +15,7 @@ set(SOURCES main.cpp
 			EditorCanvas.cpp
 			EditorController.cpp
 			EditorWindow.cpp
+			GenericImageLevelObject.cpp
 			ImageItem.cpp
 			LevelObject.cpp
 			RectButton.cpp)

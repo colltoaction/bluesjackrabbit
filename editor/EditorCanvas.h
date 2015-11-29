@@ -4,18 +4,8 @@
 #include <vector>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
+#include "LevelObjectType.h"
 #include "EditorController.h"
-
-typedef enum DraggableObjectType_ {
-  /* Generic objects */
-  GENERIC_IMAGE,
-  RECTANGLE,
-  CIRCLE,
-  /* Control objects */
-  START_POINT,
-  SPAWN_POINT,
-  GOAL
-} DraggableObjectType;
 
 class EditorCanvas : public Goocanvas::Canvas {
 public:
@@ -49,8 +39,9 @@ private:
   virtual bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
       guint time);
 
+  void convert_to_canvas_coordinates(double &x, double &y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon,
-      DraggableObjectType obj_type);
+      LevelObjectType obj_type);
   Glib::RefPtr<Goocanvas::Item> create_canvas_image(double x, double y, Gtk::Widget* icon);
   Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
