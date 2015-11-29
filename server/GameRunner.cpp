@@ -20,8 +20,7 @@ GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players,
   , keep_running_(true)
   , notify_winner_(false)
   , winner_(NULL)
-  , load_level_(load_level_functor)
-  , log_(false) {
+  , load_level_(load_level_functor) {
 }
 
 GameRunner::~GameRunner() {
@@ -29,9 +28,6 @@ GameRunner::~GameRunner() {
 
 void GameRunner::run() {
   while (keep_running_) {
-    if (log_) {
-      std::cout << "Loguendo luego de iniciar game\n";
-    }
     clock_t start = clock();
     engine_step();  // notifies clients inside
     clock_t stop = clock();
@@ -78,17 +74,12 @@ void GameRunner::shoot(uint32_t object_id) {
 }
 
 void GameRunner::notify_winner(GameObjectPlayer *winner) {
-  Logger::info("Notifing");
   // do not lock
   notify_winner_to_clients(winner);
-
-  Logger::info("End notifying");
 }
 
 void GameRunner::next_level() {
   keep_running_ = load_level_();
-  log_ = true;
-  std::cout << "LOG SETTED TO TRUE\n";
   if (keep_running_) {
     // update_clients();
   } else {
@@ -101,16 +92,10 @@ void GameRunner::finalize() {
 }
 
 void GameRunner::update_clients() {
-  if (log_) {
-    Logger::info("Start notifying");
-  }
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
        it != players_->end();
        it++) {
     it->second->send_objects(engine_->game_objects());
-  }
-  if (log_) {
-    Logger::info("END NOTIFYING");
   }
 }
 
