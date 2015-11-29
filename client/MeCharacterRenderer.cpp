@@ -1,17 +1,17 @@
-#include "OtherCharacterRenderer.h"
+#include "MeCharacterRenderer.h"
 
-#include <gdkmm/general.h>
-
-OtherCharacterRenderer::OtherCharacterRenderer(const Vector &position, double radius)
+MeCharacterRenderer::MeCharacterRenderer(const Vector &position, double radius)
   : CharacterRenderer(position, radius) {
   load_sprites();
 }
 
-OtherCharacterRenderer::~OtherCharacterRenderer() {
+MeCharacterRenderer::~MeCharacterRenderer() {
 }
 
-void OtherCharacterRenderer::load_sprites() {
-  Glib::RefPtr<Gdk::Pixbuf> image_ = Gdk::Pixbuf::create_from_file("static/sprites/enemy.png");
+void MeCharacterRenderer::load_sprites() {
+  Glib::RefPtr<Gdk::Pixbuf> image_ = Gdk::Pixbuf::create_from_file("static/sprites/blues.png");
+
+  // Stood
   images_right_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33));
   images_left_.push_back(Gdk::Pixbuf::create_subpixbuf(image_, 10, 5, 30, 33)->flip(true));
 

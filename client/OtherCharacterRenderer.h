@@ -1,15 +1,15 @@
 #ifndef BLUESJACKRABBIT_CLIENT_OTHERCHARACTERRENDERER_H
 #define BLUESJACKRABBIT_CLIENT_OTHERCHARACTERRENDERER_H
 
-#include "Renderer.h"
+#include <vector>
+#include "CharacterRenderer.h"
 
-class OtherCharacterRenderer: public Renderer {
+class OtherCharacterRenderer: public CharacterRenderer {
  public:
   explicit OtherCharacterRenderer(const Vector &position, double radius);
   virtual ~OtherCharacterRenderer();
-  virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
- private:
-  double radius_;
+ protected:
+  virtual void load_sprites();
 };
 
 #endif /* BLUESJACKRABBIT_CLIENT_OTHERCHARACTERRENDERER_H */

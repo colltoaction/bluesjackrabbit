@@ -16,7 +16,7 @@
 
 #include "BulletRenderer.h"
 #include "FloorRenderer.h"
-#include "CharacterRenderer.h"
+#include "MeCharacterRenderer.h"
 #include <common/Constants.h>
 #include <common/Logger.h>
 #include <common/GameInitMessage.h>
@@ -148,13 +148,10 @@ void RemoteServerProxy::init_game() {
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
                                                std::vector<Vector> points) {
   Renderer *render = NULL;
-  if (object_type == 'r') {
-    std::cout << "Llega la roja\n";
-  }
   switch (object_type) {
     case 'p':
       if (object_id == object_id_) {
-        render = new CharacterRenderer(position, points.front().x());
+        render = new MeCharacterRenderer(position, points.front().x());
       } else {
         render = new OtherCharacterRenderer(position, points.front().x());
       }

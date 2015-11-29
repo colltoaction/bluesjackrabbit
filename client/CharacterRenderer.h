@@ -3,6 +3,7 @@
 
 
 #include <cairomm/context.h>
+#include <gtkmm/drawingarea.h>
 #include "Renderer.h"
 
 class CharacterRenderer : public Renderer {
@@ -10,9 +11,16 @@ class CharacterRenderer : public Renderer {
   explicit CharacterRenderer(const Vector &position, double radius);
   virtual ~CharacterRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
+ protected:
+  virtual void load_sprites();
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_right_;
+  std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_left_;
  private:
   double radius_;
-  Cairo::RefPtr<Cairo::ImageSurface> image_;
+  unsigned int sprite_step_;
+  double last_x_;
+  bool first_render_;
+  bool right_direction_;
 };
 
 

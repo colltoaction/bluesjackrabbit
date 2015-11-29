@@ -18,6 +18,8 @@ set(SOURCES
         LocalServerProxy.h
         MainWindow.cpp
         MainWindow.h
+        MeCharacterRenderer.cpp
+        MeCharacterRenderer.h
         OtherCharacterRenderer.cpp
         OtherCharacterRenderer.h
         RemoteServerProxy.cpp
