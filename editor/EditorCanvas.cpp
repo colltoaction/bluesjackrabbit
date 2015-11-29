@@ -5,6 +5,8 @@
 #include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
 #include "CircleButton.h"
+#include "CircleItem.h"
+#include "CircleLevelObject.h"
 #include "EditorController.h"
 #include "GenericImageLevelObject.h"
 #include "ImageItem.h"
@@ -15,8 +17,9 @@
 #include "RectItem.h"
 #include "EditorCanvas.h"
 #define LEFT_BUTTON 1
-#define DEFAULT_WIDTH 64
-#define DEFAULT_HEIGHT 32
+#define DEFAULT_RECT_WIDTH 64
+#define DEFAULT_RECT_HEIGHT 32
+#define DEFAULT_CIRCLE_RADIUS 32
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -80,9 +83,13 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
 
     switch (obj_type) {
     case CIRCLE:
+      obj_representation = CircleItem::create(this, item_x, item_y, DEFAULT_CIRCLE_RADIUS);
+      object = new CircleLevelObject(item_x, item_y, DEFAULT_CIRCLE_RADIUS, obj_representation);
+      controller_->register_object(object);
+      break;
     case RECTANGLE:
-      obj_representation = RectItem::create(this, item_x, item_y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-      object = new RectangleLevelObject(item_x, item_y, DEFAULT_WIDTH, DEFAULT_HEIGHT,
+      obj_representation = RectItem::create(this, item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
+      object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
           obj_representation);
       controller_->register_object(object);
       break;
@@ -166,14 +173,11 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
-  return RectItem::create(this, x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  return RectItem::create(this, x, y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, double y) {
-  Glib::RefPtr<Goocanvas::Item> circle = Goocanvas::Ellipse::create(x, y, 32, 32);
-  circle->set_property("fill_color", Glib::ustring("blue"));
-  get_root_item()->add_child(circle);
-  return circle;
+  return CircleItem::create(this, x, y, DEFAULT_CIRCLE_RADIUS);
 }
 
 void EditorCanvas::move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y) {

@@ -11,6 +11,8 @@ include_directories(SYSTEM ${LIBXML_INCLUDE_DIRS})
 
 set(SOURCES main.cpp
 			CircleButton.cpp
+			CircleItem.cpp
+			CircleLevelObject.cpp
 			CustomToolButton.cpp
 			EditorCanvas.cpp
 			EditorController.cpp

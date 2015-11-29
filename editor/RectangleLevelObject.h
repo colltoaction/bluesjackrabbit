@@ -13,6 +13,10 @@ class RectangleLevelObject : public LevelObject {
 
   void set_rotation_angle(double angle);
   double rotation_angle() const;
+  void set_width(int width);
+  int width() const;
+  void set_height(int height);
+  int height() const;
 
  private:
   double rotation_angle_;
