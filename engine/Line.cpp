@@ -9,6 +9,11 @@ double Line::length() const {
   return start_.distance(end_);
 }
 
+Vector Line::project(const Vector &vector) const {
+  Vector v2 = end() - start();
+  return v2 * ((vector * v2) / (v2 * v2));
+}
+
 const Vector &Line::start() const {
   return start_;
 }

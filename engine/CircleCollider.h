@@ -9,7 +9,7 @@
 
 class CircleCollider : public Collider {
  public:
-  explicit CircleCollider(const Body &body, double radius);
+  explicit CircleCollider(Body *body, double radius);
   virtual bool will_collide(const Collider &other) const;
   virtual bool will_collide(const CircleCollider &other) const;
   virtual bool will_collide(const PolygonCollider &other) const;
@@ -21,7 +21,7 @@ class CircleCollider : public Collider {
 
  private:
   double radius_;
-  const Body &body_;
+  Body *body_;
 };
 
 

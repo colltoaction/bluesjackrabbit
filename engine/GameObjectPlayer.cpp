@@ -38,12 +38,12 @@ void GameObjectPlayer::shot() {
 
 void GameObjectPlayer::update_fixed() {
   engine_steps_++;
-  if (!normal_) {
+//  if (!normal_) {
     body().apply_force(gravity_);
-  } else {
-    body().stop_y();
-  }
-  normal_ = false;
+//  } else {
+//    body().stop_y();
+//  }
+//  normal_ = false;
 }
 
 void GameObjectPlayer::impact(GameObject *other) {

@@ -47,3 +47,6 @@ bool StaticBody::stopped() {
 bool StaticBody::stopped_x() {
   return true;
 }
+
+void StaticBody::project_velocity_onto(Line /* line */) {
+}

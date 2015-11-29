@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_ENGINE_BODY_H
 
 #include "Vector.h"
+#include "Line.h"
 
 /**
  * Represents a body in space, with force interactions and velocity.
@@ -54,23 +55,28 @@ class Body {
 
   /**
    * Zeroes the force and velocity un X axe.
-   * */
+   */
   virtual void stop_x() = 0;
 
   /**
    * Zeroes the force and velocity in Y axe.
-   * */
+   */
   virtual void stop_y() = 0;
 
   /**
    * Informs whether body is stopped or moving.
-   * */
+   */
   virtual bool stopped() = 0;
 
   /**
    * Informs whether body is not moving in X axe.
-   * */
+   */
   virtual bool stopped_x() = 0;
+
+  /**
+   * Projects velocity onto a line (mainly for collisions).
+   */
+  virtual void project_velocity_onto(Line line) = 0;
 };
 
 

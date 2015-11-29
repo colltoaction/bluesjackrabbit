@@ -68,3 +68,7 @@ bool RigidBody::stopped() {
 bool RigidBody::stopped_x() {
   return velocity_.x() == 0;
 }
+
+void RigidBody::project_velocity_onto(Line line) {
+  velocity_ = line.project(velocity_);
+}
