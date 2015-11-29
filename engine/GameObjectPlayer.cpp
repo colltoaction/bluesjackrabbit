@@ -40,19 +40,21 @@ void GameObjectPlayer::update_fixed() {
 }
 
 void GameObjectPlayer::impact(GameObject *other) {
-  switch (other->game_object_type()) {
-    case 'b':
-    case 't':
-    case 'r':
-      // prevent dying immediately after dying
-      if (engine_steps_ - last_dead_ >= MIN_ENGINE_STEPS_TO_DIE) {
-        lives_--;
-        last_dead_ = engine_steps_;
-      }
-      break;
-    case 'l':
-      picked_life_ = true;
-      break;
+  if (alive()) {
+    switch (other->game_object_type()) {
+      case 'b':
+      case 't':
+      case 'r':
+        // prevent dying immediately after dying
+        if (engine_steps_ - last_dead_ >= MIN_ENGINE_STEPS_TO_DIE) {
+          lives_--;
+          last_dead_ = engine_steps_;
+        }
+        break;
+      case 'l':
+        picked_life_ = true;
+        break;
+    }
   }
 }
 
