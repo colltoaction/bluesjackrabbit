@@ -15,6 +15,7 @@ class MapLoader {
   char needed_players();
   bool has_more_levels();
   void load_next_level();
+  void reload_level();
 
  private:
   Engine *engine_;

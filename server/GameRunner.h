@@ -9,7 +9,7 @@
 
 #include "ClientProxy.h"
 
-typedef sigc::slot<bool> LoadNextLevelCall;
+typedef sigc::slot<bool, bool> LoadNextLevelCall;
 
 class GameRunner: public Thread {
  public:
@@ -35,7 +35,7 @@ class GameRunner: public Thread {
   void engine_step();
   void update_clients();
   void notify_winner_to_clients(GameObjectPlayer *winner);
-  void next_level();
+  void next_level(bool there_was_winner);
   void really_notify_winner();
 };
 

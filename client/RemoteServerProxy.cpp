@@ -117,7 +117,7 @@ void RemoteServerProxy::connect() {
   updater_.set_socket(socket_);
   socket_->connect_socket();
   MessageReader reader(socket_);
-  reader.read_player_id();  // TODO(tinchou): use player id
+  reader.read_player_id();
   const std::string &peer_name_ = socket_->peer_name();
   Logger::info(std::string("Server ").append(peer_name_).append(" conectado"));
 }

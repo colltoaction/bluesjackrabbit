@@ -22,6 +22,7 @@ MapLoader::~MapLoader() {
 void MapLoader::load() {
   Logger::info("Loading hardcoded map");
   load_level();
+  level_index_++;
 }
 
 void MapLoader::load_level() {
@@ -66,8 +67,6 @@ void MapLoader::load_level() {
   RigidBody *r_body3 = new RigidBody(new Vector(2, 8));
   GameObjectRedTurtle *turtle_red2 = new GameObjectRedTurtle(r_body3, new CircleCollider(r_body3, 0.5));
   engine_->add_game_object(turtle_red2);
-
-  level_index_++;
 }
 
 void MapLoader::place_player(ClientProxy *player) {
@@ -106,10 +105,15 @@ char MapLoader::needed_players() {
 
 bool MapLoader::has_more_levels() {
   // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
-  return level_index_ < 3;
+  return level_index_ < 1;
 }
 
 void MapLoader::load_next_level() {
+  level_index_++;
+  reload_level();
+}
+
+void MapLoader::reload_level() {
   engine_->clean_objects();
   reposition_players();
   load_level();
