@@ -12,10 +12,13 @@
 typedef std::vector<Vector> point_type;
 typedef sigc::slot<void, uint32_t, double, double, char, point_type, bool> RendererUpdate;
 typedef sigc::slot<void, char> LivesUpdate;
+typedef sigc::slot<void> CleanRenderer;
+typedef sigc::slot<void, uint32_t, char, const Vector&, point_type> CreateObjectRenderer;
 
 class RemoteServerProxyUpdater : public Thread {
  public:
-  RemoteServerProxyUpdater(LivesUpdate live_update, RendererUpdate update);
+  RemoteServerProxyUpdater(LivesUpdate live_update, RendererUpdate update,
+      CleanRenderer cleaner, CreateObjectRenderer create);
   virtual ~RemoteServerProxyUpdater();
   virtual void run();
   void set_socket(Socket *socket);
@@ -26,6 +29,8 @@ class RemoteServerProxyUpdater : public Thread {
   bool keep_going_;
   LivesUpdate lives_update_functor_;
   RendererUpdate update_functor_;
+  CleanRenderer cleaner_functor_;
+  CreateObjectRenderer create_object_renderer_functor_;
   void update_objects(GameInitMessage *pMessage);
   void handle_game_finished(const GameFinishedMessage *finished_message) const;
   void handle_game_finished(GameFinishedMessage *message);
