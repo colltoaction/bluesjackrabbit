@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include "CollisionsHelper.h"
 #include "Line.h"
+#include "Body.h"
 
 bool CollisionsHelper::circles_intersect(const Vector &p1, double r1,
                                          const Vector &p2, double r2) {
@@ -8,12 +9,23 @@ bool CollisionsHelper::circles_intersect(const Vector &p1, double r1,
   return distance < r1 + r2;
 }
 
-bool CollisionsHelper::circle_polygon_intersect(Vector p1, double r1, std::vector<Vector> polygon_points, Line *side) {
-  return polygon_contains_point(polygon_points, p1) ||
-      circle_line_intersect(p1, r1, Line(polygon_points[0], polygon_points[1]), side) ||
-      circle_line_intersect(p1, r1, Line(polygon_points[1], polygon_points[2]), side) ||
-      circle_line_intersect(p1, r1, Line(polygon_points[2], polygon_points[3]), side) ||
-      circle_line_intersect(p1, r1, Line(polygon_points[3], polygon_points[0]), side);
+bool CollisionsHelper::circle_polygon_intersect(Vector p1, double r1, std::vector<Vector> polygon_points, Body *body) {
+  if (polygon_contains_point(polygon_points, p1)) {
+    return true;
+  }
+
+  bool intersects = false;
+  for (size_t i = 0, j = polygon_points.size() - 1;
+       i < polygon_points.size();
+       j = i++) {
+    Line line(polygon_points[i], polygon_points[j]);
+    if (circle_line_intersect(p1, r1, line)) {
+      body->project_velocity_onto(line);
+      intersects = true;
+    }
+  }
+
+  return intersects;
 }
 
 // PNPOLY
@@ -36,7 +48,7 @@ bool CollisionsHelper::polygon_contains_point(const std::vector<Vector> &polygon
 }
 
 // source: http://paulbourke.net/geometry/pointlineplane/source.c
-bool CollisionsHelper::circle_line_intersect(Vector p1, double r1, const Line &line, Line *side) {
+bool CollisionsHelper::circle_line_intersect(Vector p1, double r1, Line line) {
   double line_length = line.length();
   double U = ((p1 - line.start()) * (line.end() - line.start())) /
              (line_length * line_length);
@@ -45,7 +57,6 @@ bool CollisionsHelper::circle_line_intersect(Vector p1, double r1, const Line &l
     return false;  // closest point does not fall within the line segment
   }
 
-  *side = line;
   Vector intersection = line.start() + (line.end() - line.start()) * U;
   return p1.distance(intersection) < r1;
 }

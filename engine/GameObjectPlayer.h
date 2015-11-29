@@ -62,7 +62,6 @@ class GameObjectPlayer: public GameObject {
   uint32_t last_dead_;
   char lives_;
   char direction_;
-  bool normal_;
 };
 
 #endif /* BLUESJACKRABBIT_ENGINE_GAMEOBJECTPLAYER_H */

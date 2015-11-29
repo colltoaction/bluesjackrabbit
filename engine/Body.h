@@ -24,6 +24,11 @@ class Body {
   virtual void apply_force(const Vector &vector) = 0;
 
   /**
+   * Apply a velocity to this object.
+   */
+  virtual void set_velocity(const Vector &velocity) = 0;
+
+  /**
    * Apply a jump force to this object. Calls apply_force internally with a predefined
    * jump force.
    */

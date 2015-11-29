@@ -25,6 +25,8 @@ set(SOURCES
         GameObjectPlayer.h
         GameObjectRedTurtle.cpp
         GameObjectRedTurtle.h
+        GameObjectWall.cpp
+        GameObjectWall.h
         Line.cpp
         Line.h
         PolygonCollider.cpp

@@ -163,6 +163,7 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
       render = new TurtleRenderer(position, points.front().x(), object_type);
       break;
     case 'f':
+    case 'w':
       render = new FloorRenderer(position, points);
       break;
     case 'o':
