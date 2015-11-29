@@ -150,7 +150,7 @@ void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
 
 void ClientProxy::send_winner(GameObjectPlayer *winner) {
   MessageWriter writer(socket_);
-  writer.send_game_finished(player_ == winner);
+  writer.send_level_finished(player_ == winner);
 }
 
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar

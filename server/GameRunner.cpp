@@ -17,8 +17,11 @@ GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players,
   : engine_(engine)
   , engine_mutex_()
   , players_(players)
-  , keep_running_(true),
-  load_level_(load_level_functor) {
+  , keep_running_(true)
+  , notify_winner_(false)
+  , winner_(NULL)
+  , load_level_(load_level_functor)
+  , log_(false) {
 }
 
 GameRunner::~GameRunner() {
@@ -26,12 +29,18 @@ GameRunner::~GameRunner() {
 
 void GameRunner::run() {
   while (keep_running_) {
+    if (log_) {
+      std::cout << "Loguendo luego de iniciar game\n";
+    }
     clock_t start = clock();
     engine_step();  // notifies clients inside
     clock_t stop = clock();
     double elapsed = static_cast<double>(stop - start)* SECOND_TO_MICROSECONDS / CLOCKS_PER_SEC;
     if (elapsed > TWENTY_MILLIS_IN_MICROSECONDS) {
       Logger::warning("Engine too slow to run in 20 milliseconds");
+    }
+    if (notify_winner_) {
+      really_notify_winner();
     }
     usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
   }
@@ -72,13 +81,16 @@ void GameRunner::notify_winner(GameObjectPlayer *winner) {
   Logger::info("Notifing");
   // do not lock
   notify_winner_to_clients(winner);
-  next_level();
+
+  Logger::info("End notifying");
 }
 
 void GameRunner::next_level() {
   keep_running_ = load_level_();
+  log_ = true;
+  std::cout << "LOG SETTED TO TRUE\n";
   if (keep_running_) {
-    update_clients();
+    // update_clients();
   } else {
     Logger::info("Game finished");
   }
@@ -89,17 +101,31 @@ void GameRunner::finalize() {
 }
 
 void GameRunner::update_clients() {
+  if (log_) {
+    Logger::info("Start notifying");
+  }
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
        it != players_->end();
        it++) {
     it->second->send_objects(engine_->game_objects());
   }
+  if (log_) {
+    Logger::info("END NOTIFYING");
+  }
 }
 
 void GameRunner::notify_winner_to_clients(GameObjectPlayer *winner) {
+  notify_winner_ = true;
+  winner_ = winner;
+}
+
+
+void GameRunner::really_notify_winner() {
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
        it != players_->end();
        it++) {
-    it->second->send_winner(winner);
+    it->second->send_winner(winner_);
   }
+  notify_winner_ = false;
+  next_level();
 }

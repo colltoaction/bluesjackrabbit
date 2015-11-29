@@ -6,6 +6,7 @@
 #include "Message.h"
 #include "JoinGameMessage.h"
 #include "GameFinishedMessage.h"
+#include "LevelFinishedMessage.h"
 
 MessageReader::MessageReader(Socket *socket)
     : socket_(socket) {
@@ -26,6 +27,8 @@ Message *MessageReader::read_message() {
     return new MapsMessage(socket_);
   } else if (c == GameFinishedMessage::type_id()) {
     return new GameFinishedMessage(socket_);
+  } else if (c == LevelFinishedMessage::type_id()) {
+    return new LevelFinishedMessage(socket_);
   } else if (c == DISCONNECT) {
   } else if (c == LEFT || c == RIGHT || c == DOWN || c == UP) {
   } else if (c == JUMP) {
