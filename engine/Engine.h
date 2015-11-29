@@ -106,9 +106,9 @@ class Engine {
   void clean_objects();
 
   /**
-   * Verifies game objects who have died and if they leave rewards or not.
+   * Checks if level is finished. This is done by checking players alive.
    * */
-  void rewards();
+  bool level_finished();
 
  private:
   uint32_t object_index_;
@@ -122,6 +122,11 @@ class Engine {
   void players_shots();
   void move_object_index();
   void reset_object_index();
+
+  /**
+   * Verifies game objects who have died and if they leave rewards or not.
+   * */
+  void rewards();
 };
 
 

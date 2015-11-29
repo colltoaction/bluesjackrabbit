@@ -38,10 +38,8 @@ void Game::add_player(ClientProxy *player) {
 }
 
 void Game::start_game() {
-  std::cout << "GAME: STARTGAME\n";
   if (player_index_ == map_loader_.needed_players()) {
     in_game = true;
-    std::cout << "RUNNER START\n";
     runner_.start();
   }
 }
@@ -78,14 +76,17 @@ void Game::reset_players_lives() {
   }
 }
 
-bool Game::load_next_level() {
-  Logger::info("llamando a has more levels");
-  if (map_loader_.has_more_levels()) {
-    map_loader_.load_next_level();
-    sleep(5);
-    Logger::info("Supuestamente cargado el nuevo nivel");
-    return true;
+bool Game::load_next_level(bool there_was_winner) {
+  if (there_was_winner) {
+    if (map_loader_.has_more_levels()) {
+      map_loader_.load_next_level();
+      sleep(5);
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    map_loader_.reload_level();
+    return true;
   }
 }
