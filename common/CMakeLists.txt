@@ -18,6 +18,8 @@ set(SOURCES
         InvalidMessageException.h
         JoinGameMessage.cpp
         JoinGameMessage.h
+        LevelFinishedMessage.cpp
+        LevelFinishedMessage.h
         Lock.cpp
         Lock.h
         Logger.cpp

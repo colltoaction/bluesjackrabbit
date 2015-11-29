@@ -8,6 +8,7 @@
 #include "Collider.h"
 #include "GameObject.h"
 #include "GameObjectPlayer.h"
+#include <common/Mutex.h>
 #include <stdint.h>
 
 /**
@@ -115,10 +116,12 @@ class Engine {
   std::map<uint32_t, GameObjectPlayer*> game_objects_player_ids_;
   std::set<uint32_t> player_jump_;
   std::map<uint32_t, bool> player_shoot_;
+  Mutex mutex_;
   void check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object);
   void players_jumps();
   void players_shots();
   void move_object_index();
+  void reset_object_index();
 };
 
 

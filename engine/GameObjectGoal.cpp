@@ -19,6 +19,7 @@ void GameObjectGoal::impact(GameObject *other) {
   if (other->game_object_type() == 'p' && !has_winner_) {
     has_winner_ = true;  // This is set because sometimes we call impact twice per engine step
     winner_notifier_(dynamic_cast<GameObjectPlayer *>(other));
+    std::cout << "Finalizado el impact\n";
   }
 }
 

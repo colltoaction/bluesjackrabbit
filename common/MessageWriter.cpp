@@ -9,6 +9,7 @@
 #include "JoinGameMessage.h"
 #include "PlayerInfoMessage.h"
 #include "GameFinishedMessage.h"
+#include "LevelFinishedMessage.h"
 
 MessageWriter::MessageWriter(Socket *socket)
     : socket_(socket) {
@@ -78,4 +79,11 @@ void MessageWriter::send_game_finished(bool won) {
   socket_->send_buffer(&message_type, 1);
   GameFinishedMessage game_finished(socket_);
   game_finished.send(won);
+}
+
+void MessageWriter::send_level_finished(bool won) {
+  char message_type = LevelFinishedMessage::type_id();
+  socket_->send_buffer(&message_type, 1);
+  LevelFinishedMessage level_finished(socket_);
+  level_finished.send(won);
 }
