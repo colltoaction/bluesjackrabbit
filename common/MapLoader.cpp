@@ -77,7 +77,6 @@ void MapLoader::place_player(ClientProxy *player) {
   uint32_t object_id = engine_->add_game_object_player(object);
   player->add_object_id(object_id, object);
   players_[object_id] = player;
-  even_ = !even_;
 }
 
 void MapLoader::reposition_players() {
@@ -89,12 +88,15 @@ void MapLoader::reposition_players() {
   }
 }
 
-Vector *MapLoader::player_start_point() const {
+Vector *MapLoader::player_start_point() {
+  Vector *vect = NULL;
   if (even_) {
-    return new Vector(-2, 0);
+    vect = new Vector(-2, 0);
   } else {
-    return new Vector(5, -15);
+    vect = new Vector(5, -15);
   }
+  even_ = !even_;
+  return vect;
 }
 
 char MapLoader::needed_players() {
@@ -104,7 +106,7 @@ char MapLoader::needed_players() {
 
 bool MapLoader::has_more_levels() {
   // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
-  return level_index_ < 2;
+  return level_index_ < 3;
 }
 
 void MapLoader::load_next_level() {

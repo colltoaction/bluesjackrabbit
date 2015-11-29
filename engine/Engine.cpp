@@ -8,6 +8,9 @@
 #include "CircleCollider.h"
 #include "GameObject.h"
 
+
+#include <iostream>
+
 Engine::Engine() : object_index_(0) {
 }
 
@@ -165,6 +168,7 @@ void Engine::move_game_object_player(uint32_t object_id, Vector *new_position) {
 void Engine::move_object_index() {
   object_index_++;
   while (game_objects_player_ids_.find(object_index_) != game_objects_player_ids_.end()) {
+    std::cout << "HAY UN object_index_ que pertenece al player\n";
     object_index_++;
   }
 }
@@ -178,6 +182,7 @@ void Engine::player_shoot(uint32_t object_id) {
 }
 
 void Engine::clean_objects() {
+  std::cout << "ARRANCA ENGINE::CLEAN OBJECTS " << game_objects_.size() << std::endl;
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
          game_object != game_objects_.end();
          ++game_object) {
@@ -185,5 +190,6 @@ void Engine::clean_objects() {
       delete game_object->second;
     }
   }
+  std::cout << "FIN ENGINE::CLEAN OBJECTS " << game_objects_.size() << std::endl;
   object_index_ = 0;
 }
