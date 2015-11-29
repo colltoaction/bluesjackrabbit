@@ -10,11 +10,14 @@
 #include <common/Logger.h>
 
 
-RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update)
+RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update,
+    CleanRenderer cleaner, CreateObjectRenderer create)
   : socket_(NULL)
   , keep_going_(true)
   , lives_update_functor_(lives_update)
-  , update_functor_(update) {
+  , update_functor_(update)
+  , cleaner_functor_(cleaner)
+  , create_object_renderer_functor_(create) {
 }
 
 void RemoteServerProxyUpdater::set_socket(Socket *socket) {
@@ -35,6 +38,15 @@ void RemoteServerProxyUpdater::run() {
     } else if (message->type() == GameFinishedMessage::type_id()) {
       handle_game_finished(dynamic_cast<GameFinishedMessage *>(message));
       delete message;
+
+      MessageReader new_level_reader(socket_);
+      GameInitMessage mes = new_level_reader.read_game_init();
+      mes.read();
+      lives_update_functor_(mes.info().remaining_lives());
+      for (std::vector<GameObjectMessage *>::const_iterator i = mes.objects().begin();
+           i != mes.objects().end(); i++) {
+        create_object_renderer_functor_((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
+      }
     } else {
       std::stringstream ss;
       ss << std::hex
@@ -45,10 +57,10 @@ void RemoteServerProxyUpdater::run() {
     }
   }
 }
+
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
   message->read();
   Logger::info(message->won() ? "User WON" : "User LOST");
-  // keep_going_ = false;
 }
 
 void RemoteServerProxyUpdater::shutdown() {

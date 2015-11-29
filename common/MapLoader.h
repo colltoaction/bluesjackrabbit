@@ -22,7 +22,7 @@ class MapLoader {
   bool even_;
   char level_index_;
   std::map<uint32_t, ClientProxy*> players_;
-  Vector *player_start_point() const;
+  Vector *player_start_point();
   void load_level();
   void reposition_players();
 };

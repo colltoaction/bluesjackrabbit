@@ -68,9 +68,22 @@ RemoteServerProxy::RemoteServerProxy(const Configuration &config)
     : config_(config)
     , socket_(NULL)
     , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
-               sigc::mem_fun(*this, &RemoteServerProxy::update_object))
+               sigc::mem_fun(*this, &RemoteServerProxy::update_object),
+               sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
+               sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer))
     , object_id_(0)
     , alive_(true) {
+}
+
+void RemoteServerProxy::clean_renderers() {
+  for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
+       game_object != renderers_.end();
+       ++game_object) {
+    Renderer *render = game_object->second;
+    renderers_.erase(game_object->first);
+    delete render;
+  }
+  Logger::info("RemoteServerProxy::clean_renderers limpio");
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
@@ -193,8 +206,6 @@ void RemoteServerProxy::update_lives(char remaining_lives) {
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
   bool alive) {
-  (void) type;
-  (void) points;
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
@@ -212,6 +223,7 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
       delete render;
     }
   } else {
+    // Dead
   }
 }
 
