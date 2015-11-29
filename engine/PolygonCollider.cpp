@@ -24,9 +24,8 @@ bool PolygonCollider::will_collide(const Collider &other) const {
 }
 
 bool PolygonCollider::will_collide(const CircleCollider &other) const {
-  return CollisionsHelper::circle_polygon_intersect(
-      other.body().position(), other.radius(),
-      points_);
+  Line line(Vector::zero(), Vector::zero());  // temp
+  return CollisionsHelper::circle_polygon_intersect(other.body().position(), other.radius(), points_, &line);
 }
 
 // TODO(tinchou): implement polygon_polygon_intersect

@@ -19,10 +19,10 @@ const double LocalServerProxy::jump_force = 0.003;  // should take into account 
 LocalServerProxy::LocalServerProxy() {
   // new objects will be managed by the engine
   RigidBody *b0 = new RigidBody(new Vector(0, 0));
-  engine_.add_game_object(b0, new CircleCollider(*b0, 5));
+  engine_.add_game_object(b0, new CircleCollider(b0, 5));
 
   StaticBody *b1 = new StaticBody(new Vector(5, 0));
-  engine_.add_game_object(b1, new CircleCollider(*b1, 5));
+  engine_.add_game_object(b1, new CircleCollider(b1, 5));
 
   std::vector<Vector> floor_points;
   floor_points.push_back(Vector(17, 8));

@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_ENGINE_VECTOR_H
 #define BLUESJACKRABBIT_ENGINE_VECTOR_H
 
+
 /**
  * A 2-dimensional vector with many useful operations and operator overloads.
  */
@@ -47,9 +48,6 @@ class Vector {
    */
   Vector direction();
 
-  /**
-   * Equality comparison between this and another vector.
-   */
   bool operator==(const Vector &other) const;
 
   /**
