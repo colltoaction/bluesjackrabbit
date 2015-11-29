@@ -8,8 +8,7 @@ GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
   : GameObject(body, collider)
   , can_jump_(true)
   , lives_(LIVES)
-  , direction_(1)
-  , normal_(false) {
+  , direction_(1) {
 }
 
 GameObjectPlayer::~GameObjectPlayer() {
@@ -38,19 +37,12 @@ void GameObjectPlayer::shot() {
 
 void GameObjectPlayer::update_fixed() {
   engine_steps_++;
-//  if (!normal_) {
-    body().apply_force(gravity_);
-//  } else {
-//    body().stop_y();
-//  }
-//  normal_ = false;
 }
 
 void GameObjectPlayer::impact(GameObject *other) {
   switch (other->game_object_type()) {
     case 'f':
       can_jump_ = true;
-      normal_ = true;
       break;
     case 'b':
     case 't':

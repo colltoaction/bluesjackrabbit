@@ -14,13 +14,6 @@ GameObjectRedTurtle::~GameObjectRedTurtle() {
 }
 
 void GameObjectRedTurtle::update_fixed() {
-//  if (!normal_) {
-    body().apply_force(gravity_);
-//  } else {
-//    body().stop_y();
-//    body().apply_force(Vector(0, -0.1));
-//  }
-
   if (floor_under_) {
     if (body().stopped_x()) {
       body().apply_force(Vector(direction_ * MOVE_FORCE, 0));

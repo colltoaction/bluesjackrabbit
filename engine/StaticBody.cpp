@@ -17,6 +17,9 @@ const Vector &StaticBody::velocity() const {
 void StaticBody::apply_force(const Vector & /* force */) {
 }
 
+void StaticBody::set_velocity(const Vector & /* velocity */) {
+}
+
 void StaticBody::apply_jump_force() {
 }
 

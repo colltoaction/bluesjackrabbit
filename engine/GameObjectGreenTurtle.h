@@ -12,9 +12,9 @@ class GameObjectGreenTurtle: public GameObject {
   virtual char game_object_type();
   virtual void impact(GameObject *other);
   virtual bool alive();
+
  private:
   char lives_;
-  bool normal_;
   GameObjectFloor *floor_under_;
   int direction_;
 };

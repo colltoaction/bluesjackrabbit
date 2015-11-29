@@ -5,6 +5,7 @@
 #include <engine/RigidBody.h>
 #include <engine/StaticBody.h>
 #include <engine/PolygonCollider.h>
+#include <engine/GameObjectWall.h>
 #include "MapLoader.h"
 #include "Logger.h"
 
@@ -33,7 +34,6 @@ void MapLoader::load() {
 
   std::vector<Vector> floor_points;
   floor_points.push_back(Vector(5, 8));
-  floor_points.push_back(Vector(3, 6));
   floor_points.push_back(Vector(5, 4));
   floor_points.push_back(Vector(0, 4));
   floor_points.push_back(Vector(0, 8));
@@ -41,14 +41,14 @@ void MapLoader::load() {
   GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points));
   engine_->add_game_object(floor);
 
-  std::vector<Vector> floor2_points;
-  floor2_points.push_back(Vector(5, 12));
-  floor2_points.push_back(Vector(5, 9));
-  floor2_points.push_back(Vector(-2, 7));
-  floor2_points.push_back(Vector(-10, 12));
+  std::vector<Vector> wall_points;
+  wall_points.push_back(Vector(0, 12));
+  wall_points.push_back(Vector(0, 0));
+  wall_points.push_back(Vector(-5, 0));
+  wall_points.push_back(Vector(-5, 12));
   StaticBody *body2 = new StaticBody(new Vector(3, 10));
-  GameObjectFloor *floor2 = new GameObjectFloor(body2, new PolygonCollider(*body2, floor2_points));
-  engine_->add_game_object(floor2);
+  GameObjectWall *wall = new GameObjectWall(body2, new PolygonCollider(*body2, wall_points));
+  engine_->add_game_object(wall);
 
   RigidBody *r_body = new RigidBody(new Vector(2, -10));
   GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));

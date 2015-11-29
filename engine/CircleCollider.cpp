@@ -17,16 +17,10 @@ bool CircleCollider::will_collide(const CircleCollider &other) const {
 }
 
 bool CircleCollider::will_collide(const PolygonCollider &other) const {
-  Line side(Vector::zero(), Vector::zero());
-  if (CollisionsHelper::circle_polygon_intersect(
-          body_->next_position(), radius_,
-          other.points(),
-          &side)) {
-    body_->project_velocity_onto(side);
-    return true;
-  }
-
-  return false;
+  return CollisionsHelper::circle_polygon_intersect(
+            body_->next_position(), radius_,
+            other.points(),
+            body_);
 }
 
 const Body &CircleCollider::body() const {

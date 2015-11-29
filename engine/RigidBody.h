@@ -14,6 +14,7 @@ class RigidBody : public Body {
   virtual ~RigidBody();
   virtual const Vector &velocity() const;
   virtual void apply_force(const Vector &vector);
+  virtual void set_velocity(const Vector &velocity);
   virtual void apply_jump_force();
   virtual Vector position() const;
   virtual Vector next_position() const;
@@ -26,6 +27,7 @@ class RigidBody : public Body {
   virtual void project_velocity_onto(Line line);
 
  private:
+  static const Vector gravity_;
   static const double friction_magnitude_;
   static const Vector jump_force_;
   Vector *position_;

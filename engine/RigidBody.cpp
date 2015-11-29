@@ -1,6 +1,10 @@
 #include "RigidBody.h"
+#include "Engine.h"
 
-const double RigidBody::friction_magnitude_ = 0.1;
+const Vector RigidBody::gravity_ = Vector(0, 0.0000098) *
+    Engine::fixed_update_step *
+    Engine::fixed_update_step;  // in m/ms²
+const double RigidBody::friction_magnitude_ = 10;
 const Vector RigidBody::jump_force_ = Vector(0, -0.1);
 
 RigidBody::RigidBody(Vector *position)
@@ -19,6 +23,10 @@ const Vector &RigidBody::velocity() const {
 
 void RigidBody::apply_force(const Vector &force) {
   force_ = force_ + force;
+}
+
+void RigidBody::set_velocity(const Vector &velocity) {
+  velocity_ = velocity;
 }
 
 void RigidBody::apply_jump_force() {
@@ -46,7 +54,7 @@ void RigidBody::update_fixed() {
   }
 
   velocity_ = velocity_ + force_;
-  force_ = Vector::zero();
+  force_ = gravity_;
 }
 
 void RigidBody::stop() {
