@@ -7,11 +7,14 @@
 #include <gtkmm/image.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolitemgroup.h>
+#include "CircleButton.h"
 #include "EditorLayer.h"
 #include "EditorController.h"
 #include "EditorCanvas.h"
-#include "CircleButton.h"
+#include "GoalButton.h"
 #include "RectButton.h"
+#include "SpawnPointButton.h"
+#include "StartPointButton.h"
 #include "EditorWindow.h"
 #define GLADE_FILENAME "window.glade"
 #define MAIN_WINDOW_GLADE_ID "MainBox"
@@ -65,7 +68,7 @@ void EditorWindow::init_palette() {
 
   std::string asset_filename;
 
-  // TODO(Diego): pasar a inicializacion de Assets
+  // TODO(Diego): pasar a codigo de inicializacion de Assets generico
   // Asset 2 - Image - Barrel
   asset_filename = "assets/barrel.png";
   Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
@@ -81,8 +84,16 @@ void EditorWindow::init_palette() {
   button = Gtk::manage(new RectButton("Rectangle"));
   misc_group_->insert(*button);
 
-  palette_->add(*control_group_);
+  // Control objects
+  button = Gtk::manage(new StartPointButton());
+  control_group_->insert(*button);
+  button = Gtk::manage(new SpawnPointButton());
+  control_group_->insert(*button);
+  button = Gtk::manage(new GoalButton());
+  control_group_->insert(*button);
+
   palette_->add(*misc_group_);
+  palette_->add(*control_group_);
 }
 
 void EditorWindow::init_menus() {
