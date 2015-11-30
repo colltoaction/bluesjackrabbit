@@ -26,6 +26,7 @@ class RigidBody : public Body {
   virtual bool stopped();
   virtual bool stopped_x();
   virtual void handle_line_hit(Line line);
+  static const Vector compense_gravity_;
 
  private:
   static const Vector gravity_;
