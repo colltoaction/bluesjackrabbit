@@ -28,11 +28,14 @@ class RemoteServerProxyUpdater : public Thread {
  private:
   Socket *socket_;
   bool keep_going_;
+  bool new_level_;
   LivesUpdate lives_update_functor_;
   RendererUpdate update_functor_;
   CleanRenderer cleaner_functor_;
   CreateObjectRenderer create_object_renderer_functor_;
+  void handle_objects(GameInitMessage *pMessage);
   void update_objects(GameInitMessage *pMessage);
+  void create_objects(GameInitMessage *pMessage);
   void handle_game_finished(GameFinishedMessage *finished_message);
   void handle_level_finished(LevelFinishedMessage *message);
 };
