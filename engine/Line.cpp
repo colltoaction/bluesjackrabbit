@@ -11,8 +11,7 @@ double Line::length() const {
 
 Vector Line::project(const Vector &vector) const {
   Vector v2 = end() - start();
-  double d = (vector * v2) / (v2 * v2);
-  return d > 0.00001 || d < -0.00001 ? v2 * d : Vector::zero();  // precision issues
+  return v2 * ((vector * v2) / (v2 * v2));
 }
 
 const Vector &Line::start() const {

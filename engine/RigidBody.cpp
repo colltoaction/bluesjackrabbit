@@ -4,7 +4,7 @@
 const Vector RigidBody::gravity_ = Vector(0, 0.0000098) *
     Engine::fixed_update_step *
     Engine::fixed_update_step;  // in m/ms²
-const double RigidBody::friction_magnitude_ = 10;
+const double RigidBody::friction_magnitude_ = 0.1;
 const Vector RigidBody::jump_force_ = Vector(0, -0.1);
 
 RigidBody::RigidBody(Vector *position)
@@ -79,4 +79,5 @@ bool RigidBody::stopped_x() {
 
 void RigidBody::project_velocity_onto(Line line) {
   velocity_ = line.project(velocity_);
+  force_ = line.project(force_);
 }
