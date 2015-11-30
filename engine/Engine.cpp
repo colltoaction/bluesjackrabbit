@@ -2,15 +2,16 @@
 #include <vector>
 #include "Engine.h"
 #include "GameObjectBullet.h"
+#include "GameObjectNewLife.h"
 #include "RigidBody.h"
 #include "StaticBody.h"
 #include "CircleCollider.h"
 #include "GameObject.h"
-#include "GameObjectPlayer.h"
+#include <common/Lock.h>
 
-#include <iostream>
+#include <stdlib.h>
 
-Engine::Engine() : object_index_(0) {
+Engine::Engine() : object_index_(0), seed_(2142585766) {
 }
 
 Engine::~Engine() {
@@ -26,9 +27,45 @@ std::map<uint32_t, GameObject*> *Engine::game_objects() {
 }
 
 void Engine::FixedUpdate() {
+  Lock l(&mutex_);
   players_jumps();
   players_shots();
   move_objects();
+  rewards();
+}
+
+bool Engine::level_finished() {
+  bool finished = true;
+  for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
+      it != game_objects_player_ids_.end();
+      it++) {
+    if (it->second->alive()) {
+      finished = false;
+    }
+  }
+  return finished;
+}
+
+void Engine::rewards() {
+  for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
+      other != game_objects_.end();
+      ++other) {
+    if (!other->second->alive() && (other->second->game_object_type() == 't'
+        || other->second->game_object_type() == 'r')) {
+        int probability = rand_r(&seed_) % 10 + 1;
+        if (probability > 5) {
+          Vector *position = new Vector(other->second->body().position().x(), other->second->body().position().y());
+          StaticBody *body = new StaticBody(position);
+          GameObjectNewLife *life = new GameObjectNewLife(body, new CircleCollider(body, 0.1));
+          add_game_object(life);
+        }
+    }
+  }
+  for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
+      it != game_objects_player_ids_.end();
+      it++) {
+    it->second->increment_lives();
+  }
 }
 
 void Engine::clean_dead() {
@@ -36,8 +73,8 @@ void Engine::clean_dead() {
   for (std::map<uint32_t, GameObject*>::iterator other = game_objects_.begin();
          other != game_objects_.end();
          ++other) {
-    if (!other->second->alive()) {
-       ids.push_back(other->first);
+    if (!other->second->alive() && other->second->game_object_type() != 'p') {
+      ids.push_back(other->first);
     }
   }
   for (std::list<uint32_t>::iterator it = ids.begin(); it != ids.end(); it++) {
@@ -72,7 +109,8 @@ void Engine::players_shots() {
         RigidBody *body = new RigidBody(offset);
         GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(body, 0.05),
             player->direction());
-        game_objects_[object_index_++] = object;
+        game_objects_[object_index_] = object;
+        move_object_index();
         player->shot();
       }
       player_shoot_[it->first] = false;
@@ -119,15 +157,35 @@ uint32_t Engine::add_game_object(Body *body, Collider *collider) {
   GameObject *game_object = new GameObject(body, collider);
   game_objects_[object_index_] = game_object;
   uint32_t to_return = object_index_;
-  object_index_++;
+  move_object_index();
   return to_return;
 }
 
 uint32_t Engine::add_game_object(GameObject *game_object) {
   game_objects_[object_index_] = game_object;
   uint32_t to_return = object_index_;
-  object_index_++;
+  move_object_index();
   return to_return;
+}
+
+uint32_t Engine::add_game_object_player(GameObjectPlayer *game_object) {
+  game_objects_[object_index_] = game_object;
+  uint32_t to_return = object_index_;
+  game_objects_player_ids_[object_index_] = game_object;
+  move_object_index();
+  return to_return;
+}
+
+void Engine::move_game_object_player(uint32_t object_id, Vector *new_position) {
+  static_cast<GameObjectPlayer*>(game_objects_[object_id])->reset_lives();
+  game_objects_[object_id]->reposition_object(new_position);
+}
+
+void Engine::move_object_index() {
+  object_index_++;
+  while (game_objects_player_ids_.find(object_index_) != game_objects_player_ids_.end()) {
+    object_index_++;
+  }
 }
 
 void Engine::player_jump(uint32_t object_id) {
@@ -136,4 +194,25 @@ void Engine::player_jump(uint32_t object_id) {
 
 void Engine::player_shoot(uint32_t object_id) {
   player_shoot_[object_id] = true;
+}
+
+void Engine::clean_objects() {
+  Lock l(&mutex_);
+  for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
+         game_object != game_objects_.end();
+         ++game_object) {
+    if (game_object->second->game_object_type() != 'p') {
+      GameObject *object = game_object->second;
+      game_objects_.erase(game_object->first);
+      delete object;
+    }
+  }
+  reset_object_index();
+}
+
+void Engine::reset_object_index() {
+  object_index_ = 0;
+  while (game_objects_player_ids_.find(object_index_) != game_objects_player_ids_.end()) {
+    object_index_++;
+  }
 }

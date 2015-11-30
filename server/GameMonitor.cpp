@@ -1,6 +1,6 @@
 #include "GameMonitor.h"
-
-#include <iostream>
+#include <common/Logger.h>
+#include <sstream>
 
 GameMonitor::GameMonitor()
     : game_index_(0)
@@ -15,12 +15,9 @@ GameMonitor::~GameMonitor() {
   }
 }
 
-// TODO(tomas) Ver como garcha manejar los map_ids y crear nuevo juego con
-// mapa correspondiente
 char GameMonitor::create_game(char /* map_id */, std::string game_name, ClientProxy *player) {
   Lock lock(&game_admin_mutex_);
   Game *new_game = new Game(player, game_name);
-  // No se si esto estara bien. Revisar cuando haya mas de un juego
   games_.push_back(new_game);
   char game_id = game_index_;
   game_index_++;
@@ -29,7 +26,9 @@ char GameMonitor::create_game(char /* map_id */, std::string game_name, ClientPr
 
 void GameMonitor::join_game(char game_id, ClientProxy *player) {
   Lock lock(&game_admin_mutex_);
-  std::cout << "GameMonitor:: SE UNE JUGADOR A GAME_ID" << static_cast<int>(game_id) << "\n";
+  std::stringstream ss;
+  ss << "Se une jugador al juego: " << static_cast<int>(game_id);
+  Logger::info(ss.str());
   games_[game_id]->add_player(player);
 }
 

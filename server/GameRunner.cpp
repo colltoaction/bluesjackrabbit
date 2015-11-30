@@ -3,7 +3,6 @@
 #include <common/Lock.h>
 #include <common/Logger.h>
 #include <unistd.h>
-#include <iostream>
 
 #include <common/Constants.h>
 #include <common/MessageWriter.h>
@@ -13,11 +12,18 @@
 
 const double GameRunner::step = 0.003;
 
-GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players)
+#include <iostream>
+
+GameRunner::GameRunner(Engine *engine, std::map<char, ClientProxy*> *players,
+    LoadNextLevelCall load_level_functor)
   : engine_(engine)
   , engine_mutex_()
   , players_(players)
-  , keep_running_(true) {
+  , levels_won_()
+  , keep_running_(true)
+  , notify_winner_(false)
+  , winner_(NULL)
+  , load_level_(load_level_functor) {
 }
 
 GameRunner::~GameRunner() {
@@ -31,6 +37,9 @@ void GameRunner::run() {
     double elapsed = static_cast<double>(stop - start)* SECOND_TO_MICROSECONDS / CLOCKS_PER_SEC;
     if (elapsed > TWENTY_MILLIS_IN_MICROSECONDS) {
       Logger::warning("Engine too slow to run in 20 milliseconds");
+    }
+    if (notify_winner_ || engine_->level_finished()) {
+      really_notify_winner();
     }
     usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
   }
@@ -70,7 +79,36 @@ void GameRunner::shoot(uint32_t object_id) {
 void GameRunner::notify_winner(GameObjectPlayer *winner) {
   // do not lock
   notify_winner_to_clients(winner);
-  finalize();
+}
+
+GameObjectPlayer* GameRunner::look_up_winner() {
+  GameObjectPlayer *winner = levels_won_.begin()->first;
+  int max = levels_won_.begin()->second;
+  std::cout << "First: " << max << std::endl;
+  for (std::map<GameObjectPlayer*, int>::iterator it = levels_won_.begin();
+      it != levels_won_.end();
+      it++) {
+    if (it->second > max) {
+      std::cout << "Superado: " << max << std::endl;
+      winner = it->first;
+      max = it->second;
+    }
+  }
+  std::cout << "Final: " << max << std::endl;
+  return winner;
+}
+
+void GameRunner::next_level(bool there_was_winner) {
+  keep_running_ = load_level_(there_was_winner);
+  if (!keep_running_) {
+    GameObjectPlayer *winner = look_up_winner();
+    for (std::map<char, ClientProxy*>::iterator it = players_->begin();
+         it != players_->end();
+         it++) {
+      it->second->send_total_winner(winner);
+    }
+    Logger::info("Game finished");
+  }
 }
 
 void GameRunner::finalize() {
@@ -86,9 +124,24 @@ void GameRunner::update_clients() {
 }
 
 void GameRunner::notify_winner_to_clients(GameObjectPlayer *winner) {
+  std::cout << "Entro en notify winner\n";
+  if (levels_won_.find(winner) == levels_won_.end()) {
+    std::cout << "No encuentra este winner.";
+    levels_won_[winner] = 0;
+  }
+  levels_won_[winner] += 1;
+  notify_winner_ = true;
+  winner_ = winner;
+}
+
+
+void GameRunner::really_notify_winner() {
   for (std::map<char, ClientProxy*>::iterator it = players_->begin();
        it != players_->end();
        it++) {
-    it->second->send_winner(winner);
+    it->second->send_winner(winner_);
   }
+  next_level(winner_ != NULL);
+  notify_winner_ = false;
+  winner_ = NULL;
 }

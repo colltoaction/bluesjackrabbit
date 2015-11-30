@@ -22,6 +22,8 @@ set(SOURCES
         MainWindow.h
         MeCharacterRenderer.cpp
         MeCharacterRenderer.h
+        NewLifeRenderer.cpp
+        NewLifeRenderer.h
         OtherCharacterRenderer.cpp
         OtherCharacterRenderer.h
         RedTurtleRenderer.cpp
