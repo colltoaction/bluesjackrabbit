@@ -112,6 +112,7 @@ class Engine {
 
  private:
   uint32_t object_index_;
+  unsigned int seed_;
   std::map<uint32_t, GameObject*> game_objects_;
   std::map<uint32_t, GameObjectPlayer*> game_objects_player_ids_;
   std::set<uint32_t> player_jump_;

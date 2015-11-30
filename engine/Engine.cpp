@@ -9,9 +9,9 @@
 #include "GameObject.h"
 #include <common/Lock.h>
 
-#include <iostream>
+#include <stdlib.h>
 
-Engine::Engine() : object_index_(0) {
+Engine::Engine() : object_index_(0), seed_(2142585766) {
 }
 
 Engine::~Engine() {
@@ -52,10 +52,13 @@ void Engine::rewards() {
       ++other) {
     if (!other->second->alive() && (other->second->game_object_type() == 't'
         || other->second->game_object_type() == 'r')) {
-        Vector *position = new Vector(other->second->body().position().x(), other->second->body().position().y());
-        StaticBody *body = new StaticBody(position);
-        GameObjectNewLife *life = new GameObjectNewLife(body, new CircleCollider(body, 0.1));
-        add_game_object(life);
+        int probability = rand_r(&seed_) % 10 + 1;
+        if (probability > 5) {
+          Vector *position = new Vector(other->second->body().position().x(), other->second->body().position().y());
+          StaticBody *body = new StaticBody(position);
+          GameObjectNewLife *life = new GameObjectNewLife(body, new CircleCollider(body, 0.1));
+          add_game_object(life);
+        }
     }
   }
   for (std::map<uint32_t, GameObjectPlayer*>::iterator it = game_objects_player_ids_.begin();
