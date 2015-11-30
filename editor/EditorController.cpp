@@ -7,7 +7,8 @@
 
 #include <iostream>
 
-EditorController::EditorController() : level_(1000, 1000), unsaved_changes_(false) {
+EditorController::EditorController() : level_("Mapa de ejemplo", 1000, 1000),
+    unsaved_changes_(false) {
 }
 
 void EditorController::start_new_level() {

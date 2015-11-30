@@ -71,7 +71,7 @@ void EditorWindow::init_palette() {
   Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
   Gtk::Image* image = Gtk::manage(new Gtk::Image(
       misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
-  Glib::ustring icon_name = "Obj1";
+  Glib::ustring icon_name = "barrel.png";
   Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
   misc_group_->insert(*button);
 

@@ -1,3 +1,4 @@
+#include <string>
 #include <gtkmm/image.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/toolbutton.h>
@@ -54,6 +55,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
 
   LevelObjectType obj_type;
   Gtk::Widget* icon = NULL;
+  std::string file;
   if (dynamic_cast<RectButton*>(button)) {
     obj_type = RECTANGLE;
   } else if (dynamic_cast<CircleButton*>(button)) {
@@ -61,6 +63,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   } else {
     obj_type = GENERIC_IMAGE;
     icon = button->get_icon_widget();
+    file = button->get_label();
   }
 
   /* This method is called from either drag_motion or drag_drop, and the DragContext has to be
@@ -95,7 +98,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
       break;
     case GENERIC_IMAGE:
       obj_representation = ImageItem::create(this, icon, item_x, item_y);
-      object = new GenericImageLevelObject(item_x, item_y, obj_representation);
+      object = new GenericImageLevelObject(file, item_x, item_y, obj_representation);
       controller_->register_object(object);
       break;
     default:

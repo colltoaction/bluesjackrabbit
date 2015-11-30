@@ -1,6 +1,5 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
-
 #include <vector>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
