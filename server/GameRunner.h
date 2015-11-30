@@ -26,6 +26,7 @@ class GameRunner: public Thread {
   Engine *engine_;
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> *players_;
+  std::map<GameObjectPlayer*, int> levels_won_;
   bool keep_running_;
   bool notify_winner_;
   GameObjectPlayer *winner_;
