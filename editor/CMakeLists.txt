@@ -19,7 +19,9 @@ set(SOURCES main.cpp
 			EditorWindow.cpp
 			GenericImageLevelObject.cpp
 			ImageItem.cpp
+			Level.cpp
 			LevelObject.cpp
+			LevelWriter.cpp
 			RectButton.cpp
 			RectItem.cpp
 			RectangleLevelObject.cpp)

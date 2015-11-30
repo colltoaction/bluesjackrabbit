@@ -91,7 +91,11 @@ void EditorWindow::init_menus() {
   Glib::RefPtr<Gio::SimpleAction> action_new = Gio::SimpleAction::create("new");
   action_new->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::start_new_level));
+  Glib::RefPtr<Gio::SimpleAction> action_save = Gio::SimpleAction::create("save");
+  action_save->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::save_file));
   ag->add_action(action_new);
+  ag->add_action(action_save);
   /* Ver */
   insert_action_group("editor", ag);
 }

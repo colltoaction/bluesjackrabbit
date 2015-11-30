@@ -54,6 +54,7 @@
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="action_name">editor.save</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </object>
@@ -167,6 +168,7 @@
               <object class="GtkToolButton" id="toolbutton3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="action_name">editor.save</property>
                 <property name="label" translatable="yes">Guardar</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-save</property>
