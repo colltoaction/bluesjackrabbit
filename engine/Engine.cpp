@@ -84,9 +84,9 @@ void Engine::move_objects() {
   for (std::map<uint32_t, GameObject*>::iterator game_object = game_objects_.begin();
        game_object != game_objects_.end();
        ++game_object) {
+    check_collisions(game_object);
     game_object->second->update_fixed();
     // With all forces applied, new position is calculated
-    check_collisions(game_object);
     game_object->second->body().update_fixed();
   }
 }

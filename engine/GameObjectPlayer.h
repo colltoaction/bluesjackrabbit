@@ -57,7 +57,6 @@ class GameObjectPlayer: public GameObject {
 
  private:
   uint32_t engine_steps_;
-  bool can_jump_;
   uint32_t last_shot_;
   uint32_t last_dead_;
   char lives_;

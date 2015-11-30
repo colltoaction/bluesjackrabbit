@@ -6,7 +6,6 @@
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
   : GameObject(body, collider)
-  , can_jump_(true)
   , lives_(LIVES)
   , direction_(1) {
 }
@@ -19,11 +18,10 @@ char GameObjectPlayer::game_object_type() {
 }
 
 bool GameObjectPlayer::can_jump() {
-  return can_jump_;
+  return body_->velocity().y() == 0;
 }
 
 void GameObjectPlayer::jump() {
-  can_jump_ = false;
   body().apply_jump_force();
 }
 
@@ -41,9 +39,6 @@ void GameObjectPlayer::update_fixed() {
 
 void GameObjectPlayer::impact(GameObject *other) {
   switch (other->game_object_type()) {
-    case 'f':
-      can_jump_ = true;
-      break;
     case 'b':
     case 't':
     case 'r':
