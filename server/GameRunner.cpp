@@ -81,23 +81,27 @@ void GameRunner::notify_winner(GameObjectPlayer *winner) {
   notify_winner_to_clients(winner);
 }
 
+GameObjectPlayer* GameRunner::look_up_winner() {
+  GameObjectPlayer *winner = levels_won_.begin()->first;
+  int max = levels_won_.begin()->second;
+  std::cout << "First: " << max << std::endl;
+  for (std::map<GameObjectPlayer*, int>::iterator it = levels_won_.begin();
+      it != levels_won_.end();
+      it++) {
+    if (it->second > max) {
+      std::cout << "Superado: " << max << std::endl;
+      winner = it->first;
+      max = it->second;
+    }
+  }
+  std::cout << "Final: " << max << std::endl;
+  return winner;
+}
+
 void GameRunner::next_level(bool there_was_winner) {
   keep_running_ = load_level_(there_was_winner);
   if (!keep_running_) {
-    GameObjectPlayer *winner = levels_won_.begin()->first;
-    int max = levels_won_.begin()->second;
-    std::cout << "First: " << max << std::endl;
-    for (std::map<GameObjectPlayer*, int>::iterator it = levels_won_.begin();
-        it != levels_won_.end();
-        it++) {
-      if (it->second > max) {
-        std::cout << "Superado: " << max << std::endl;
-        winner = it->first;
-        max = it->second;
-      }
-    }
-    std::cout << "Final: " << max << std::endl;
-
+    GameObjectPlayer *winner = look_up_winner();
     for (std::map<char, ClientProxy*>::iterator it = players_->begin();
          it != players_->end();
          it++) {
