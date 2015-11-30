@@ -60,6 +60,14 @@ void MapLoader::load_level() {
   GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
   engine_->add_game_object(turtle);
 
+  RigidBody *r_body22 = new RigidBody(new Vector(3, -10));
+  GameObjectGreenTurtle *turtle2 = new GameObjectGreenTurtle(r_body22, new CircleCollider(r_body22, 0.5));
+  engine_->add_game_object(turtle2);
+
+  RigidBody *r_body33 = new RigidBody(new Vector(4, -10));
+  GameObjectGreenTurtle *turtle3 = new GameObjectGreenTurtle(r_body33, new CircleCollider(r_body33, 0.5));
+  engine_->add_game_object(turtle3);
+
   RigidBody *r_body2 = new RigidBody(new Vector(5, -10));
   GameObjectRedTurtle *turtle_red = new GameObjectRedTurtle(r_body2, new CircleCollider(r_body2, 0.5));
   engine_->add_game_object(turtle_red);
