@@ -37,7 +37,7 @@ void RemoteServerProxyUpdater::run() {
       update_objects(dynamic_cast<GameInitMessage *>(message));
       delete message;
     } else if (message->type() == LevelFinishedMessage::type_id()) {
-      handle_game_finished(dynamic_cast<LevelFinishedMessage *>(message));
+      handle_level_finished(dynamic_cast<LevelFinishedMessage *>(message));
       delete message;
 
       MessageReader new_level_reader(socket_);
@@ -49,20 +49,27 @@ void RemoteServerProxyUpdater::run() {
         create_object_renderer_functor_((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
       }
     } else if (message->type() == GameFinishedMessage::type_id()) {
+      // delete message;
     } else {
       std::stringstream ss;
       ss << std::hex
          << "Unexpected message in the RemoteServerProxyUpdater main loop with type 0x"
          << static_cast<int>(message->type());
       delete message;
-      throw InvalidMessageException(ss.str());
+      Logger::warning(ss.str());
+      keep_going_ = false;
     }
   }
 }
 
-void RemoteServerProxyUpdater::handle_game_finished(LevelFinishedMessage *message) {
+void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *message) {
   message->read();
-  Logger::info(message->won() ? "User WON" : "User LOST");
+  Logger::info(message->won() ? "User won this level" : "User lost this level");
+}
+
+void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
+  message->read();
+  Logger::info(message->won() ? "USER WON THE MATCH" : "USER LOST THE MATCH");
 }
 
 void RemoteServerProxyUpdater::shutdown() {

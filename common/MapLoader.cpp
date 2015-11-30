@@ -98,7 +98,7 @@ void MapLoader::reposition_players() {
 Vector *MapLoader::player_start_point() {
   Vector *vect = NULL;
   if (even_) {
-    vect = new Vector(-2, 0);
+    vect = new Vector(-2, -10);
   } else {
     vect = new Vector(5, -15);
   }
@@ -108,12 +108,12 @@ Vector *MapLoader::player_start_point() {
 
 char MapLoader::needed_players() {
   // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
-  return 1;
+  return 2;
 }
 
 bool MapLoader::has_more_levels() {
   // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
-  return level_index_ < 1;
+  return level_index_ < 5;
 }
 
 void MapLoader::load_next_level() {

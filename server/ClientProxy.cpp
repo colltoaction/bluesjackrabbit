@@ -153,6 +153,11 @@ void ClientProxy::send_winner(GameObjectPlayer *winner) {
   writer.send_level_finished(player_ == winner);
 }
 
+void ClientProxy::send_total_winner(GameObjectPlayer *winner) {
+  MessageWriter writer(socket_);
+  writer.send_game_finished(player_ == winner);
+}
+
 /* El socket aceptor envia una senial de terminacion porque se quiere finalizar
  * el servidor, eso implica cerrar todas las socketes con los clientes.
  * Se marca como finalized y se cierra la socket con la otra punta
