@@ -2,6 +2,8 @@
 #include <gdkmm/general.h>
 #include <cmath>
 
+#define THRESHOLD 0.01
+
 CharacterRenderer::CharacterRenderer(const Vector &position, double radius)
     : Renderer(position),
       radius_(radius),
@@ -31,7 +33,7 @@ void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
 
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > *images;
 
-  if (std::abs(last_x_ - position_.x()) > 0.01) {
+  if (std::abs(last_x_ - position_.x()) > THRESHOLD) {
     sprite_index = ((sprite_step_ / 3) % sprites_moving_size()) + 1;
     if (last_x_ - position_.x() > 0.0) {
       right_direction_ = false;
@@ -39,9 +41,9 @@ void CharacterRenderer::render(const Cairo::RefPtr<Cairo::Context> &cr) {
       right_direction_ = true;
     }
   }
-  if (last_x_ - position_.x() > 0.01) {
+  if (last_x_ - position_.x() > THRESHOLD) {
     images = &images_left_;
-  } else if ((last_x_ - position_.x()) < -0.01) {
+  } else if ((last_x_ - position_.x()) < -THRESHOLD) {
     images = &images_right_;
   } else {
     if (right_direction_) {
