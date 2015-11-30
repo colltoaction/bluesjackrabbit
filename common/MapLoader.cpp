@@ -113,7 +113,7 @@ char MapLoader::needed_players() {
 
 bool MapLoader::has_more_levels() {
   // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
-  return level_index_ < 5;
+  return level_index_ < 3;
 }
 
 void MapLoader::load_next_level() {
