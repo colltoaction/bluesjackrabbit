@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-EditorController::EditorController() : level_("Mapa de ejemplo", 1000, 1000),
+EditorController::EditorController() : level_(new Level("Mapa de ejemplo", 1000, 1000)),
     unsaved_changes_(false) {
 }
 
@@ -23,7 +23,7 @@ void EditorController::start_new_level(const Glib::VariantBase& /* parameter */)
 }
 
 void EditorController::save_file() {
-  LevelWriter writer(level_);
+  LevelWriter writer(*level_);
   writer.write("level1.xml");
 }
 
@@ -35,5 +35,11 @@ void EditorController::save_file(const Glib::VariantBase& /* parameter */) {
 // LA MEMORIA!!
 void EditorController::register_object(LevelObject* object) {
   obj_by_rep_lookup_table[object->representation()] = object;
-  level_.add_generic_object(object);
+  level_->add_generic_object(object);
+}
+
+EditorController::~EditorController() {
+  if (level_) {
+    delete level_;
+  }
 }

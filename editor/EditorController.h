@@ -10,6 +10,7 @@
 class EditorController {
  public:
   EditorController();
+  ~EditorController();
   void start_new_level();
   void start_new_level(const Glib::VariantBase&);
   void save_file();
@@ -18,7 +19,7 @@ class EditorController {
   // void update_object(Glib::RefPtr<Goocanvas::Item>, int x, )
 
  private:
-  Level level_;
+  Level* level_;
   bool unsaved_changes_;
   std::map<Glib::RefPtr<Goocanvas::Item>, LevelObject*> obj_by_rep_lookup_table;
 };

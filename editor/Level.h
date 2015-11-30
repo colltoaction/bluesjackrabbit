@@ -7,6 +7,8 @@
 class Level {
  public:
   Level(std::string title, int width, int height);
+  ~Level();
+  void delete_objects(std::vector<LevelObject*> object_vector);
   void add_generic_object(LevelObject* object);
   void add_start_point(LevelObject* object);
   void add_spawn_point(LevelObject* object);

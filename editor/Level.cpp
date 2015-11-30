@@ -48,3 +48,18 @@ int Level::width() const {
 int Level::height() const {
   return height_;
 }
+
+void Level::delete_objects(std::vector<LevelObject*> object_vector) {
+  std::vector<LevelObject*>::iterator it = object_vector.begin();
+  while (it != object_vector.end()) {
+    delete *it;
+    ++it;
+  }
+}
+
+Level::~Level() {
+  delete_objects(objects_);
+  delete_objects(start_points_);
+  delete_objects(spawn_points_);
+  delete_objects(goals_);
+}
