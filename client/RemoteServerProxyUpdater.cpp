@@ -34,24 +34,12 @@ void RemoteServerProxyUpdater::run() {
     try {
       MessageReader reader(socket_);
       Message *message = reader.read_message();  // Need a pointer because of polymorphism
-      // TODO(tinchou): don't use the init message, create an update message
       if (message->type() == GameInitMessage::type_id()) {
         handle_objects(dynamic_cast<GameInitMessage *>(message));
-        delete message;
       } else if (message->type() == LevelFinishedMessage::type_id()) {
         handle_level_finished(dynamic_cast<LevelFinishedMessage *>(message));
-        delete message;
-        new_level_ = true;
-        /*MessageReader new_level_reader(socket_);
-        GameInitMessage mes = new_level_reader.read_game_init();
-        mes.read();
-        lives_update_functor_(mes.info().remaining_lives());
-        for (std::vector<GameObjectMessage *>::const_iterator i = mes.objects().begin();
-             i != mes.objects().end(); i++) {
-          create_object_renderer_functor_((*i)->object_id(), (*i)->object_type(), (*i)->position(), (*i)->points());
-        }*/
       } else if (message->type() == GameFinishedMessage::type_id()) {
-        delete message;
+        handle_game_finished(dynamic_cast<GameFinishedMessage *>(message));
       } else {
         std::stringstream ss;
         ss << std::hex
@@ -59,14 +47,16 @@ void RemoteServerProxyUpdater::run() {
            << static_cast<int>(message->type());
         delete message;
         Logger::warning(ss.str());
-        keep_going_ = false;
+        shutdown();
       }
+      delete message;
     } catch (const InvalidMessageException& e) {
       std::stringstream ss;
       ss << std::hex
          << "Unexpected message in the RemoteServerProxyUpdater main loop. "
          << e.what();
       Logger::error(ss.str());
+      shutdown();
     }
   }
 }
@@ -74,11 +64,13 @@ void RemoteServerProxyUpdater::run() {
 void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *message) {
   message->read();
   Logger::info(message->won() ? "User won this level" : "User lost this level");
+  new_level_ = true;
 }
 
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
   message->read();
   Logger::info(message->won() ? "USER WON THE MATCH" : "USER LOST THE MATCH");
+  shutdown();
 }
 
 void RemoteServerProxyUpdater::shutdown() {
