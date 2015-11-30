@@ -48,6 +48,9 @@ class Vector {
    */
   Vector direction();
 
+  /**
+   * Equality comparison between this and another vector.
+   */
   bool operator==(const Vector &other) const;
 
   /**

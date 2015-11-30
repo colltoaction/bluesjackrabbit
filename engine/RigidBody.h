@@ -24,7 +24,7 @@ class RigidBody : public Body {
   virtual void stop_y();
   virtual bool stopped();
   virtual bool stopped_x();
-  virtual void project_velocity_onto(Line line);
+  virtual void handle_line_hit(Line line);
 
  private:
   static const Vector gravity_;

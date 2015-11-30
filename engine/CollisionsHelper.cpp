@@ -20,7 +20,7 @@ bool CollisionsHelper::circle_polygon_intersect(Vector p1, double r1, std::vecto
        j = i++) {
     Line line(polygon_points[i], polygon_points[j]);
     if (circle_line_intersect(p1, r1, line)) {
-      body->project_velocity_onto(line);
+      body->handle_line_hit(line);
       intersects = true;
     }
   }

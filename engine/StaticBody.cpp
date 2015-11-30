@@ -51,5 +51,5 @@ bool StaticBody::stopped_x() {
   return true;
 }
 
-void StaticBody::project_velocity_onto(Line /* line */) {
+void StaticBody::handle_line_hit(Line /* line */) {
 }

@@ -77,7 +77,7 @@ bool RigidBody::stopped_x() {
   return velocity_.x() == 0;
 }
 
-void RigidBody::project_velocity_onto(Line line) {
+void RigidBody::handle_line_hit(Line line) {
   velocity_ = line.project(velocity_);
   force_ = line.project(force_);
 }

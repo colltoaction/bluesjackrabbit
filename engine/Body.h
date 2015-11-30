@@ -81,7 +81,7 @@ class Body {
   /**
    * Projects velocity onto a line (mainly for collisions).
    */
-  virtual void project_velocity_onto(Line line) = 0;
+  virtual void handle_line_hit(Line line) = 0;
 };
 
 
