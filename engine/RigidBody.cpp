@@ -4,6 +4,7 @@
 const Vector RigidBody::gravity_ = Vector(0, 0.0000098) *
     Engine::fixed_update_step *
     Engine::fixed_update_step;  // in m/ms²
+const Vector RigidBody::compense_gravity_ = gravity_ * -1;
 const double RigidBody::friction_magnitude_ = 0.1;
 const Vector RigidBody::jump_force_ = Vector(0, -0.1);
 
