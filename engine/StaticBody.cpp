@@ -17,6 +17,9 @@ const Vector &StaticBody::velocity() const {
 void StaticBody::apply_force(const Vector & /* force */) {
 }
 
+void StaticBody::set_velocity(const Vector & /* velocity */) {
+}
+
 void StaticBody::apply_jump_force() {
 }
 
@@ -46,4 +49,7 @@ bool StaticBody::stopped() {
 
 bool StaticBody::stopped_x() {
   return true;
+}
+
+void StaticBody::handle_line_hit(Line /* line */) {
 }

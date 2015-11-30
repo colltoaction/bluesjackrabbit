@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_ENGINE_VECTOR_H
 #define BLUESJACKRABBIT_ENGINE_VECTOR_H
 
+
 /**
  * A 2-dimensional vector with many useful operations and operator overloads.
  */

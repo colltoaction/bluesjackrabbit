@@ -2,6 +2,7 @@
 #define BLUESJACKRABBIT_ENGINE_BODY_H
 
 #include "Vector.h"
+#include "Line.h"
 
 /**
  * Represents a body in space, with force interactions and velocity.
@@ -21,6 +22,11 @@ class Body {
    * so a force needs to be applied repeatedly to be constant (like gravity).
    */
   virtual void apply_force(const Vector &vector) = 0;
+
+  /**
+   * Apply a velocity to this object.
+   */
+  virtual void set_velocity(const Vector &velocity) = 0;
 
   /**
    * Apply a jump force to this object. Calls apply_force internally with a predefined
@@ -54,23 +60,28 @@ class Body {
 
   /**
    * Zeroes the force and velocity un X axe.
-   * */
+   */
   virtual void stop_x() = 0;
 
   /**
    * Zeroes the force and velocity in Y axe.
-   * */
+   */
   virtual void stop_y() = 0;
 
   /**
    * Informs whether body is stopped or moving.
-   * */
+   */
   virtual bool stopped() = 0;
 
   /**
    * Informs whether body is not moving in X axe.
-   * */
+   */
   virtual bool stopped_x() = 0;
+
+  /**
+   * Projects velocity onto a line (mainly for collisions).
+   */
+  virtual void handle_line_hit(Line line) = 0;
 };
 
 

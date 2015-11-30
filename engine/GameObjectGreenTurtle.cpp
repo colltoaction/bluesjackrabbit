@@ -1,12 +1,12 @@
 #include "GameObjectGreenTurtle.h"
+#include "Engine.h"
 
 #define GREEN_TURTLE_LIVES 2
-#define MOVE_FORCE 0.03
+#define VELOCITY (0.2 / Engine::fixed_update_step)
 
 GameObjectGreenTurtle::GameObjectGreenTurtle(Body *body, Collider *collider)
   : GameObject(body, collider),
     lives_(GREEN_TURTLE_LIVES),
-    normal_(false),
     floor_under_(NULL),
     direction_(1) {
 }
@@ -15,22 +15,14 @@ GameObjectGreenTurtle::~GameObjectGreenTurtle() {
 }
 
 void GameObjectGreenTurtle::update_fixed() {
-  if (!normal_) {
-    body().apply_force(gravity_);
-  } else {
-    body().stop_y();
-    if (body().stopped()) {
-      body().apply_force(Vector(direction_ * MOVE_FORCE, 0));
-    }
-    if (floor_under_) {
-      if (floor_under_->right_x() < this->body().position().x()
-          || floor_under_->left_x() > this->body().position().x()) {
-        direction_ = direction_ * -1;  // Invert direction
-        body().apply_force(Vector(direction_ * 2 * MOVE_FORCE, 0));
-      }
+  if (floor_under_) {
+    body().set_velocity(Vector(direction_ * VELOCITY, 0));
+    if (body().next_position().x() >= floor_under_->right_x() ||
+        body().next_position().x() <= floor_under_->left_x()) {
+      body().set_velocity(Vector::zero());
+      direction_ *= -1;
     }
   }
-  normal_ = false;
 }
 
 char GameObjectGreenTurtle::game_object_type() {
@@ -43,7 +35,6 @@ void GameObjectGreenTurtle::impact(GameObject *other) {
       lives_--;
       break;
     case 'f':
-      normal_ = true;
       floor_under_ = static_cast<GameObjectFloor*>(other);
       break;
   }

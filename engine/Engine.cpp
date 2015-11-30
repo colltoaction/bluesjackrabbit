@@ -70,7 +70,7 @@ void Engine::players_shots() {
         Vector origin = game_objects_[it->first]->body().position();
         Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
         RigidBody *body = new RigidBody(offset);
-        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(*body, 0.05),
+        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(body, 0.05),
             player->direction());
         game_objects_[object_index_++] = object;
         player->shot();

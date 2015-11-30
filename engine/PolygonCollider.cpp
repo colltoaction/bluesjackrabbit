@@ -23,10 +23,8 @@ bool PolygonCollider::will_collide(const Collider &other) const {
   return other.will_collide(*this);
 }
 
-bool PolygonCollider::will_collide(const CircleCollider &other) const {
-  return CollisionsHelper::circle_polygon_intersect(
-      other.body().position(), other.radius(),
-      points_);
+bool PolygonCollider::will_collide(const CircleCollider &/* other */) const {
+  return false;  // We're not using this
 }
 
 // TODO(tinchou): implement polygon_polygon_intersect

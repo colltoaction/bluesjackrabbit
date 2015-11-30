@@ -46,7 +46,6 @@ class GameObject {
   virtual bool alive();
 
  protected:
-  static const Vector gravity_;
   bool alive_;
   Body *body_;
   Collider *collider_;

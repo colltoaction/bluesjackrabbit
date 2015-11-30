@@ -2,7 +2,7 @@
 #include "CircleCollider.h"
 #include "CollisionsHelper.h"
 
-CircleCollider::CircleCollider(const Body &body, double radius)
+CircleCollider::CircleCollider(Body *body, double radius)
     : radius_(radius), body_(body) {
 }
 
@@ -12,18 +12,19 @@ bool CircleCollider::will_collide(const Collider &other) const {
 }
 
 bool CircleCollider::will_collide(const CircleCollider &other) const {
-  return CollisionsHelper::circles_intersect(body_.next_position(), radius_,
+  return CollisionsHelper::circles_intersect(body_->next_position(), radius_,
                                              other.body().position(), other.radius_);
 }
 
 bool CircleCollider::will_collide(const PolygonCollider &other) const {
   return CollisionsHelper::circle_polygon_intersect(
-      body_.next_position(), radius_,
-      other.points());
+            body_->next_position(), radius_,
+            other.points(),
+            body_);
 }
 
 const Body &CircleCollider::body() const {
-  return body_;
+  return *body_;
 }
 
 std::vector<Vector> CircleCollider::points() const {
