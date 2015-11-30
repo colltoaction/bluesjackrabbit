@@ -141,7 +141,7 @@ void MainWindow::singleplayer_click() {
 }
 
 void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy(config_);
+  server_proxy_ = new RemoteServerProxy(config_, sigc::mem_fun(*this, &MainWindow::main_game_view));
   init_server_proxy();
   main_game_view();
 }
