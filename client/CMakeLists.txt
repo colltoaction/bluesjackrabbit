@@ -12,6 +12,8 @@ set(SOURCES
         EventBus.h
         FloorRenderer.cpp
         FloorRenderer.h
+        GreenTurtleRenderer.cpp
+        GreenTurtleRenderer.h
         LivesRenderer.cpp
         LivesRenderer.h
         LocalServerProxy.cpp
@@ -22,6 +24,8 @@ set(SOURCES
         MeCharacterRenderer.h
         OtherCharacterRenderer.cpp
         OtherCharacterRenderer.h
+        RedTurtleRenderer.cpp
+        RedTurtleRenderer.h
         RemoteServerProxy.cpp
         RemoteServerProxy.h
         RemoteServerProxyUpdater.cpp
