@@ -64,13 +64,14 @@ void RemoteServerProxy::shoot() {
   socket_->send_buffer(&move, 1);
 }
 
-RemoteServerProxy::RemoteServerProxy(const Configuration &config)
+RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame finish)
     : config_(config)
     , socket_(NULL)
     , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
                sigc::mem_fun(*this, &RemoteServerProxy::update_object),
                sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
-               sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer))
+               sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer),
+               finish)
     , object_id_(0)
     , alive_(true) {
 }

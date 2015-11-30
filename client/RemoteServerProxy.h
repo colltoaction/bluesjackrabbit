@@ -28,7 +28,7 @@ typedef sigc::slot<void> Subscriber;
 
 class RemoteServerProxy : public ServerProxy {
  public:
-  explicit RemoteServerProxy(const Configuration &config);
+  explicit RemoteServerProxy(const Configuration &config, FinishGame finish);
   virtual ~RemoteServerProxy();
   virtual void MoveUp();
   virtual void MoveDown();
