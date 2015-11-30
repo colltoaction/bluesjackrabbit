@@ -9,17 +9,19 @@
 #include <common/LevelFinishedMessage.h>
 #include <common/GameFinishedMessage.h>
 #include <common/Logger.h>
+#include <gtkmm/messagedialog.h>
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update,
-    CleanRenderer cleaner, CreateObjectRenderer create)
+    CleanRenderer cleaner, CreateObjectRenderer create, FinishGame finish)
   : socket_(NULL)
   , keep_going_(true)
   , new_level_(false)
   , lives_update_functor_(lives_update)
   , update_functor_(update)
   , cleaner_functor_(cleaner)
-  , create_object_renderer_functor_(create) {
+  , create_object_renderer_functor_(create)
+  , finish_functor_(finish) {
 }
 
 void RemoteServerProxyUpdater::set_socket(Socket *socket) {
@@ -69,12 +71,18 @@ void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *messa
 
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
   message->read();
-  Logger::info(message->won() ? "USER WON THE MATCH" : "USER LOST THE MATCH");
+  bool won = message->won();
+  Logger::info(won ? "USER WON THE MATCH" : "USER LOST THE MATCH");
+  // Gtk::MessageDialog dialog(won ? "HA GANADO LA PARTIDA" : "HA PERDIDO");
+  // dialog.run();
   shutdown();
 }
 
 void RemoteServerProxyUpdater::shutdown() {
   keep_going_ = false;
+  // TODO(tomas) Revisar esto que creo que rompe
+  // cleaner_functor_();
+  // finish_functor_();
 }
 
 void RemoteServerProxyUpdater::handle_objects(GameInitMessage *pMessage) {
