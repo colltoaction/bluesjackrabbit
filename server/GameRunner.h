@@ -38,6 +38,7 @@ class GameRunner: public Thread {
   void notify_winner_to_clients(GameObjectPlayer *winner);
   void next_level(bool there_was_winner);
   void really_notify_winner();
+  GameObjectPlayer* look_up_winner();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */
