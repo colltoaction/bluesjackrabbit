@@ -33,8 +33,8 @@ class RemoteServerProxyUpdater : public Thread {
   CleanRenderer cleaner_functor_;
   CreateObjectRenderer create_object_renderer_functor_;
   void update_objects(GameInitMessage *pMessage);
-  void handle_game_finished(const LevelFinishedMessage *finished_message) const;
-  void handle_game_finished(LevelFinishedMessage *message);
+  void handle_game_finished(GameFinishedMessage *finished_message);
+  void handle_level_finished(LevelFinishedMessage *message);
 };
 
 #endif /* BLUESJACKRABBIT_CLIENT_REMOTESERVERPROXYUPDATER_H */

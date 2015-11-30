@@ -75,7 +75,9 @@ bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
 }
 
 void MainWindow::on_quit_requested() {
-  server_proxy_->shutdown();
+  if (server_proxy_ != NULL) {
+    server_proxy_->shutdown();
+  }
   hide();
 }
 
