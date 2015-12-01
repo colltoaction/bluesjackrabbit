@@ -17,6 +17,7 @@
 #include "BulletRenderer.h"
 #include "FloorRenderer.h"
 #include "MeCharacterRenderer.h"
+#include "NewLifeRenderer.h"
 #include <common/Constants.h>
 #include <common/Logger.h>
 #include <common/GameInitMessage.h>
@@ -63,13 +64,26 @@ void RemoteServerProxy::shoot() {
   socket_->send_buffer(&move, 1);
 }
 
-RemoteServerProxy::RemoteServerProxy(const Configuration &config)
+RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame finish)
     : config_(config)
     , socket_(NULL)
     , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
-               sigc::mem_fun(*this, &RemoteServerProxy::update_object))
+               sigc::mem_fun(*this, &RemoteServerProxy::update_object),
+               sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
+               sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer),
+               finish)
     , object_id_(0)
     , alive_(true) {
+}
+
+void RemoteServerProxy::clean_renderers() {
+  for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
+       game_object != renderers_.end();
+       ++game_object) {
+    delete game_object->second;
+  }
+  renderers_.clear();
+  Logger::info("RemoteServerProxy::clean_renderers limpio");
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
@@ -103,7 +117,7 @@ void RemoteServerProxy::connect() {
   updater_.set_socket(socket_);
   socket_->connect_socket();
   MessageReader reader(socket_);
-  reader.read_player_id();  // TODO(tinchou): use player id
+  reader.read_player_id();
   const std::string &peer_name_ = socket_->peer_name();
   Logger::info(std::string("Server ").append(peer_name_).append(" conectado"));
 }
@@ -171,6 +185,9 @@ void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_t
     case 'o':
       render = new FloorRenderer(position, points);
       break;
+    case 'l':
+      render = new NewLifeRenderer(position, points.front().x());
+      break;
   }
   renderers_[object_id] = render;
 }
@@ -189,22 +206,22 @@ void RemoteServerProxy::update_lives(char remaining_lives) {
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
   bool alive) {
-  (void) type;
-  (void) points;
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
-    } else {
-      renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+    } else if (type == 'b') {
+        renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
+    } else if (type == 'l') {
+      renderers_[object_id] = new NewLifeRenderer(Vector(x, y), points.front().x());
     }
   } else if (object_id != object_id_) {
-    std::cout << "muere object: " << type << std::endl;
-    Renderer *render = renderers_[object_id];
-    renderers_.erase(object_id);
-    delete render;
+    if (renderers_.find(object_id) != renderers_.end()) {
+      Renderer *render = renderers_[object_id];
+      renderers_.erase(object_id);
+      delete render;
+    }
   } else {
-    // TODO(tomas) Bloquear todo como para que el usuario no pueda hacer nada
-    std::cout << "te mataron\n";
+    Logger::info("Perdio todas las vidas");
   }
 }
 

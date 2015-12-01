@@ -34,7 +34,8 @@ class Game {
   std::string game_name_;
 
   void start_game();
-  int even;
+  bool load_next_level(bool there_was_winner);
+  void reset_players_lives();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAME_H */

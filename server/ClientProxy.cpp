@@ -150,6 +150,11 @@ void ClientProxy::send_objects(std::map<uint32_t, GameObject*> *game_objects) {
 
 void ClientProxy::send_winner(GameObjectPlayer *winner) {
   MessageWriter writer(socket_);
+  writer.send_level_finished(player_ == winner);
+}
+
+void ClientProxy::send_total_winner(GameObjectPlayer *winner) {
+  MessageWriter writer(socket_);
   writer.send_game_finished(player_ == winner);
 }
 

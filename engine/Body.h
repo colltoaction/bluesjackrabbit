@@ -40,6 +40,11 @@ class Body {
   virtual Vector position() const = 0;
 
   /**
+   * Moves to new position the body
+   */
+  virtual void reposition(Vector *reposition) = 0;
+
+  /**
    * Provides the position the body will be after calling update_fixed. A RigidBody would
    * give the next position given its velocity, and a StaticBody would always return the
    * same position.
@@ -56,7 +61,6 @@ class Body {
    * Zeroes the force and velocity of the object to make it stop immediately.
    */
   virtual void stop() = 0;
-
 
   /**
    * Zeroes the force and velocity un X axe.

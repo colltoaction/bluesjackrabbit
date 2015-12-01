@@ -28,7 +28,7 @@ typedef sigc::slot<void> Subscriber;
 
 class RemoteServerProxy : public ServerProxy {
  public:
-  explicit RemoteServerProxy(const Configuration &config);
+  explicit RemoteServerProxy(const Configuration &config, FinishGame finish);
   virtual ~RemoteServerProxy();
   virtual void MoveUp();
   virtual void MoveDown();
@@ -72,6 +72,7 @@ class RemoteServerProxy : public ServerProxy {
   void read_object_id(uint32_t *object_id);
   void update_lives(char remaining_lives);
   void update_object(uint32_t object_id, double x, double y, char type, point_type points, bool alive);
+  void clean_renderers();
   void create_object_renderer(uint32_t object_id, char object_type, const Vector &position, std::vector<Vector> points);
 };
 
