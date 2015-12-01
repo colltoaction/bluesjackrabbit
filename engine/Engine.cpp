@@ -180,7 +180,7 @@ uint32_t Engine::add_game_object_player(GameObjectPlayer *game_object) {
   return to_return;
 }
 
-void Engine::move_game_object_player(uint32_t object_id, Vector *new_position) {
+void Engine::move_game_object_player(uint32_t object_id, const Vector &new_position) {
   static_cast<GameObjectPlayer*>(game_objects_[object_id])->reset_lives();
   game_objects_[object_id]->reposition_object(new_position);
 }

@@ -42,7 +42,7 @@ class Body {
   /**
    * Moves to new position the body
    */
-  virtual void reposition(Vector *reposition) = 0;
+  virtual void reposition(const Vector &reposition) = 0;
 
   /**
    * Provides the position the body will be after calling update_fixed. A RigidBody would

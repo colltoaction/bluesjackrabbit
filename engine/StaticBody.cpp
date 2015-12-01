@@ -27,7 +27,7 @@ Vector StaticBody::position() const {
   return *position_;
 }
 
-void StaticBody::reposition(Vector* /*reposition*/ ) {
+void StaticBody::reposition(const Vector& /*reposition*/ ) {
 }
 
 Vector StaticBody::next_position() const {

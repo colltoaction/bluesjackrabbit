@@ -19,7 +19,7 @@ Body &GameObject::body() {
   return *body_;
 }
 
-void GameObject::reposition_object(Vector *new_position) {
+void GameObject::reposition_object(const Vector &new_position) {
   body_->reposition(new_position);
 }
 

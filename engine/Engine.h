@@ -76,7 +76,7 @@ class Engine {
   /**
    * Moves a player to a new position.
    */
-  void move_game_object_player(uint32_t object_id, Vector *new_position);
+  void move_game_object_player(uint32_t object_id, const Vector &new_position);
 
   /**
    * Player with object id tries to jump.
