@@ -145,10 +145,11 @@ void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   double y = to_game_coordinates(parameters["y"]);
   double width = 1;
   double height = 1;
+
   goal_points.push_back(Vector(x, y));
   goal_points.push_back(Vector(x + width, y));
-  goal_points.push_back(Vector(x + width, y - height));
-  goal_points.push_back(Vector(x, y - height));
+  goal_points.push_back(Vector(x + width / 2, y - height));
+
   StaticBody *goal_body = new StaticBody(new Vector(x + width / 2, y - height / 2));
   GameObjectGoal *goal = new GameObjectGoal(goal_body,
                                             new PolygonCollider(*goal_body, goal_points),
