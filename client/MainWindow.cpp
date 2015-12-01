@@ -209,11 +209,6 @@ void MainWindow::init_main_game_screen() {
 void MainWindow::init_connect_screen() {
   Glib::RefPtr<Gtk::Builder> builder = load_from_glade("static/connect.glade", &connection_screen_);
   Gtk::Button *button = NULL;
-  builder->get_widget("button_singleplayer", button);
-  if (button) {
-    button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::singleplayer_click));
-  }
-  button = NULL;
   builder->get_widget("button_multiplayer", button);
   if (button) {
       button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::multiplayer_click));

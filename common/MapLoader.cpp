@@ -67,7 +67,7 @@ void MapLoader::load_level() {
 }
 
 void MapLoader::place_player(ClientProxy *player) {
-  Vector *pos = player_start_point();
+  Vector *pos = new Vector(*player_start_point());
   RigidBody *body = new RigidBody(pos);
   GameObjectPlayer *object = new GameObjectPlayer(body, new CircleCollider(body, 0.5));
   uint32_t object_id = engine_->add_game_object_player(object);
@@ -98,6 +98,10 @@ void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
 void MapLoader::add_startpoint(std::map<std::string, std::string> parameters) {
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
+  std::stringstream ss;
+  ss << "Start point: ";
+  ss << "(" << x << ", " << y << ")";
+  Logger::info(ss.str());
   start_points_.push_back(new Vector(x, y));
 }
 
@@ -105,7 +109,12 @@ void MapLoader::add_spawnpoint(std::map<std::string, std::string> parameters) {
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
   RigidBody *r_body = new RigidBody(new Vector(x, y));
-  GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
+  GameObject *turtle;
+  if (g_random_boolean()) {
+    turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
+  } else {
+    turtle = new GameObjectRedTurtle(r_body, new CircleCollider(r_body, 0.5));
+  }
   engine_->add_game_object(turtle);
 }
 
@@ -115,7 +124,12 @@ void MapLoader::reposition_players() {
   for (std::map<uint32_t, ClientProxy*>::iterator it= players_.begin();
       it != players_.end();
       it++) {
-    engine_->move_game_object_player(it->first, player_start_point());
+    Vector *vec = player_start_point();
+    std::stringstream ss;
+    ss << "Reposicionando jugador a coordenadas: ";
+    ss << "(" << vec->x() << ", " << vec->y() << ")";
+    Logger::info(ss.str());
+    engine_->move_game_object_player(it->first, *vec);
   }
 }
 
@@ -134,6 +148,7 @@ void MapLoader::load_next_level() {
 }
 
 void MapLoader::reload_level() {
+  startpoint_cursor_ = 0;
   engine_->clean_objects();
   reposition_players();
   load_level();

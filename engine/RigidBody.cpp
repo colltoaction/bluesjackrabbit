@@ -38,9 +38,8 @@ Vector RigidBody::position() const {
   return *position_;
 }
 
-void RigidBody::reposition(Vector *reposition) {
-  delete position_;
-  position_ = reposition;
+void RigidBody::reposition(const Vector &reposition) {
+  *position_ = reposition;
   velocity_ = Vector::zero();
   force_ = Vector::zero();
 }

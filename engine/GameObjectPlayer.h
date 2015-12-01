@@ -63,6 +63,8 @@ class GameObjectPlayer: public GameObject {
 
   void increment_lives();
 
+  void new_direction(bool right);
+
  private:
   uint32_t engine_steps_;
   uint32_t last_shot_;

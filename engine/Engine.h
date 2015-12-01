@@ -76,7 +76,7 @@ class Engine {
   /**
    * Moves a player to a new position.
    */
-  void move_game_object_player(uint32_t object_id, Vector *new_position);
+  void move_game_object_player(uint32_t object_id, const Vector &new_position);
 
   /**
    * Player with object id tries to jump.
@@ -109,6 +109,11 @@ class Engine {
    * Checks if level is finished. This is done by checking players alive.
    * */
   bool level_finished();
+
+  /**
+   * Updates player direction to shoot bullets.
+   * */
+  void update_player_direction(uint32_t object_id, bool right);
 
  private:
   uint32_t object_index_;
