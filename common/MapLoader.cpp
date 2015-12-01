@@ -12,8 +12,8 @@
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
   , winner_notifier_(winner_notifier)
-  , even_(false),
-  level_index_(0) {
+  , even_(false)
+  , level_index_(0) {
 }
 
 MapLoader::~MapLoader() {

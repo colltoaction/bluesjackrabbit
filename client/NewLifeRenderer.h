@@ -1,5 +1,5 @@
-#ifndef NEWLIFERENDERER_H_
-#define NEWLIFERENDERER_H_
+#ifndef BLUESJACKRABBIT_CLIENT_NEWLIFERENDERER_H
+#define BLUESJACKRABBIT_CLIENT_NEWLIFERENDERER_H
 
 #include "Renderer.h"
 
@@ -12,4 +12,4 @@ class NewLifeRenderer: public Renderer {
   double radius_;
 };
 
-#endif /* NEWLIFERENDERER_H_ */
+#endif /* BLUESJACKRABBIT_CLIENT_NEWLIFERENDERER_H */

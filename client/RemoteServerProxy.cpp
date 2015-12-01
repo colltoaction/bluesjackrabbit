@@ -80,10 +80,9 @@ void RemoteServerProxy::clean_renderers() {
   for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
-    Renderer *render = game_object->second;
-    renderers_.erase(game_object->first);
-    delete render;
+    delete game_object->second;
   }
+  renderers_.clear();
   Logger::info("RemoteServerProxy::clean_renderers limpio");
 }
 
@@ -210,12 +209,10 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));
-    } else {
-      if (type == 'b') {
+    } else if (type == 'b') {
         renderers_[object_id] = new BulletRenderer(Vector(x, y), points.front().x());
-      } else if (type == 'l') {
-        renderers_[object_id] = new NewLifeRenderer(Vector(x, y), points.front().x());
-      }
+    } else if (type == 'l') {
+      renderers_[object_id] = new NewLifeRenderer(Vector(x, y), points.front().x());
     }
   } else if (object_id != object_id_) {
     if (renderers_.find(object_id) != renderers_.end()) {
@@ -224,7 +221,7 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
       delete render;
     }
   } else {
-    // Dead
+    Logger::info("Perdio todas las vidas");
   }
 }
 

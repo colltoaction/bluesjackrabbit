@@ -6,6 +6,9 @@
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
   : GameObject(body, collider)
+  , engine_steps_(MIN_ENGINE_STEPS_TO_DIE)
+  , last_shot_(MIN_ENGINE_STEPS_TO_SHOOT)
+  , last_dead_(MIN_ENGINE_STEPS_TO_DIE)
   , lives_(LIVES)
   , direction_(1)
   , normal_(false)

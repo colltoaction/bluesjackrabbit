@@ -19,8 +19,8 @@ typedef sigc::slot<void> FinishGame;
 
 class RemoteServerProxyUpdater : public Thread {
  public:
-  RemoteServerProxyUpdater(LivesUpdate live_update, RendererUpdate update,
-      CleanRenderer cleaner, CreateObjectRenderer create, FinishGame finish);
+  RemoteServerProxyUpdater(LivesUpdate live_update, RendererUpdate update
+      , CleanRenderer cleaner, CreateObjectRenderer create, FinishGame finish);
   virtual ~RemoteServerProxyUpdater();
   virtual void run();
   void set_socket(Socket *socket);
@@ -35,9 +35,9 @@ class RemoteServerProxyUpdater : public Thread {
   CleanRenderer cleaner_functor_;
   CreateObjectRenderer create_object_renderer_functor_;
   FinishGame finish_functor_;
-  void handle_objects(GameInitMessage *pMessage);
-  void update_objects(GameInitMessage *pMessage);
-  void create_objects(GameInitMessage *pMessage);
+  void handle_objects(GameInitMessage *message);
+  void update_objects(GameInitMessage *message);
+  void create_objects(GameInitMessage *message);
   void handle_game_finished(GameFinishedMessage *finished_message);
   void handle_level_finished(LevelFinishedMessage *message);
 };

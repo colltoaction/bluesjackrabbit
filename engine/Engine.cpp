@@ -11,7 +11,11 @@
 
 #include <stdlib.h>
 
-Engine::Engine() : object_index_(0), seed_(2142585766) {
+#define SEED 2142585766
+
+Engine::Engine()
+  : object_index_(0)
+  , seed_(static_cast<unsigned int>(time(NULL))) {
 }
 
 Engine::~Engine() {

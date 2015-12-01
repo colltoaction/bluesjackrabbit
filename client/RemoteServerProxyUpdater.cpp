@@ -54,8 +54,7 @@ void RemoteServerProxyUpdater::run() {
       delete message;
     } catch (const InvalidMessageException& e) {
       std::stringstream ss;
-      ss << std::hex
-         << "Unexpected message in the RemoteServerProxyUpdater main loop. "
+      ss << "Unexpected message in the RemoteServerProxyUpdater main loop. "
          << e.what();
       Logger::error(ss.str());
       shutdown();
@@ -85,17 +84,17 @@ void RemoteServerProxyUpdater::shutdown() {
   // finish_functor_();
 }
 
-void RemoteServerProxyUpdater::handle_objects(GameInitMessage *pMessage) {
+void RemoteServerProxyUpdater::handle_objects(GameInitMessage *message) {
   if (!new_level_) {
-    update_objects(pMessage);
+    update_objects(message);
   } else {
-    create_objects(pMessage);
+    create_objects(message);
     new_level_ = false;
   }
 }
 
-void RemoteServerProxyUpdater::create_objects(GameInitMessage *pMessage) {
-  GameInitMessage mes = *pMessage;
+void RemoteServerProxyUpdater::create_objects(GameInitMessage *message) {
+  GameInitMessage mes = *message;
   mes.read();
   lives_update_functor_(mes.info().remaining_lives());
   for (std::vector<GameObjectMessage *>::const_iterator i = mes.objects().begin();
