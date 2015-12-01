@@ -9,9 +9,11 @@
 
 #include "ClientProxy.h"
 
+typedef sigc::slot<bool, bool> LoadNextLevelCall;
+
 class GameRunner: public Thread {
  public:
-  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players);
+  GameRunner(Engine *engine, std::map<char, ClientProxy*> *players, LoadNextLevelCall load_level_functor);
   virtual ~GameRunner();
   virtual void run();
   void action(uint32_t object_id, char option);
@@ -24,12 +26,19 @@ class GameRunner: public Thread {
   Engine *engine_;
   Mutex engine_mutex_;
   std::map<char, ClientProxy*> *players_;
+  std::map<GameObjectPlayer*, int> levels_won_;
   bool keep_running_;
+  bool notify_winner_;
+  GameObjectPlayer *winner_;
+  LoadNextLevelCall load_level_;
   static const double step;
 
   void engine_step();
   void update_clients();
   void notify_winner_to_clients(GameObjectPlayer *winner);
+  void next_level(bool there_was_winner);
+  void really_notify_winner();
+  GameObjectPlayer* look_up_winner();
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMERUNNER_H */

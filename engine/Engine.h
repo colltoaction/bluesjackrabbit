@@ -7,6 +7,8 @@
 #include "Body.h"
 #include "Collider.h"
 #include "GameObject.h"
+#include "GameObjectPlayer.h"
+#include <common/Mutex.h>
 #include <stdint.h>
 
 /**
@@ -66,6 +68,17 @@ class Engine {
   uint32_t add_game_object(GameObject *game_object);
 
   /**
+   * Adds a game object player with a specific body and collider to the Engine.
+   * Used to mark the object player id.
+   */
+  uint32_t add_game_object_player(GameObjectPlayer *game_object);
+
+  /**
+   * Moves a player to a new position.
+   */
+  void move_game_object_player(uint32_t object_id, Vector *new_position);
+
+  /**
    * Player with object id tries to jump.
    */
   void player_jump(uint32_t object_id);
@@ -85,14 +98,36 @@ class Engine {
    * */
   void move_objects();
 
+  /**
+   * Called when want to load a new level. Removes all game objects
+   * EXCEPT GAME OBJECT PLAYERS BECAUSE THEY ALREADY HAVE A GAME ID
+   * Resets object index counter to start adding objects.
+   * */
+  void clean_objects();
+
+  /**
+   * Checks if level is finished. This is done by checking players alive.
+   * */
+  bool level_finished();
+
  private:
   uint32_t object_index_;
+  unsigned int seed_;
   std::map<uint32_t, GameObject*> game_objects_;
+  std::map<uint32_t, GameObjectPlayer*> game_objects_player_ids_;
   std::set<uint32_t> player_jump_;
   std::map<uint32_t, bool> player_shoot_;
+  Mutex mutex_;
   void check_collisions(const std::map<uint32_t, GameObject *>::iterator &game_object);
   void players_jumps();
   void players_shots();
+  void move_object_index();
+  void reset_object_index();
+
+  /**
+   * Verifies game objects who have died and if they leave rewards or not.
+   * */
+  void rewards();
 };
 
 

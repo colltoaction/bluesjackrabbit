@@ -17,6 +17,7 @@ class RigidBody : public Body {
   virtual void set_velocity(const Vector &velocity);
   virtual void apply_jump_force();
   virtual Vector position() const;
+  virtual void reposition(Vector *reposition);
   virtual Vector next_position() const;
   virtual void update_fixed();
   virtual void stop();
@@ -25,6 +26,7 @@ class RigidBody : public Body {
   virtual bool stopped();
   virtual bool stopped_x();
   virtual void handle_line_hit(Line line);
+  static const Vector compense_gravity_;
 
  private:
   static const Vector gravity_;

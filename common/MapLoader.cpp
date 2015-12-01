@@ -12,7 +12,8 @@
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
   , winner_notifier_(winner_notifier)
-  , even_(false) {
+  , even_(false)
+  , level_index_(0) {
 }
 
 MapLoader::~MapLoader() {
@@ -20,7 +21,12 @@ MapLoader::~MapLoader() {
 
 void MapLoader::load() {
   Logger::info("Loading hardcoded map");
+  load_level();
+  level_index_++;
+}
 
+void MapLoader::load_level() {
+  Logger::info("Cargando nivel");
   std::vector<Vector> goal_points;
   goal_points.push_back(Vector(17, 8));
   goal_points.push_back(Vector(17, 7));
@@ -54,6 +60,14 @@ void MapLoader::load() {
   GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
   engine_->add_game_object(turtle);
 
+  RigidBody *r_body22 = new RigidBody(new Vector(3, -10));
+  GameObjectGreenTurtle *turtle2 = new GameObjectGreenTurtle(r_body22, new CircleCollider(r_body22, 0.5));
+  engine_->add_game_object(turtle2);
+
+  RigidBody *r_body33 = new RigidBody(new Vector(4, -10));
+  GameObjectGreenTurtle *turtle3 = new GameObjectGreenTurtle(r_body33, new CircleCollider(r_body33, 0.5));
+  engine_->add_game_object(turtle3);
+
   RigidBody *r_body2 = new RigidBody(new Vector(5, -10));
   GameObjectRedTurtle *turtle_red = new GameObjectRedTurtle(r_body2, new CircleCollider(r_body2, 0.5));
   engine_->add_game_object(turtle_red);
@@ -67,15 +81,48 @@ void MapLoader::place_player(ClientProxy *player) {
   Vector *pos = player_start_point();
   RigidBody *body = new RigidBody(pos);
   GameObjectPlayer *object = new GameObjectPlayer(body, new CircleCollider(body, 0.5));
-  uint32_t object_id = engine_->add_game_object(object);
+  uint32_t object_id = engine_->add_game_object_player(object);
   player->add_object_id(object_id, object);
-  even_ = !even_;
+  players_[object_id] = player;
 }
 
-Vector *MapLoader::player_start_point() const {
-  if (even_) {
-    return new Vector(-2, 0);
-  } else {
-    return new Vector(5, -15);
+void MapLoader::reposition_players() {
+  even_ = false;
+  for (std::map<uint32_t, ClientProxy*>::iterator it= players_.begin();
+      it != players_.end();
+      it++) {
+    engine_->move_game_object_player(it->first, player_start_point());
   }
+}
+
+Vector *MapLoader::player_start_point() {
+  Vector *vect = NULL;
+  if (even_) {
+    vect = new Vector(-2, -10);
+  } else {
+    vect = new Vector(5, -15);
+  }
+  even_ = !even_;
+  return vect;
+}
+
+char MapLoader::needed_players() {
+  // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
+  return 1;
+}
+
+bool MapLoader::has_more_levels() {
+  // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
+  return level_index_ < 3;
+}
+
+void MapLoader::load_next_level() {
+  level_index_++;
+  reload_level();
+}
+
+void MapLoader::reload_level() {
+  engine_->clean_objects();
+  reposition_players();
+  load_level();
 }

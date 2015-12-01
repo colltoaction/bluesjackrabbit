@@ -1,5 +1,7 @@
 #include "GameObjectGoal.h"
 
+#include <iostream>
+
 GameObjectGoal::GameObjectGoal(Body *body, Collider *collider, WinnerNotifier winner_notifier)
   : GameObject(body, collider)
   , has_winner_(false)

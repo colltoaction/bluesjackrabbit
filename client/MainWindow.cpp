@@ -75,7 +75,9 @@ bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
 }
 
 void MainWindow::on_quit_requested() {
-  server_proxy_->shutdown();
+  if (server_proxy_ != NULL) {
+    server_proxy_->shutdown();
+  }
   hide();
 }
 
@@ -139,7 +141,7 @@ void MainWindow::singleplayer_click() {
 }
 
 void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy(config_);
+  server_proxy_ = new RemoteServerProxy(config_, sigc::mem_fun(*this, &MainWindow::main_game_view));
   init_server_proxy();
   main_game_view();
 }
