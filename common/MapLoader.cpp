@@ -81,7 +81,6 @@ Vector *MapLoader::player_start_point() {
 }
 
 void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
-  // std::cout << "Floor x: " << parameters["x"] << std::endl;
   std::vector<Vector> floor_points;
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);

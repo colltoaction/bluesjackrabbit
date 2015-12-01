@@ -98,10 +98,7 @@ RemoteServerProxy::~RemoteServerProxy() {
 }
 
 Vector RemoteServerProxy::character_position() {
-  // std::cout << "char position\n";
-  Vector ret = renderers_[object_id_]->position();
-  // std::cout << "char position after\n";
-  return ret;
+  return renderers_[object_id_]->position();
 }
 
 LivesRenderer &RemoteServerProxy::lives_renderer() {

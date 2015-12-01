@@ -105,7 +105,6 @@ void ClientProxy::add_start_functor(start_callback start_cb) {
 }
 
 void ClientProxy::add_object_id(uint32_t object_id, GameObjectPlayer *player) {
-  std::cout << "Agregando object_id " << static_cast<int>(object_id) << std::endl;
   object_id_ = object_id;
   player_ = player;
 }
