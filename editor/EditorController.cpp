@@ -2,6 +2,7 @@
 #include "EditorWindow.h"
 #include "EditorLayer.h"
 #include "LevelObject.h"
+#include "LevelObjectType.h"
 #include "LevelWriter.h"
 #include "EditorController.h"
 
@@ -35,7 +36,20 @@ void EditorController::save_file(const Glib::VariantBase& /* parameter */) {
 // LA MEMORIA!!
 void EditorController::register_object(LevelObject* object) {
   obj_by_rep_lookup_table[object->representation()] = object;
-  level_->add_generic_object(object);
+  switch (object->object_type()) {
+  case SPAWN_POINT:
+    level_->add_spawn_point(object);
+    break;
+  case START_POINT:
+    level_->add_start_point(object);
+    break;
+  case GOAL:
+    level_->add_goal(object);
+    break;
+  default:
+    level_->add_generic_object(object);
+    break;
+  }
 }
 
 EditorController::~EditorController() {

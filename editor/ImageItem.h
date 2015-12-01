@@ -1,6 +1,5 @@
 #ifndef BLUESJACKRABBIT_EDITOR_IMAGEITEM_H
 #define BLUESJACKRABBIT_EDITOR_IMAGEITEM_H
-#include <map>
 #include <goocanvasmm/image.h>
 #include <goocanvasmm/bounds.h>
 #include <gtkmm/widget.h>

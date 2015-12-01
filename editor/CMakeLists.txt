@@ -13,12 +13,15 @@ set(SOURCES main.cpp
 			CircleButton.cpp
 			CircleItem.cpp
 			CircleLevelObject.cpp
+			ControlItem.cpp
 			ControlToolButton.cpp
 			CustomToolButton.cpp
 			EditorCanvas.cpp
 			EditorController.cpp
 			EditorWindow.cpp
 			GoalButton.cpp
+			GoalItem.cpp
+			GoalLevelObject.cpp
 			GenericImageLevelObject.cpp
 			ImageItem.cpp
 			Level.cpp
@@ -28,7 +31,11 @@ set(SOURCES main.cpp
 			RectItem.cpp
 			RectangleLevelObject.cpp
 			SpawnPointButton.cpp
-			StartPointButton.cpp)
+			SpawnPointItem.cpp
+			SpawnPointLevelObject.cpp
+			StartPointButton.cpp
+			StartPointItem.cpp
+			StartPointLevelObject.cpp)
 
 include(CppLint)
 

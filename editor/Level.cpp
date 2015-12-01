@@ -58,8 +58,8 @@ void Level::delete_objects(std::vector<LevelObject*> object_vector) {
 }
 
 Level::~Level() {
-  delete_objects(objects_);
   delete_objects(start_points_);
   delete_objects(spawn_points_);
   delete_objects(goals_);
+  delete_objects(objects_);
 }

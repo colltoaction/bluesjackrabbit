@@ -3,6 +3,8 @@
 #include <vector>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
+#include <goocanvasmm/group.h>
+#include "ControlItem.h"
 #include "LevelObjectType.h"
 #include "EditorController.h"
 
@@ -15,6 +17,12 @@ public:
   bool on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
       GdkEventButton* event);
   bool on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventMotion* event);
+  bool on_group_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_group_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
       GdkEventMotion* event);
 
 private:
@@ -45,6 +53,8 @@ private:
   Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
   void move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y);
+  Glib::RefPtr<Goocanvas::Group> get_group(const Glib::RefPtr<Goocanvas::Item>& item);
+  bool is_overlapped(Glib::RefPtr<Goocanvas::Item> item);
 
   Gtk::ScrolledWindow*& canvas_window_;
   EditorController* controller_;

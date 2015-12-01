@@ -21,7 +21,7 @@ class EditorController {
  private:
   Level* level_;
   bool unsaved_changes_;
-  std::map<Glib::RefPtr<Goocanvas::Item>, LevelObject*> obj_by_rep_lookup_table;
+  std::map<Glib::RefPtr<Goocanvas::Item>*, LevelObject*> obj_by_rep_lookup_table;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H

@@ -3,24 +3,36 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolpalette.h>
+#include <goocanvasmm/group.h>
 #include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
 #include "CircleButton.h"
 #include "CircleItem.h"
 #include "CircleLevelObject.h"
+#include "ControlItem.h"
 #include "EditorController.h"
 #include "GenericImageLevelObject.h"
+#include "GoalButton.h"
+#include "GoalItem.h"
+#include "GoalLevelObject.h"
 #include "ImageItem.h"
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 #include "RectButton.h"
 #include "RectangleLevelObject.h"
 #include "RectItem.h"
+#include "SpawnPointButton.h"
+#include "SpawnPointItem.h"
+#include "SpawnPointLevelObject.h"
+#include "StartPointButton.h"
+#include "StartPointItem.h"
+#include "StartPointLevelObject.h"
 #include "EditorCanvas.h"
 #define LEFT_BUTTON 1
 #define DEFAULT_RECT_WIDTH 64
 #define DEFAULT_RECT_HEIGHT 32
 #define DEFAULT_CIRCLE_RADIUS 32
+#define DEFAULT_CONTROL_HEIGHT 64
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -61,9 +73,17 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   } else if (dynamic_cast<CircleButton*>(button)) {
     obj_type = CIRCLE;
   } else {
-    obj_type = GENERIC_IMAGE;
     icon = button->get_icon_widget();
-    file = button->get_label();
+    if (dynamic_cast<SpawnPointButton*>(button)) {
+      obj_type = SPAWN_POINT;
+    } else if (dynamic_cast<StartPointButton*>(button)) {
+      obj_type = START_POINT;
+    } else if (dynamic_cast<GoalButton*>(button)) {
+      obj_type = GOAL;
+    } else {
+      obj_type = GENERIC_IMAGE;
+      file = button->get_label();
+    }
   }
 
   /* This method is called from either drag_motion or drag_drop, and the DragContext has to be
@@ -88,22 +108,47 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case CIRCLE:
       obj_representation = CircleItem::create(this, item_x, item_y, DEFAULT_CIRCLE_RADIUS);
       object = new CircleLevelObject(item_x, item_y, DEFAULT_CIRCLE_RADIUS, obj_representation);
-      controller_->register_object(object);
       break;
     case RECTANGLE:
       obj_representation = RectItem::create(this, item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
       object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
           obj_representation);
-      controller_->register_object(object);
+      break;
+    case SPAWN_POINT:
+      {
+        Glib::RefPtr<SpawnPointItem> spawn_point = SpawnPointItem::create(this, icon, x, y,
+            DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
+        obj_representation = spawn_point;
+        spawn_point->update_box_style(false, is_overlapped(obj_representation));
+        object = new SpawnPointLevelObject(item_x, item_y, obj_representation);
+      }
+      break;
+    case START_POINT:
+      {
+        Glib::RefPtr<StartPointItem> start_point = StartPointItem::create(this, icon, x, y,
+          DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
+        obj_representation = start_point;
+        start_point->update_box_style(false, is_overlapped(obj_representation));
+        object = new StartPointLevelObject(item_x, item_y, obj_representation);
+      }
+      break;
+    case GOAL:
+      {
+        Glib::RefPtr<GoalItem> goal = GoalItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+          DEFAULT_CONTROL_HEIGHT, false, true);
+        obj_representation = goal;
+        goal->update_box_style(false, is_overlapped(obj_representation));
+        object = new GoalLevelObject(item_x, item_y, obj_representation);
+      }
       break;
     case GENERIC_IMAGE:
       obj_representation = ImageItem::create(this, icon, item_x, item_y);
       object = new GenericImageLevelObject(file, item_x, item_y, obj_representation);
-      controller_->register_object(object);
       break;
     default:
       break;
     }
+    controller_->register_object(object);
     context->drag_finish(false, false, timestamp);
   }
 }
@@ -161,6 +206,18 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
     break;
   case RECTANGLE:
     canvas_item = create_canvas_rect(item_x, item_y);
+    break;
+  case SPAWN_POINT:
+    canvas_item = SpawnPointItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+        DEFAULT_CONTROL_HEIGHT, true, false);
+    break;
+  case START_POINT:
+    canvas_item = StartPointItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+        DEFAULT_CONTROL_HEIGHT, true, false);
+    break;
+  case GOAL:
+    canvas_item = GoalItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+        DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case GENERIC_IMAGE:
   default:
@@ -226,4 +283,42 @@ bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& it
     move_item(item, t_x + delta_x, t_y + delta_y);
   }
   return true;
+}
+
+Glib::RefPtr<Goocanvas::Group> EditorCanvas::get_group(const Glib::RefPtr<Goocanvas::Item>& item) {
+  Glib::RefPtr<Goocanvas::Group> items_group = Glib::RefPtr<Goocanvas::Group>::cast_dynamic(item);
+  if (!items_group) {
+    items_group = Glib::RefPtr<Goocanvas::Group>::cast_dynamic(item->get_parent());
+  }
+  return items_group;
+}
+
+bool EditorCanvas::on_group_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventButton* event) {
+  return on_item_button_press(get_group(item), event);
+}
+
+bool EditorCanvas::on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventButton* event) {
+  Glib::RefPtr<ControlItem> control_item =
+      Glib::RefPtr<ControlItem>::cast_dynamic(get_group(item));
+  control_item->update_box_style(false, is_overlapped(control_item));
+  return on_item_button_release(control_item, event);
+}
+
+bool EditorCanvas::on_group_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+    GdkEventMotion* event) {
+  return on_item_motion_notify(get_group(item), event);
+}
+
+bool EditorCanvas::is_overlapped(Glib::RefPtr<Goocanvas::Item> item) {
+  std::vector< Glib::RefPtr<Goocanvas::Item> > items_overlapped =
+      get_items_in_area(item->get_bounds(), true, true, false);
+  std::vector< Glib::RefPtr<Goocanvas::Item> >::iterator it = items_overlapped.begin();
+  while (it != items_overlapped.end()) {
+    if (item != *it && item->find_child(*it) < 0)
+      return true;
+    ++it;
+  }
+  return false;
 }
