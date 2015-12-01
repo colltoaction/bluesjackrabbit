@@ -16,12 +16,16 @@
 LevelWriter::LevelWriter(const Level& level) : level_(level) {
 }
 
-void LevelWriter::write(std::string file_name) {
+void LevelWriter::write(std::string file_name, const std::string &players_size) {
+  std::cout << "Jugadores: " << players_size << std::endl;
   xmlpp::Document document;
   xmlpp::Element* node_root = document.create_root_node("map");
 
   xmlpp::Element* title_node = node_root->add_child("title");
   title_node->add_child_text(level_.title());
+
+  xmlpp::Element* players_size_node = node_root->add_child("players_size");
+  players_size_node->add_child_text(players_size);
 
   xmlpp::Element* width_node = node_root->add_child("width");
   width_node->add_child_text(to_string(level_.width()));

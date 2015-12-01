@@ -84,17 +84,14 @@ void GameRunner::notify_winner(GameObjectPlayer *winner) {
 GameObjectPlayer* GameRunner::look_up_winner() {
   GameObjectPlayer *winner = levels_won_.begin()->first;
   int max = levels_won_.begin()->second;
-  std::cout << "First: " << max << std::endl;
   for (std::map<GameObjectPlayer*, int>::iterator it = levels_won_.begin();
       it != levels_won_.end();
       it++) {
     if (it->second > max) {
-      std::cout << "Superado: " << max << std::endl;
       winner = it->first;
       max = it->second;
     }
   }
-  std::cout << "Final: " << max << std::endl;
   return winner;
 }
 
@@ -124,9 +121,7 @@ void GameRunner::update_clients() {
 }
 
 void GameRunner::notify_winner_to_clients(GameObjectPlayer *winner) {
-  std::cout << "Entro en notify winner\n";
   if (levels_won_.find(winner) == levels_won_.end()) {
-    std::cout << "No encuentra este winner.";
     levels_won_[winner] = 0;
   }
   levels_won_[winner] += 1;

@@ -1,6 +1,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <stdlib.h>
 #include <libxml++/libxml++.h>
 #include <libxml++/parsers/textreader.h>
 #include <engine/GameObjectFloor.h>
@@ -20,7 +21,8 @@ MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   , winner_notifier_(winner_notifier)
   , even_(false)
   , level_index_(0)
-  , startpoint_cursor_(0) {
+  , startpoint_cursor_(0)
+  , players_size_(0) {
 }
 
 MapLoader::~MapLoader() {
@@ -37,6 +39,13 @@ void MapLoader::load_level() {
 
   while (reader.read()) {
     std::string node_name = reader.get_name();
+    if (node_name.find("players_size") != std::string::npos) {
+      if (players_size_ == 0) {
+        reader.read();
+        std::string val = reader.get_value();
+        players_size_ = static_cast<char>(atoi(val.c_str()));
+      }
+    }
     std::map<std::string, std::string> attributes;
     if (reader.has_attributes()) {
       reader.move_to_first_attribute();
@@ -72,7 +81,6 @@ Vector *MapLoader::player_start_point() {
 }
 
 void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
-  // std::cout << "Floor x: " << parameters["x"] << std::endl;
   std::vector<Vector> floor_points;
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
@@ -112,8 +120,7 @@ void MapLoader::reposition_players() {
 }
 
 char MapLoader::needed_players() {
-  // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
-  return 1;
+  return players_size_;
 }
 
 bool MapLoader::has_more_levels() {
@@ -136,12 +143,13 @@ void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   std::vector<Vector> goal_points;
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
-  int width = 1;
-  int height = 1;
+  double width = 1;
+  double height = 1;
+
   goal_points.push_back(Vector(x, y));
   goal_points.push_back(Vector(x + width, y));
-  goal_points.push_back(Vector(x + width, y - height));
-  goal_points.push_back(Vector(x, y - height));
+  goal_points.push_back(Vector(x + width / 2, y - height));
+
   StaticBody *goal_body = new StaticBody(new Vector(x + width / 2, y - height / 2));
   GameObjectGoal *goal = new GameObjectGoal(goal_body,
                                             new PolygonCollider(*goal_body, goal_points),
@@ -149,14 +157,14 @@ void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   engine_->add_game_object(goal);
 }
 
-int MapLoader::to_int(std::string val) {
+double MapLoader::to_double(std::string val) {
   std::stringstream ss;
-  int val_int;
+  double val_int;
   ss << val;
   ss >> val_int;
   return val_int;
 }
 
 double MapLoader::to_game_coordinates(std::string val) {
-  return to_int(val) / PIXELS_PER_METER;
+  return to_double(val) / PIXELS_PER_METER;
 }

@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H
 #define BLUESJACKRABBIT_EDITOR_EDITORWINDOW_H
 
+#include <gtkmm/entry.h>
 #include <giomm/simpleactiongroup.h>
 #include <giomm/simpleaction.h>
 #include <gtkmm/box.h>
@@ -35,6 +36,7 @@ class EditorWindow: public Gtk::Window {
   void init_menus();
   void change_layer(int parameter);
 
+  Gtk::Entry players_size_;
   EditorController controller_;
 
   Gtk::Box *root_;

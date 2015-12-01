@@ -24,7 +24,10 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow() : canvas_(canvas_window_, &controller_) {
+EditorWindow::EditorWindow()
+  : players_size_()
+  , controller_(&players_size_)
+  , canvas_(canvas_window_, &controller_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
@@ -94,6 +97,7 @@ void EditorWindow::init_palette() {
 
   palette_->add(*misc_group_);
   palette_->add(*control_group_);
+  root_->add(players_size_);
 }
 
 void EditorWindow::init_menus() {
