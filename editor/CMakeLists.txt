@@ -11,11 +11,31 @@ include_directories(SYSTEM ${LIBXML_INCLUDE_DIRS})
 
 set(SOURCES main.cpp
 			CircleButton.cpp
+			CircleItem.cpp
+			CircleLevelObject.cpp
+			ControlItem.cpp
+			ControlToolButton.cpp
 			CustomToolButton.cpp
 			EditorCanvas.cpp
 			EditorController.cpp
 			EditorWindow.cpp
-			RectButton.cpp)
+			GoalButton.cpp
+			GoalItem.cpp
+			GoalLevelObject.cpp
+			GenericImageLevelObject.cpp
+			ImageItem.cpp
+			Level.cpp
+			LevelObject.cpp
+			LevelWriter.cpp
+			RectButton.cpp
+			RectItem.cpp
+			RectangleLevelObject.cpp
+			SpawnPointButton.cpp
+			SpawnPointItem.cpp
+			SpawnPointLevelObject.cpp
+			StartPointButton.cpp
+			StartPointItem.cpp
+			StartPointLevelObject.cpp)
 
 include(CppLint)
 

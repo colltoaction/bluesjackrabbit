@@ -7,11 +7,14 @@
 #include <gtkmm/image.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolitemgroup.h>
+#include "CircleButton.h"
 #include "EditorLayer.h"
 #include "EditorController.h"
 #include "EditorCanvas.h"
-#include "CircleButton.h"
+#include "GoalButton.h"
 #include "RectButton.h"
+#include "SpawnPointButton.h"
+#include "StartPointButton.h"
 #include "EditorWindow.h"
 #define GLADE_FILENAME "window.glade"
 #define MAIN_WINDOW_GLADE_ID "MainBox"
@@ -21,7 +24,7 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow() : canvas_(canvas_window_) {
+EditorWindow::EditorWindow() : canvas_(canvas_window_, &controller_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
@@ -65,13 +68,13 @@ void EditorWindow::init_palette() {
 
   std::string asset_filename;
 
-  // TODO(Diego): pasar a inicializacion de Assets
+  // TODO(Diego): pasar a codigo de inicializacion de Assets generico
   // Asset 2 - Image - Barrel
   asset_filename = "assets/barrel.png";
   Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
   Gtk::Image* image = Gtk::manage(new Gtk::Image(
       misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
-  Glib::ustring icon_name = "Obj1";
+  Glib::ustring icon_name = "barrel.png";
   Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
   misc_group_->insert(*button);
 
@@ -81,8 +84,16 @@ void EditorWindow::init_palette() {
   button = Gtk::manage(new RectButton("Rectangle"));
   misc_group_->insert(*button);
 
-  palette_->add(*control_group_);
+  // Control objects
+  button = Gtk::manage(new StartPointButton());
+  control_group_->insert(*button);
+  button = Gtk::manage(new SpawnPointButton());
+  control_group_->insert(*button);
+  button = Gtk::manage(new GoalButton());
+  control_group_->insert(*button);
+
   palette_->add(*misc_group_);
+  palette_->add(*control_group_);
 }
 
 void EditorWindow::init_menus() {
@@ -91,7 +102,11 @@ void EditorWindow::init_menus() {
   Glib::RefPtr<Gio::SimpleAction> action_new = Gio::SimpleAction::create("new");
   action_new->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::start_new_level));
+  Glib::RefPtr<Gio::SimpleAction> action_save = Gio::SimpleAction::create("save");
+  action_save->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::save_file));
   ag->add_action(action_new);
+  ag->add_action(action_save);
   /* Ver */
   insert_action_group("editor", ag);
 }

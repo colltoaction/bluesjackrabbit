@@ -1,19 +1,29 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
-
+#include <vector>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
-
-typedef enum DraggableObjectType_ {
-  IMAGE,
-  RECTANGLE,
-  CIRCLE
-} DraggableObjectType;
+#include <goocanvasmm/group.h>
+#include "ControlItem.h"
+#include "LevelObjectType.h"
+#include "EditorController.h"
 
 class EditorCanvas : public Goocanvas::Canvas {
 public:
-  EditorCanvas(Gtk::ScrolledWindow*& parent);
+  EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller);
   virtual ~EditorCanvas();
+  bool on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventMotion* event);
+  bool on_group_button_press(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventButton* event);
+  bool on_group_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
+      GdkEventMotion* event);
 
 private:
   /**
@@ -36,16 +46,24 @@ private:
   virtual bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
       guint time);
 
+  void convert_to_canvas_coordinates(double &x, double &y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon,
-      DraggableObjectType obj_type);
+      LevelObjectType obj_type);
   Glib::RefPtr<Goocanvas::Item> create_canvas_image(double x, double y, Gtk::Widget* icon);
   Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
+  void move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y);
+  Glib::RefPtr<Goocanvas::Group> get_group(const Glib::RefPtr<Goocanvas::Item>& item);
+  bool is_overlapped(Glib::RefPtr<Goocanvas::Item> item);
 
   Gtk::ScrolledWindow*& canvas_window_;
-  Glib::RefPtr<Goocanvas::Item> dnd_item_;
+  EditorController* controller_;
+  
+  Glib::RefPtr<Goocanvas::Item> item_being_moved_;
+  std::vector<Glib::RefPtr<Goocanvas::Item> > selected_items_;
   bool requested_for_motion_;
-
+  gdouble original_x_;
+  gdouble original_y_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
