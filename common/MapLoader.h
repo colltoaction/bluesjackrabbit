@@ -29,6 +29,7 @@ class MapLoader {
   void load_level();
   void reposition_players();
   std::vector<Vector*> start_points_;
+  char players_size_;
   Vector *player_start_point();
   void add_floor(std::map<std::string, std::string> parameters);
   void add_startpoint(std::map<std::string, std::string> parameters);

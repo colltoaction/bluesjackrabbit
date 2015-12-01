@@ -1,6 +1,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <stdlib.h>
 #include <libxml++/libxml++.h>
 #include <libxml++/parsers/textreader.h>
 #include <engine/GameObjectFloor.h>
@@ -20,7 +21,8 @@ MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   , winner_notifier_(winner_notifier)
   , even_(false)
   , level_index_(0)
-  , startpoint_cursor_(0) {
+  , startpoint_cursor_(0)
+  , players_size_(0) {
 }
 
 MapLoader::~MapLoader() {
@@ -37,6 +39,13 @@ void MapLoader::load_level() {
 
   while (reader.read()) {
     std::string node_name = reader.get_name();
+    if (node_name.find("players_size") != std::string::npos) {
+      if (players_size_ == 0) {
+        reader.read();
+        std::string val = reader.get_value();
+        players_size_ = static_cast<char>(atoi(val.c_str()));
+      }
+    }
     std::map<std::string, std::string> attributes;
     if (reader.has_attributes()) {
       reader.move_to_first_attribute();
@@ -112,8 +121,7 @@ void MapLoader::reposition_players() {
 }
 
 char MapLoader::needed_players() {
-  // TODO(tomas) Cambiar esto a la cantidad que indique el mapa
-  return 1;
+  return players_size_;
 }
 
 bool MapLoader::has_more_levels() {
