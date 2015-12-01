@@ -1,3 +1,8 @@
+#include <map>
+#include <sstream>
+#include <string>
+#include <libxml++/libxml++.h>
+#include <libxml++/parsers/textreader.h>
 #include <engine/GameObjectFloor.h>
 #include <engine/GameObjectGoal.h>
 #include <engine/GameObjectGreenTurtle.h>
@@ -8,73 +13,48 @@
 #include <engine/GameObjectWall.h>
 #include "MapLoader.h"
 #include "Logger.h"
+#define PIXELS_PER_METER 64
 
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
   , winner_notifier_(winner_notifier)
   , even_(false)
-  , level_index_(0) {
+  , level_index_(0)
+  , startpoint_cursor_(0) {
 }
 
 MapLoader::~MapLoader() {
 }
 
 void MapLoader::load() {
-  Logger::info("Loading hardcoded map");
   load_level();
   level_index_++;
 }
 
 void MapLoader::load_level() {
   Logger::info("Cargando nivel");
-  std::vector<Vector> goal_points;
-  goal_points.push_back(Vector(17, 8));
-  goal_points.push_back(Vector(17, 7));
-  goal_points.push_back(Vector(12, 7));
-  goal_points.push_back(Vector(12, 8));
-  StaticBody *goal_body = new StaticBody(new Vector(15, 5));
-  GameObjectGoal *goal = new GameObjectGoal(goal_body,
-                                            new PolygonCollider(*goal_body, goal_points),
-                                            winner_notifier_);
-  engine_->add_game_object(goal);
+  xmlpp::TextReader reader("static/level1.xml");
 
-  std::vector<Vector> floor_points;
-  floor_points.push_back(Vector(5, 8));
-  floor_points.push_back(Vector(5, 4));
-  floor_points.push_back(Vector(0, 4));
-  floor_points.push_back(Vector(0, 8));
-  StaticBody *body = new StaticBody(new Vector(3, 5));
-  GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points));
-  engine_->add_game_object(floor);
-
-  std::vector<Vector> wall_points;
-  wall_points.push_back(Vector(0, 12));
-  wall_points.push_back(Vector(0, 0));
-  wall_points.push_back(Vector(-5, 0));
-  wall_points.push_back(Vector(-5, 12));
-  StaticBody *body2 = new StaticBody(new Vector(3, 10));
-  GameObjectWall *wall = new GameObjectWall(body2, new PolygonCollider(*body2, wall_points));
-  engine_->add_game_object(wall);
-
-  RigidBody *r_body = new RigidBody(new Vector(2, -10));
-  GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
-  engine_->add_game_object(turtle);
-
-  RigidBody *r_body22 = new RigidBody(new Vector(3, -10));
-  GameObjectGreenTurtle *turtle2 = new GameObjectGreenTurtle(r_body22, new CircleCollider(r_body22, 0.5));
-  engine_->add_game_object(turtle2);
-
-  RigidBody *r_body33 = new RigidBody(new Vector(4, -10));
-  GameObjectGreenTurtle *turtle3 = new GameObjectGreenTurtle(r_body33, new CircleCollider(r_body33, 0.5));
-  engine_->add_game_object(turtle3);
-
-  RigidBody *r_body2 = new RigidBody(new Vector(5, -10));
-  GameObjectRedTurtle *turtle_red = new GameObjectRedTurtle(r_body2, new CircleCollider(r_body2, 0.5));
-  engine_->add_game_object(turtle_red);
-
-  RigidBody *r_body3 = new RigidBody(new Vector(2, 8));
-  GameObjectRedTurtle *turtle_red2 = new GameObjectRedTurtle(r_body3, new CircleCollider(r_body3, 0.5));
-  engine_->add_game_object(turtle_red2);
+  while (reader.read()) {
+    std::string node_name = reader.get_name();
+    std::map<std::string, std::string> attributes;
+    if (reader.has_attributes()) {
+      reader.move_to_first_attribute();
+      do {
+        attributes[reader.get_name()] = reader.get_value();
+      } while (reader.move_to_next_attribute());
+      // reader.move_to_element();
+      if (node_name == "rectangle") {
+        add_floor(attributes);
+      } else if (node_name == "startpoint") {
+        add_startpoint(attributes);
+      } else if (node_name == "spawnpoint") {
+        add_spawnpoint(attributes);
+      } else if (node_name == "goal") {
+        add_goal(attributes);
+      }
+    }
+  }
 }
 
 void MapLoader::place_player(ClientProxy *player) {
@@ -86,6 +66,42 @@ void MapLoader::place_player(ClientProxy *player) {
   players_[object_id] = player;
 }
 
+
+Vector *MapLoader::player_start_point() {
+  return start_points_[(startpoint_cursor_++) % start_points_.size()];
+}
+
+void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
+  // std::cout << "Floor x: " << parameters["x"] << std::endl;
+  std::vector<Vector> floor_points;
+  int x = to_game_coordinates(parameters["x"]);
+  int y = to_game_coordinates(parameters["y"]);
+  int width = to_game_coordinates(parameters["width"]);
+  int height = to_game_coordinates(parameters["height"]);
+  floor_points.push_back(Vector(x, y));
+  floor_points.push_back(Vector(x + width, y));
+  floor_points.push_back(Vector(x + width, y - height));
+  floor_points.push_back(Vector(x, y - height));
+  StaticBody *body = new StaticBody(new Vector(x + width / 2, y - height / 2));
+  GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points));
+  engine_->add_game_object(floor);
+}
+
+void MapLoader::add_startpoint(std::map<std::string, std::string> parameters) {
+  int x = to_game_coordinates(parameters["x"]);
+  int y = to_game_coordinates(parameters["y"]);
+  start_points_.push_back(new Vector(x, y));
+}
+
+void MapLoader::add_spawnpoint(std::map<std::string, std::string> parameters) {
+  int x = to_game_coordinates(parameters["x"]);
+  int y = to_game_coordinates(parameters["y"]);
+  RigidBody *r_body = new RigidBody(new Vector(x, y));
+  GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
+  engine_->add_game_object(turtle);
+}
+
+
 void MapLoader::reposition_players() {
   even_ = false;
   for (std::map<uint32_t, ClientProxy*>::iterator it= players_.begin();
@@ -93,17 +109,6 @@ void MapLoader::reposition_players() {
       it++) {
     engine_->move_game_object_player(it->first, player_start_point());
   }
-}
-
-Vector *MapLoader::player_start_point() {
-  Vector *vect = NULL;
-  if (even_) {
-    vect = new Vector(-2, -10);
-  } else {
-    vect = new Vector(5, -15);
-  }
-  even_ = !even_;
-  return vect;
 }
 
 char MapLoader::needed_players() {
@@ -125,4 +130,33 @@ void MapLoader::reload_level() {
   engine_->clean_objects();
   reposition_players();
   load_level();
+}
+
+void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
+  std::vector<Vector> goal_points;
+  int x = to_game_coordinates(parameters["x"]);
+  int y = to_game_coordinates(parameters["y"]);
+  int width = 1;
+  int height = 1;
+  goal_points.push_back(Vector(x, y));
+  goal_points.push_back(Vector(x + width, y));
+  goal_points.push_back(Vector(x + width, y - height));
+  goal_points.push_back(Vector(x, y - height));
+  StaticBody *goal_body = new StaticBody(new Vector(x + width / 2, y - height / 2));
+  GameObjectGoal *goal = new GameObjectGoal(goal_body,
+                                            new PolygonCollider(*goal_body, goal_points),
+                                            winner_notifier_);
+  engine_->add_game_object(goal);
+}
+
+int MapLoader::to_int(std::string val) {
+  std::stringstream ss;
+  int val_int;
+  ss << val;
+  ss >> val_int;
+  return val_int;
+}
+
+int MapLoader::to_game_coordinates(std::string val) {
+  return to_int(val) / PIXELS_PER_METER;
 }

@@ -1,6 +1,8 @@
 #ifndef BLUESJACKRABBIT_COMMON_MAPLOADER_H
 #define BLUESJACKRABBIT_COMMON_MAPLOADER_H
 
+#include <map>
+#include <sstream>
 #include <string>
 #include <engine/Engine.h>
 #include <server/ClientProxy.h>
@@ -22,10 +24,19 @@ class MapLoader {
   WinnerNotifier winner_notifier_;
   bool even_;
   char level_index_;
+  int startpoint_cursor_;
   std::map<uint32_t, ClientProxy*> players_;
-  Vector *player_start_point();
   void load_level();
   void reposition_players();
+  std::vector<Vector*> start_points_;
+  Vector *player_start_point();
+  void add_floor(std::map<std::string, std::string> parameters);
+  void add_startpoint(std::map<std::string, std::string> parameters);
+  void add_spawnpoint(std::map<std::string, std::string> parameters);
+  void add_goal(std::map<std::string, std::string> parameters);
+
+  int to_int(std::string val);
+  int to_game_coordinates(std::string val);
 };
 
 #endif  // BLUESJACKRABBIT_COMMON_MAPLOADER_H
