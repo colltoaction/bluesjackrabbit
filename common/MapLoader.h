@@ -36,7 +36,7 @@ class MapLoader {
   void add_spawnpoint(std::map<std::string, std::string> parameters);
   void add_goal(std::map<std::string, std::string> parameters);
 
-  int to_int(std::string val);
+  double to_double(std::string val);
   double to_game_coordinates(std::string val);
 };
 

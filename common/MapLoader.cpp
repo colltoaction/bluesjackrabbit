@@ -143,8 +143,8 @@ void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   std::vector<Vector> goal_points;
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
-  int width = 1;
-  int height = 1;
+  double width = 1;
+  double height = 1;
   goal_points.push_back(Vector(x, y));
   goal_points.push_back(Vector(x + width, y));
   goal_points.push_back(Vector(x + width, y - height));
@@ -156,14 +156,14 @@ void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   engine_->add_game_object(goal);
 }
 
-int MapLoader::to_int(std::string val) {
+double MapLoader::to_double(std::string val) {
   std::stringstream ss;
-  int val_int;
+  double val_int;
   ss << val;
   ss >> val_int;
   return val_int;
 }
 
 double MapLoader::to_game_coordinates(std::string val) {
-  return to_int(val) / PIXELS_PER_METER;
+  return to_double(val) / PIXELS_PER_METER;
 }
