@@ -42,7 +42,7 @@ void LevelWriter::add_visible_child_nodes(xmlpp::Element* root_element) {
   const std::vector<LevelObject*> objects = level_.generic_objects();
   std::vector<LevelObject*>::const_iterator it = objects.begin();
   while (it != objects.end()) {
-    xmlpp::Element* child_node;
+    xmlpp::Element* child_node = NULL;
     switch ((*it)->object_type()) {
     case GENERIC_IMAGE:
       {

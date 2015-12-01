@@ -13,7 +13,7 @@
 #include <engine/GameObjectWall.h>
 #include "MapLoader.h"
 #include "Logger.h"
-#define PIXELS_PER_METER 64
+#define PIXELS_PER_METER 64.0
 
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
@@ -74,10 +74,10 @@ Vector *MapLoader::player_start_point() {
 void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
   // std::cout << "Floor x: " << parameters["x"] << std::endl;
   std::vector<Vector> floor_points;
-  int x = to_game_coordinates(parameters["x"]);
-  int y = to_game_coordinates(parameters["y"]);
-  int width = to_game_coordinates(parameters["width"]);
-  int height = to_game_coordinates(parameters["height"]);
+  double x = to_game_coordinates(parameters["x"]);
+  double y = to_game_coordinates(parameters["y"]);
+  double width = to_game_coordinates(parameters["width"]);
+  double height = to_game_coordinates(parameters["height"]);
   floor_points.push_back(Vector(x, y));
   floor_points.push_back(Vector(x + width, y));
   floor_points.push_back(Vector(x + width, y - height));
@@ -88,14 +88,14 @@ void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
 }
 
 void MapLoader::add_startpoint(std::map<std::string, std::string> parameters) {
-  int x = to_game_coordinates(parameters["x"]);
-  int y = to_game_coordinates(parameters["y"]);
+  double x = to_game_coordinates(parameters["x"]);
+  double y = to_game_coordinates(parameters["y"]);
   start_points_.push_back(new Vector(x, y));
 }
 
 void MapLoader::add_spawnpoint(std::map<std::string, std::string> parameters) {
-  int x = to_game_coordinates(parameters["x"]);
-  int y = to_game_coordinates(parameters["y"]);
+  double x = to_game_coordinates(parameters["x"]);
+  double y = to_game_coordinates(parameters["y"]);
   RigidBody *r_body = new RigidBody(new Vector(x, y));
   GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
   engine_->add_game_object(turtle);
@@ -134,8 +134,8 @@ void MapLoader::reload_level() {
 
 void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
   std::vector<Vector> goal_points;
-  int x = to_game_coordinates(parameters["x"]);
-  int y = to_game_coordinates(parameters["y"]);
+  double x = to_game_coordinates(parameters["x"]);
+  double y = to_game_coordinates(parameters["y"]);
   int width = 1;
   int height = 1;
   goal_points.push_back(Vector(x, y));
@@ -157,6 +157,6 @@ int MapLoader::to_int(std::string val) {
   return val_int;
 }
 
-int MapLoader::to_game_coordinates(std::string val) {
+double MapLoader::to_game_coordinates(std::string val) {
   return to_int(val) / PIXELS_PER_METER;
 }

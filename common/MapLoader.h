@@ -36,7 +36,7 @@ class MapLoader {
   void add_goal(std::map<std::string, std::string> parameters);
 
   int to_int(std::string val);
-  int to_game_coordinates(std::string val);
+  double to_game_coordinates(std::string val);
 };
 
 #endif  // BLUESJACKRABBIT_COMMON_MAPLOADER_H
