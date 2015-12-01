@@ -66,17 +66,11 @@ bool GameObjectPlayer::alive() {
 }
 
 char GameObjectPlayer::direction() {
-  // TODO(tomas) Esto esta mal porque si me voy deteniendo de a poco.
-  // mi velocidad sigue siendo positiva por ej, pero estoy tratando de mirar
-  // hacia el otro lado (cosa que deberia poder disparar inmediatamente)
-  // Creo que hay que usar position en vez de velocidad, como creo que estaba hecho antes.
-  if (body().velocity().x() > 0) {
-    return (direction_ = 1);  // update and return
-  } else if (body().velocity().x() < 0) {
-    return (direction_ = -1);  // update and return
-  } else {
-    return direction_;  // last direction if it's still
-  }
+  return direction_;
+}
+
+void GameObjectPlayer::new_direction(bool right) {
+  direction_ = (right) ? 1 : -1;
 }
 
 char GameObjectPlayer::remaining_lives() {

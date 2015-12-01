@@ -110,6 +110,11 @@ class Engine {
    * */
   bool level_finished();
 
+  /**
+   * Updates player direction to shoot bullets.
+   * */
+  void update_player_direction(uint32_t object_id, bool right);
+
  private:
   uint32_t object_index_;
   unsigned int seed_;

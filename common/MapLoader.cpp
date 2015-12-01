@@ -109,7 +109,12 @@ void MapLoader::add_spawnpoint(std::map<std::string, std::string> parameters) {
   double x = to_game_coordinates(parameters["x"]);
   double y = to_game_coordinates(parameters["y"]);
   RigidBody *r_body = new RigidBody(new Vector(x, y));
-  GameObjectGreenTurtle *turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
+  GameObject *turtle;
+  if (g_random_boolean()) {
+    turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
+  } else {
+    turtle = new GameObjectRedTurtle(r_body, new CircleCollider(r_body, 0.5));
+  }
   engine_->add_game_object(turtle);
 }
 

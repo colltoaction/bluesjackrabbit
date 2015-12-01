@@ -151,6 +151,12 @@ void Engine::apply_force(GameObject *game_object, Vector force) {
   game_object->body().apply_force(force);
 }
 
+void Engine::update_player_direction(uint32_t object_id, bool right) {
+  if (game_objects_.find(object_id) != game_objects_.end()) {
+    static_cast<GameObjectPlayer*>(game_objects_[object_id])->new_direction(right);
+  }
+}
+
 void Engine::apply_force_(uint32_t object_id, Vector force) {
   if (game_objects_.find(object_id) != game_objects_.end()) {
     game_objects_[object_id]->body().apply_force(force);
