@@ -2,8 +2,11 @@
 
 
 SceneRenderer::SceneRenderer()
-  : server_proxy_(NULL),
-    camera_position_(0, 0) {
+  : server_proxy_(NULL)
+  , camera_position_(0, 0)
+  , image_(Cairo::SurfacePattern::create(
+        Cairo::ImageSurface::create_from_png("static/starfield.png"))) {
+  image_->set_extend(Cairo::EXTEND_REPEAT);
 }
 
 
@@ -23,6 +26,10 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   gint monitor_height = get_screen()->get_monitor_height_mm(get_screen()->get_primary_monitor());
   // 5mm in screen -> 1m in game
   gint scale_factor = std::min(monitor_width, monitor_height) / 5;
+
+  // background
+  cr->set_source(image_);
+  cr->paint();
 
   cr->save();
   // Temporary scaling to draw the heart in the corner of the screen

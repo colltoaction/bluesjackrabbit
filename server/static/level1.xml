@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map>
     <title>Mapa de ejemplo</title>
-    <players_size>1</players_size>
+    <players_size>2</players_size>
     <width>1000</width>
     <height>1000</height>
     <visible-object-layer>
