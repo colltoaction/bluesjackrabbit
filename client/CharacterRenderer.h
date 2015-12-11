@@ -11,11 +11,13 @@ class CharacterRenderer : public Renderer {
   explicit CharacterRenderer(const Vector &position, double radius);
   virtual ~CharacterRenderer();
   virtual void render(const Cairo::RefPtr<Cairo::Context> &cr);
+
  protected:
   virtual void load_sprites();
   virtual char sprites_moving_size();
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_right_;
   std::vector<Glib::RefPtr<Gdk::Pixbuf> > images_left_;
+
  private:
   double radius_;
   unsigned int sprite_step_;

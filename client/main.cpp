@@ -5,6 +5,7 @@
 #include "MainWindow.h"
 
 int main(int /* argc */, char *argv[]) {
+  LoggerScope scope;  // RAII
   try {
     int argc1 = 1;
     Glib::RefPtr<Gtk::Application> app =
@@ -12,7 +13,6 @@ int main(int /* argc */, char *argv[]) {
                                  argv,
                                  "org.fiuba.bluesjackrabbit",
                                  Gio::APPLICATION_NON_UNIQUE);  // Allow multiple windows
-    LoggerScope scope;  // RAII
     Configuration config("client.ini");
     MainWindow window(config);
     int result = app->run(window);
