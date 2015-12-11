@@ -51,8 +51,6 @@ class GameObject {
   bool alive_;
   Body *body_;
   Collider *collider_;
-
- private:
 };
 
 
