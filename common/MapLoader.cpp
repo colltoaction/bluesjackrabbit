@@ -15,14 +15,14 @@
 #define PIXELS_PER_METER 64.0
 
 MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
-  : engine_(engine)
-  , winner_notifier_(winner_notifier)
-  , even_(false)
-  , startpoint_cursor_(0)
-  , players_size_(1)
-  , parser_("static/level1.xml")
-  , levels_(parser_.get_document()->get_root_node()->get_children("level"))
-  , level_(levels_.begin()) {
+    : engine_(engine)
+    , winner_notifier_(winner_notifier)
+    , even_(false)
+    , startpoint_cursor_(0)
+    , parser_("static/level1.xml")
+    , players_size_(static_cast<char>(parser_.get_document()->get_root_node()->eval_to_number("@players_size")))
+    , levels_(parser_.get_document()->get_root_node()->get_children("level"))
+    , level_(levels_.begin()) {
 }
 
 MapLoader::~MapLoader() {

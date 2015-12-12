@@ -28,8 +28,8 @@ class MapLoader {
   void load_level();
   void reposition_players();
   std::vector<Vector*> start_points_;
-  char players_size_;
   xmlpp::DomParser parser_;
+  char players_size_;
   xmlpp::Node::NodeList levels_;
   xmlpp::Node::NodeList::const_iterator level_;
 
