@@ -16,7 +16,7 @@ typedef sigc::slot<void, char> LivesUpdate;
 typedef sigc::slot<void> CleanRenderer;
 typedef sigc::slot<void, uint32_t, char, const Vector&, point_type> CreateObjectRenderer;
 typedef sigc::slot<void> FinishGame;
-typedef sigc::slot<void/*, std::string*/> Notifier;
+typedef sigc::slot<void, std::string> Notifier;
 
 class RemoteServerProxyUpdater : public Thread {
  public:

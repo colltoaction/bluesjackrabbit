@@ -73,12 +73,13 @@ MainWindow::~MainWindow() {
   }
 }
 
-void MainWindow::notify_something() {
+void MainWindow::notify_something(std::string message) {
+  message_ = message;
   dispatcher_.emit();
 }
 
-void MainWindow::show_dialog(/*std::string message*/) {
-  Gtk::MessageDialog dialog(*this, "Hola");
+void MainWindow::show_dialog() {
+  Gtk::MessageDialog dialog(*this, message_);
   dialog.run();
 }
 

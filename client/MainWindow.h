@@ -22,7 +22,7 @@ class MainWindow: public Gtk::Window {
   explicit MainWindow(const Configuration &config);
   virtual ~MainWindow();
   void show_dialog(/*std::string message*/);
-  void notify_something();
+  void notify_something(std::string message);
 
  private:
   const Configuration &config_;
@@ -40,6 +40,7 @@ class MainWindow: public Gtk::Window {
   ServerProxy *server_proxy_;
   size_t map_id_;
   size_t game_id_;
+  std::string message_;
   static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);

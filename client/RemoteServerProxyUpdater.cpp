@@ -67,16 +67,15 @@ void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *messa
   message->read();
   std::string message_info = message->won() ? "User won this level" : "User lost this level";
   Logger::info(message_info);
-  notifier_functor_(/*message_info*/);
+  notifier_functor_(message_info);
   new_level_ = true;
 }
 
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
   message->read();
-  bool won = message->won();
-  Logger::info(won ? "USER WON THE MATCH" : "USER LOST THE MATCH");
-  // Gtk::MessageDialog dialog(won ? "HA GANADO LA PARTIDA" : "HA PERDIDO");
-  // dialog.run();
+  std::string message_info = message->won() ? "USER WON THE MATCH" : "USER LOST THE MATCH";
+  Logger::info(message_info);
+  notifier_functor_(message_info);
   shutdown();
 }
 
