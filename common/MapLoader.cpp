@@ -2,8 +2,6 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
-#include <libxml++/libxml++.h>
-#include <libxml++/parsers/textreader.h>
 #include <engine/GameObjectFloor.h>
 #include <engine/GameObjectGoal.h>
 #include <engine/GameObjectGreenTurtle.h>
@@ -20,9 +18,11 @@ MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
   : engine_(engine)
   , winner_notifier_(winner_notifier)
   , even_(false)
-  , level_index_(0)
   , startpoint_cursor_(0)
-  , players_size_(0) {
+  , players_size_(1)
+  , parser_("static/level1.xml")
+  , levels_(parser_.get_document()->get_root_node()->get_children("level"))
+  , level_(levels_.begin()) {
 }
 
 MapLoader::~MapLoader() {
@@ -30,39 +30,35 @@ MapLoader::~MapLoader() {
 
 void MapLoader::load() {
   load_level();
-  level_index_++;
 }
 
 void MapLoader::load_level() {
   Logger::info("Cargando nivel");
-  xmlpp::TextReader reader("static/level1.xml");
 
-  while (reader.read()) {
-    std::string node_name = reader.get_name();
-    if (node_name.find("players_size") != std::string::npos) {
-      if (players_size_ == 0) {
-        reader.read();
-        std::string val = reader.get_value();
-        players_size_ = static_cast<char>(atoi(val.c_str()));
-      }
-    }
-    std::map<std::string, std::string> attributes;
-    if (reader.has_attributes()) {
-      reader.move_to_first_attribute();
-      do {
-        attributes[reader.get_name()] = reader.get_value();
-      } while (reader.move_to_next_attribute());
-      // reader.move_to_element();
-      if (node_name == "rectangle") {
-        add_floor(attributes);
-      } else if (node_name == "startpoint") {
-        add_startpoint(attributes);
-      } else if (node_name == "spawnpoint") {
-        add_spawnpoint(attributes);
-      } else if (node_name == "goal") {
-        add_goal(attributes);
-      }
-    }
+  xmlpp::Node *visible_layer = (*level_)->get_first_child("visible-object-layer");
+  const xmlpp::Node::NodeList &rectangles = visible_layer->get_children("rectangle");
+  for (std::list<xmlpp::Node *>::const_iterator it = rectangles.begin();
+       it != rectangles.end(); ++it) {
+    add_floor(*it);
+  }
+
+  xmlpp::Node *control_layer = (*level_)->get_first_child("control-object-layer");
+  const xmlpp::Node::NodeList &startpoints = control_layer->get_children("startpoint");
+  for (std::list<xmlpp::Node *>::const_iterator it = startpoints.begin();
+       it != startpoints.end(); ++it) {
+    add_startpoint(*it);
+  }
+
+  const xmlpp::Node::NodeList &spawnpoints = control_layer->get_children("spawnpoint");
+  for (std::list<xmlpp::Node *>::const_iterator it = spawnpoints.begin();
+       it != spawnpoints.end(); ++it) {
+    add_spawnpoint(*it);
+  }
+
+  const xmlpp::Node::NodeList &goals = control_layer->get_children("goal");
+  for (std::list<xmlpp::Node *>::const_iterator it = goals.begin();
+       it != goals.end(); ++it) {
+    add_goal(*it);
   }
 }
 
@@ -80,13 +76,13 @@ Vector *MapLoader::player_start_point() {
   return start_points_[(startpoint_cursor_++) % start_points_.size()];
 }
 
-void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
+void MapLoader::add_floor(xmlpp::Node *const &node) {
   std::vector<Vector> floor_points;
-  double x = to_game_coordinates(parameters["x"]);
-  double y = to_game_coordinates(parameters["y"]);
-  double width = to_game_coordinates(parameters["width"]);
-  double height = to_game_coordinates(parameters["height"]);
-  bool breakable = parameters["breakable"] == "true";
+  double x = to_game_coordinates(node->eval_to_string("@x"));
+  double y = to_game_coordinates(node->eval_to_string("@y"));
+  double width = to_game_coordinates(node->eval_to_string("@width"));
+  double height = to_game_coordinates(node->eval_to_string("@height"));
+  bool breakable = node->eval_to_string("@breakable") == "true";
   floor_points.push_back(Vector(x, y));
   floor_points.push_back(Vector(x + width, y));
   floor_points.push_back(Vector(x + width, y - height));
@@ -96,9 +92,9 @@ void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
   engine_->add_game_object(floor);
 }
 
-void MapLoader::add_startpoint(std::map<std::string, std::string> parameters) {
-  double x = to_game_coordinates(parameters["x"]);
-  double y = to_game_coordinates(parameters["y"]);
+void MapLoader::add_startpoint(xmlpp::Node *const &node) {
+  double x = to_game_coordinates(node->eval_to_string("@x"));
+  double y = to_game_coordinates(node->eval_to_string("@y"));
   std::stringstream ss;
   ss << "Start point: ";
   ss << "(" << x << ", " << y << ")";
@@ -106,9 +102,9 @@ void MapLoader::add_startpoint(std::map<std::string, std::string> parameters) {
   start_points_.push_back(new Vector(x, y));
 }
 
-void MapLoader::add_spawnpoint(std::map<std::string, std::string> parameters) {
-  double x = to_game_coordinates(parameters["x"]);
-  double y = to_game_coordinates(parameters["y"]);
+void MapLoader::add_spawnpoint(xmlpp::Node *const &node) {
+  double x = to_game_coordinates(node->eval_to_string("@x"));
+  double y = to_game_coordinates(node->eval_to_string("@y"));
   RigidBody *r_body = new RigidBody(new Vector(x, y));
   GameObject *turtle;
   if (g_random_boolean()) {
@@ -138,14 +134,14 @@ char MapLoader::needed_players() {
   return players_size_;
 }
 
-bool MapLoader::has_more_levels() {
-  // TODO(tomas) Hardcodeado. Esto tambien sacarlo del xml
-  return level_index_ < 3;
-}
+bool MapLoader::load_next_level() {
+  ++level_;
+  if (level_ != levels_.end()) {
+    reload_level();
+    return true;
+  }
 
-void MapLoader::load_next_level() {
-  level_index_++;
-  reload_level();
+  return false;
 }
 
 void MapLoader::reload_level() {
@@ -155,10 +151,10 @@ void MapLoader::reload_level() {
   load_level();
 }
 
-void MapLoader::add_goal(std::map<std::string, std::string> parameters) {
+void MapLoader::add_goal(xmlpp::Node *const &node) {
   std::vector<Vector> goal_points;
-  double x = to_game_coordinates(parameters["x"]);
-  double y = to_game_coordinates(parameters["y"]);
+  double x = to_game_coordinates(node->eval_to_string("@x"));
+  double y = to_game_coordinates(node->eval_to_string("@y"));
   double width = 1;
   double height = 1;
 

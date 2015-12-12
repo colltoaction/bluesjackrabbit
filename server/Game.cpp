@@ -78,13 +78,12 @@ void Game::reset_players_lives() {
 
 bool Game::load_next_level(bool there_was_winner) {
   if (there_was_winner) {
-    if (map_loader_.has_more_levels()) {
-      map_loader_.load_next_level();
+    bool not_finished = map_loader_.load_next_level();
+    if (not_finished) {
       sleep(5);
-      return true;
-    } else {
-      return false;
     }
+
+    return not_finished;
   } else {
     map_loader_.reload_level();
     return true;
