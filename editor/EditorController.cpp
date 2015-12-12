@@ -8,9 +8,8 @@
 
 #include <iostream>
 
-EditorController::EditorController(Gtk::Entry *players_size)
-  : players_size_(players_size)
-  , level_(new Level("Mapa de ejemplo", 1000, 1000))
+EditorController::EditorController()
+  : level_(new Level("Mapa de ejemplo", 1000, 1000 , 2))
   , unsaved_changes_(false) {
 }
 
@@ -27,7 +26,7 @@ void EditorController::start_new_level(const Glib::VariantBase& /* parameter */)
 
 void EditorController::save_file() {
   LevelWriter writer(*level_);
-  writer.write("level1.xml", players_size_->get_text());
+  writer.write("level1.xml");
 }
 
 void EditorController::save_file(const Glib::VariantBase& /* parameter */) {

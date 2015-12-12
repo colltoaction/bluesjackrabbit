@@ -1,8 +1,8 @@
 #include "LevelObject.h"
 #include "Level.h"
 
-Level::Level(std::string title, int width, int height) :
-    title_(title), width_(width), height_(height) {
+Level::Level(std::string title, int width, int height, int players_qty) :
+    title_(title), width_(width), height_(height), players_qty_(players_qty) {
 }
 
 void Level::add_generic_object(LevelObject* object) {
@@ -47,6 +47,10 @@ int Level::width() const {
 
 int Level::height() const {
   return height_;
+}
+
+int Level::players_qty() const {
+  return players_qty_;
 }
 
 void Level::delete_objects(std::vector<LevelObject*> object_vector) {
