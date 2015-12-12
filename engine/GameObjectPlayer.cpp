@@ -3,6 +3,7 @@
 #define MIN_ENGINE_STEPS_TO_SHOOT 50  // One second
 #define MIN_ENGINE_STEPS_TO_DIE 50  // One second
 #define LIVES 4
+#define MAX_Y_TO_LIVE 500
 
 GameObjectPlayer::GameObjectPlayer(Body *body, Collider *collider)
   : GameObject(body, collider)
@@ -40,6 +41,9 @@ void GameObjectPlayer::shot() {
 
 void GameObjectPlayer::update_fixed() {
   engine_steps_++;
+  if (body_->position().y() > MAX_Y_TO_LIVE) {
+    lives_ = 0;
+  }
 }
 
 void GameObjectPlayer::impact(GameObject *other) {
