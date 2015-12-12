@@ -78,10 +78,10 @@ Vector *MapLoader::player_start_point() {
 
 void MapLoader::add_floor(xmlpp::Node *const &node) {
   std::vector<Vector> floor_points;
-  double x = to_game_coordinates(node->eval_to_string("@x"));
-  double y = to_game_coordinates(node->eval_to_string("@y"));
-  double width = to_game_coordinates(node->eval_to_string("@width"));
-  double height = to_game_coordinates(node->eval_to_string("@height"));
+  double x = to_game_coordinates(node->eval_to_number("@x"));
+  double y = to_game_coordinates(node->eval_to_number("@y"));
+  double width = to_game_coordinates(node->eval_to_number("@width"));
+  double height = to_game_coordinates(node->eval_to_number("@height"));
   bool breakable = node->eval_to_string("@breakable") == "true";
   floor_points.push_back(Vector(x, y));
   floor_points.push_back(Vector(x + width, y));
@@ -93,8 +93,8 @@ void MapLoader::add_floor(xmlpp::Node *const &node) {
 }
 
 void MapLoader::add_startpoint(xmlpp::Node *const &node) {
-  double x = to_game_coordinates(node->eval_to_string("@x"));
-  double y = to_game_coordinates(node->eval_to_string("@y"));
+  double x = to_game_coordinates(node->eval_to_number("@x"));
+  double y = to_game_coordinates(node->eval_to_number("@y"));
   std::stringstream ss;
   ss << "Start point: ";
   ss << "(" << x << ", " << y << ")";
@@ -103,8 +103,8 @@ void MapLoader::add_startpoint(xmlpp::Node *const &node) {
 }
 
 void MapLoader::add_spawnpoint(xmlpp::Node *const &node) {
-  double x = to_game_coordinates(node->eval_to_string("@x"));
-  double y = to_game_coordinates(node->eval_to_string("@y"));
+  double x = to_game_coordinates(node->eval_to_number("@x"));
+  double y = to_game_coordinates(node->eval_to_number("@y"));
   RigidBody *r_body = new RigidBody(new Vector(x, y));
   GameObject *turtle;
   if (g_random_boolean()) {
@@ -153,8 +153,8 @@ void MapLoader::reload_level() {
 
 void MapLoader::add_goal(xmlpp::Node *const &node) {
   std::vector<Vector> goal_points;
-  double x = to_game_coordinates(node->eval_to_string("@x"));
-  double y = to_game_coordinates(node->eval_to_string("@y"));
+  double x = to_game_coordinates(node->eval_to_number("@x"));
+  double y = to_game_coordinates(node->eval_to_number("@y"));
   double width = 1;
   double height = 1;
 
@@ -169,14 +169,6 @@ void MapLoader::add_goal(xmlpp::Node *const &node) {
   engine_->add_game_object(goal);
 }
 
-double MapLoader::to_double(std::string val) {
-  std::stringstream ss;
-  double val_int;
-  ss << val;
-  ss >> val_int;
-  return val_int;
-}
-
-double MapLoader::to_game_coordinates(std::string val) {
-  return to_double(val) / PIXELS_PER_METER;
+double MapLoader::to_game_coordinates(double val) {
+  return val / PIXELS_PER_METER;
 }

@@ -40,7 +40,7 @@ class MapLoader {
   void add_goal(xmlpp::Node *const &node);
 
   double to_double(std::string val);
-  double to_game_coordinates(std::string val);
+  double to_game_coordinates(double val);
 };
 
 #endif  // BLUESJACKRABBIT_COMMON_MAPLOADER_H
