@@ -16,8 +16,7 @@
 LevelWriter::LevelWriter(const Level& level) : level_(level) {
 }
 
-void LevelWriter::write(std::string file_name, const std::string &players_size) {
-  std::cout << "Jugadores: " << players_size << std::endl;
+void LevelWriter::write(std::string file_name) {
   xmlpp::Document document;
   xmlpp::Element* node_root = document.create_root_node("map");
 
@@ -25,7 +24,7 @@ void LevelWriter::write(std::string file_name, const std::string &players_size) 
   title_node->add_child_text(level_.title());
 
   xmlpp::Element* players_size_node = node_root->add_child("players_size");
-  players_size_node->add_child_text(players_size);
+  players_size_node->add_child_text(to_string(level_.players_qty()));
 
   xmlpp::Element* width_node = node_root->add_child("width");
   width_node->add_child_text(to_string(level_.width()));
