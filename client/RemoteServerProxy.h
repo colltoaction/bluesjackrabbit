@@ -67,6 +67,8 @@ class RemoteServerProxy : public ServerProxy {
   Mutex mutex_;
   uint32_t object_id_;
   bool alive_;
+  bool notify_dead_;
+  Notifier notifier_;
   static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
   void update_lives(char remaining_lives);
