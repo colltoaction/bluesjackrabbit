@@ -19,7 +19,7 @@ class SceneRenderer: public Gtk::DrawingArea {
  private:
   ServerProxy *server_proxy_;
   Vector camera_position_;
-  Cairo::RefPtr<Cairo::Pattern> image_;
+  Cairo::RefPtr<Cairo::SurfacePattern> image_;
 };
 
 
