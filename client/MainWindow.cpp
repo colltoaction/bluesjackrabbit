@@ -11,6 +11,7 @@
 #include <gtkmm/messagedialog.h>
 #include <common/InvalidMessageException.h>
 #include <common/Logger.h>
+#include <gtkmm/messagedialog.h>
 
 #include "EventBus.h"
 #include "LocalServerProxy.h"
@@ -26,6 +27,7 @@ MainWindow::MainWindow(const Configuration &config)
     , initial_screen_()
     , new_game_screen_()
     , join_game_screen_()
+    , dispatcher_()
     , text_game_name_(NULL)
     , server_proxy_(NULL)
     , map_id_(0)
@@ -47,6 +49,8 @@ MainWindow::MainWindow(const Configuration &config)
   main_frame_.pack_start(new_game_screen_);
   main_frame_.pack_start(join_game_screen_);
 
+  dispatcher_.connect(sigc::mem_fun(*this, &MainWindow::show_dialog));
+
   add(main_frame_);
   main_game_view();
 
@@ -67,6 +71,15 @@ MainWindow::~MainWindow() {
   if (server_proxy_ != NULL) {
     delete server_proxy_;
   }
+}
+
+void MainWindow::notify_something() {
+  dispatcher_.emit();
+}
+
+void MainWindow::show_dialog(/*std::string message*/) {
+  Gtk::MessageDialog dialog(*this, "Hola");
+  dialog.run();
 }
 
 bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
@@ -141,7 +154,8 @@ void MainWindow::singleplayer_click() {
 }
 
 void MainWindow::multiplayer_click() {
-  server_proxy_ = new RemoteServerProxy(config_, sigc::mem_fun(*this, &MainWindow::main_game_view));
+  server_proxy_ = new RemoteServerProxy(config_, sigc::mem_fun(*this, &MainWindow::main_game_view)
+      , sigc::mem_fun(*this, &MainWindow::notify_something));
   init_server_proxy();
   main_game_view();
 }

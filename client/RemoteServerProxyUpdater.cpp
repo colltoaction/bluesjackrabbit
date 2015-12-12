@@ -13,7 +13,7 @@
 
 
 RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, RendererUpdate update,
-    CleanRenderer cleaner, CreateObjectRenderer create, FinishGame finish)
+    CleanRenderer cleaner, CreateObjectRenderer create, FinishGame finish, Notifier notifier)
   : socket_(NULL)
   , keep_going_(true)
   , new_level_(false)
@@ -21,7 +21,8 @@ RemoteServerProxyUpdater::RemoteServerProxyUpdater(LivesUpdate lives_update, Ren
   , update_functor_(update)
   , cleaner_functor_(cleaner)
   , create_object_renderer_functor_(create)
-  , finish_functor_(finish) {
+  , finish_functor_(finish)
+  , notifier_functor_(notifier) {
 }
 
 void RemoteServerProxyUpdater::set_socket(Socket *socket) {
@@ -64,7 +65,9 @@ void RemoteServerProxyUpdater::run() {
 
 void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *message) {
   message->read();
-  Logger::info(message->won() ? "User won this level" : "User lost this level");
+  std::string message_info = message->won() ? "User won this level" : "User lost this level";
+  Logger::info(message_info);
+  notifier_functor_(/*message_info*/);
   new_level_ = true;
 }
 

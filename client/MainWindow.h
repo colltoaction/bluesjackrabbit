@@ -10,6 +10,7 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/window.h>
+#include <glibmm/dispatcher.h>
 #include <vector>
 
 #include "EventBus.h"
@@ -20,6 +21,8 @@ class MainWindow: public Gtk::Window {
  public:
   explicit MainWindow(const Configuration &config);
   virtual ~MainWindow();
+  void show_dialog(/*std::string message*/);
+  void notify_something();
 
  private:
   const Configuration &config_;
@@ -30,6 +33,7 @@ class MainWindow: public Gtk::Window {
   Gtk::Box initial_screen_;
   Gtk::Box new_game_screen_;
   Gtk::Box join_game_screen_;
+  Glib::Dispatcher dispatcher_;
   Gtk::Entry *text_game_name_;
 
   bool connected_;

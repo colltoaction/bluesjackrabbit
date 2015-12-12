@@ -28,6 +28,8 @@
 #include "RedTurtleRenderer.h"
 
 
+
+
 void RemoteServerProxy::MoveUp() {
   Lock l(&mutex_);
   char move = UP;
@@ -64,14 +66,15 @@ void RemoteServerProxy::shoot() {
   socket_->send_buffer(&move, 1);
 }
 
-RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame finish)
+RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame finish, Notifier notifier)
     : config_(config)
     , socket_(NULL)
     , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
                sigc::mem_fun(*this, &RemoteServerProxy::update_object),
                sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
                sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer),
-               finish)
+               finish,
+               notifier)
     , object_id_(0)
     , alive_(true) {
 }
