@@ -86,12 +86,13 @@ void MapLoader::add_floor(std::map<std::string, std::string> parameters) {
   double y = to_game_coordinates(parameters["y"]);
   double width = to_game_coordinates(parameters["width"]);
   double height = to_game_coordinates(parameters["height"]);
+  bool breakable = parameters["breakable"] == "true";
   floor_points.push_back(Vector(x, y));
   floor_points.push_back(Vector(x + width, y));
   floor_points.push_back(Vector(x + width, y - height));
   floor_points.push_back(Vector(x, y - height));
   StaticBody *body = new StaticBody(new Vector(x + width / 2, y - height / 2));
-  GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points));
+  GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points), breakable);
   engine_->add_game_object(floor);
 }
 

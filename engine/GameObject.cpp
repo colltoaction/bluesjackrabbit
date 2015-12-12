@@ -38,5 +38,5 @@ void GameObject::impact(GameObject */* other */) {
 }
 
 bool GameObject::alive() {
-  return true;
+  return alive_;
 }
