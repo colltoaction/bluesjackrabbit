@@ -79,8 +79,9 @@ void EditorWindow::init_palette() {
   misc_group_->insert(*button);
 
   // Special assets: rectangle and circle
-  button = Gtk::manage(new CircleButton("Circle"));
-  misc_group_->insert(*button);
+  // Circle no tiene soporte en el juego
+  // button = Gtk::manage(new CircleButton("Circle"));
+  // misc_group_->insert(*button);
   button = Gtk::manage(new RectButton("Rectangle"));
   misc_group_->insert(*button);
 
