@@ -62,7 +62,7 @@ void GameObjectPlayer::impact(GameObject *other) {
 }
 
 bool GameObjectPlayer::alive() {
-  return lives_ > 0;
+  return lives_ > 0 && body_->position().y() < 1000;
 }
 
 char GameObjectPlayer::direction() {
