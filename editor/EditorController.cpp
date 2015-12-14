@@ -1,6 +1,7 @@
 #include <gdk/gdk.h>
 #include "EditorWindow.h"
 #include "EditorLayer.h"
+#include "LevelLoader.h"
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 #include "LevelWriter.h"
@@ -33,11 +34,7 @@ void EditorController::start_new_level(const Glib::VariantBase& /* parameter */)
 
 void EditorController::save_file(const std::string& file_name) {
   LevelWriter writer(*level_);
-<<<<<<< Updated upstream
-  writer.write("level1.xml");
-=======
   writer.write(file_name);
->>>>>>> Stashed changes
 }
 
 void EditorController::save_file(const Glib::VariantBase& /* parameter */) {

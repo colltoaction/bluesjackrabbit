@@ -25,6 +25,7 @@ set(SOURCES main.cpp
 			GenericImageLevelObject.cpp
 			ImageItem.cpp
 			Level.cpp
+			LevelLoader.cpp
 			LevelObject.cpp
 			LevelWriter.cpp
 			RectButton.cpp
