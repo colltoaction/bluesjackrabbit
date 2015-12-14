@@ -8,6 +8,7 @@ class LevelWriter {
  public:
   LevelWriter(const Level& level);
   void write(std::string file_name);
+  void append_level_to_node(xmlpp::Element* node_root);
  private:
   void add_visible_child_nodes(xmlpp::Element* root_element);
   void add_control_child_nodes(xmlpp::Element* root_element);

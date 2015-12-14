@@ -18,8 +18,12 @@ LevelWriter::LevelWriter(const Level& level) : level_(level) {
 
 void LevelWriter::write(std::string file_name) {
   xmlpp::Document document;
-  xmlpp::Element* node_root = document.create_root_node("map");
+  xmlpp::Element* node_root = document.create_root_node("level");
+  append_level_to_node(node_root);
+  document.write_to_file(file_name);
+}
 
+void LevelWriter::append_level_to_node(xmlpp::Element* node_root) {
   xmlpp::Element* title_node = node_root->add_child("title");
   title_node->add_child_text(level_.title());
 
@@ -37,8 +41,6 @@ void LevelWriter::write(std::string file_name) {
 
   xmlpp::Element* control_object_layer_node = node_root->add_child("control-object-layer");
   add_control_child_nodes(control_object_layer_node);
-
-  document.write_to_file(file_name);
 }
 
 void LevelWriter::add_visible_child_nodes(xmlpp::Element* root_element) {
