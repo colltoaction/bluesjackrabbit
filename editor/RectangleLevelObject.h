@@ -7,7 +7,7 @@
 class RectangleLevelObject : public LevelObject {
  public:
   RectangleLevelObject(double x, double y, int width, int height,
-      Glib::RefPtr<Goocanvas::Item> representation);
+      const CanvasItem& representation);
 
   LevelObjectType object_type() const;
 

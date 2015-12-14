@@ -4,7 +4,7 @@
 #include "RectangleLevelObject.h"
 
 RectangleLevelObject::RectangleLevelObject(double x, double y, int width, int height,
-    Glib::RefPtr<Goocanvas::Item> representation) : LevelObject(x, y, representation),
+    const CanvasItem& representation) : LevelObject(x, y, representation),
     rotation_angle_(0), width_(width), height_(height) {
 }
 

@@ -1,6 +1,7 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H
 #include <vector>
+#include <stdint.h>
 #include <gtkmm/scrolledwindow.h>
 #include <goocanvasmm/canvas.h>
 #include <goocanvasmm/group.h>
@@ -46,6 +47,7 @@ private:
   virtual bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext>& context, int x, int y,
       guint time);
 
+  uint64_t next_item_id();
   void convert_to_canvas_coordinates(double &x, double &y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon,
       LevelObjectType obj_type);
@@ -55,10 +57,12 @@ private:
   void move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y);
   Glib::RefPtr<Goocanvas::Group> get_group(const Glib::RefPtr<Goocanvas::Item>& item);
   bool is_overlapped(Glib::RefPtr<Goocanvas::Item> item);
+  uint64_t get_item_id(const Glib::RefPtr<Goocanvas::Item>& item);
 
   Gtk::ScrolledWindow*& canvas_window_;
   EditorController* controller_;
   
+  uint64_t item_counter_;
   Glib::RefPtr<Goocanvas::Item> item_being_moved_;
   std::vector<Glib::RefPtr<Goocanvas::Item> > selected_items_;
   bool requested_for_motion_;
