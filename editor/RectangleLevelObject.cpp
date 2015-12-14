@@ -4,8 +4,8 @@
 #include "RectangleLevelObject.h"
 
 RectangleLevelObject::RectangleLevelObject(double x, double y, int width, int height,
-    const CanvasItem& representation) : LevelObject(x, y, representation),
-    rotation_angle_(0), width_(width), height_(height) {
+    const CanvasItem& representation, bool breakable) : LevelObject(x, y, representation),
+    rotation_angle_(0), width_(width), height_(height), breakable_(breakable) {
 }
 
 LevelObjectType RectangleLevelObject::object_type() const {
@@ -34,4 +34,8 @@ void RectangleLevelObject::set_height(int height) {
 
 int RectangleLevelObject::height() const {
   return height_;
+}
+
+bool RectangleLevelObject::breakable() const {
+  return breakable_;
 }

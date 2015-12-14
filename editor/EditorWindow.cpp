@@ -7,6 +7,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolitemgroup.h>
+#include "BreakableRectButton.h"
 #include "CircleButton.h"
 #include "EditorLayer.h"
 #include "EditorController.h"
@@ -70,19 +71,21 @@ void EditorWindow::init_palette() {
 
   // TODO(Diego): pasar a codigo de inicializacion de Assets generico
   // Asset 2 - Image - Barrel
-  asset_filename = "assets/barrel.png";
-  Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
-  Gtk::Image* image = Gtk::manage(new Gtk::Image(
-      misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
-  Glib::ustring icon_name = "barrel.png";
-  Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
-  misc_group_->insert(*button);
+  // asset_filename = "assets/barrel.png";
+  // Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
+  // Gtk::Image* image = Gtk::manage(new Gtk::Image(
+  //     misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
+  // Glib::ustring icon_name = "barrel.png";
+  Gtk::ToolButton* button;  // = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
+  // misc_group_->insert(*button);
 
   // Special assets: rectangle and circle
   // Circle no tiene soporte en el juego
   // button = Gtk::manage(new CircleButton("Circle"));
   // misc_group_->insert(*button);
-  button = Gtk::manage(new RectButton("Rectangle"));
+  button = Gtk::manage(new RectButton("Floor"));
+  misc_group_->insert(*button);
+  button = Gtk::manage(new BreakableRectButton("Breakable Floor"));
   misc_group_->insert(*button);
 
   // Control objects
