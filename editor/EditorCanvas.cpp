@@ -281,12 +281,11 @@ bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& i
     GdkEventButton* event) {
   if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
     LevelObject* obj = controller_->get_registered_object(get_item_id(item));
-    (void) obj;
     gdouble item_x = event->x;
     gdouble item_y = event->y;
     convert_from_pixels(item_x, item_y);
-    // obj->set_x(item_x);
-    // obj->set_y(item_y);
+    obj->set_x(item_x);
+    obj->set_y(item_y);
     item_being_moved_.reset();
   }
   return true;
