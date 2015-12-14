@@ -34,11 +34,11 @@ void MessageWriter::send_available_games(const std::map<char, std::string> &game
   games.send(game_names);
 }
 
-void MessageWriter::send_create_game(size_t map_id, const std::string &game_name) {
+void MessageWriter::send_create_game(size_t map_id, const std::string &game_name, int players_size) {
   char message_type = NEW_GAME;
   socket_->send_buffer(&message_type, 1);
   CreateGameMessage create_game(socket_);
-  create_game.send(map_id, game_name);
+  create_game.send(map_id, game_name, players_size);
 }
 
 void MessageWriter::send_game_init(GameObjectPlayer *player, std::map<uint32_t, GameObject *> *game_objects) {

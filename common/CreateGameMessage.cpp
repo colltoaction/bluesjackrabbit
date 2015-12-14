@@ -14,12 +14,14 @@ char CreateGameMessage::type() {
   return Message::type();
 }
 
-void CreateGameMessage::send(size_t map_id, const std::string &game_name) {
+void CreateGameMessage::send(size_t map_id, const std::string &game_name, int players_size) {
   char map_id_char = static_cast<char>(map_id);
   socket_->send_buffer(&map_id_char, sizeof(char));
   char game_name_length = static_cast<char>(game_name.size());
   socket_->send_buffer(&game_name_length, sizeof(char));
   socket_->send_buffer(game_name.c_str(), game_name_length);
+  char size = static_cast<char>(players_size);
+  socket_->send_buffer(&size, 1);
 }
 
 void CreateGameMessage::read() {
@@ -28,6 +30,7 @@ void CreateGameMessage::read() {
   socket_->read_buffer(&game_name_length, sizeof(char));
   socket_->read_buffer(game_name_, game_name_length);
   game_name_[static_cast<size_t>(game_name_length)] = '\0';
+  socket_->read_buffer(&players_size_, 1);
 }
 
 char CreateGameMessage::map_id() {
@@ -36,4 +39,8 @@ char CreateGameMessage::map_id() {
 
 std::string CreateGameMessage::game_name() {
   return game_name_;
+}
+
+char CreateGameMessage::player_size() {
+  return players_size_;
 }

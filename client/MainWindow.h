@@ -35,6 +35,7 @@ class MainWindow: public Gtk::Window {
   Gtk::Box join_game_screen_;
   Glib::Dispatcher dispatcher_;
   Gtk::Entry *text_game_name_;
+  Gtk::Entry *players_;
 
   bool connected_;
   ServerProxy *server_proxy_;

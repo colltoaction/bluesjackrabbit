@@ -130,7 +130,7 @@ std::map<size_t, std::string> LocalServerProxy::list_games() {
   return map;
 }
 
-bool LocalServerProxy::start_game(size_t /* map_id */, std::string /* game_name */) {
+bool LocalServerProxy::start_game(size_t /* map_id */, std::string /* game_name */, int /*players_size/*/) {
   return true;
 }
 

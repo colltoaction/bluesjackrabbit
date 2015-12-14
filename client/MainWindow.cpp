@@ -29,6 +29,7 @@ MainWindow::MainWindow(const Configuration &config)
     , join_game_screen_()
     , dispatcher_()
     , text_game_name_(NULL)
+    , players_(NULL)
     , server_proxy_(NULL)
     , map_id_(0)
     , game_id_(0)
@@ -134,7 +135,11 @@ void MainWindow::join_once_for_all() {
 
 void MainWindow::init_click() {
   std::string game_name = text_game_name_->get_text();
-  server_proxy_->start_game(map_id_, game_name);
+  std::string players_size = players_->get_text();
+  std::istringstream buffer(players_size);
+  int value;
+  buffer >> value;
+  server_proxy_->start_game(map_id_, game_name, value);
   new_game_screen_.hide();
   connect_bus_signals();
   scene_.show();
@@ -244,6 +249,7 @@ void MainWindow::init_new_game_screen() {
     button->signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::main_game_view));
   }
   builder->get_widget("game_name", text_game_name_);
+  builder->get_widget("players", players_);
   builder->get_widget("map", map_combo);
   // Create the Combobox Tree model:
   map_combo_model = Gtk::ListStore::create(columns);

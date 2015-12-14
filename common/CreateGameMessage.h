@@ -20,7 +20,7 @@ class CreateGameMessage: public Message {
    * Sends a request to create a new game in the server, which opens a lobby.
    * Players will wait until the game has enough players to start.
    */
-  void send(size_t map_id, const std::string &game_name);
+  void send(size_t map_id, const std::string &game_name, int players_size);
 
   /**
    * Reads a request to create a new game.
@@ -37,10 +37,13 @@ class CreateGameMessage: public Message {
    */
   std::string game_name();
 
+  char player_size();
+
  private:
   Socket *socket_;
   char map_id_;
   char game_name_[MAX_NAME_LENGTH];
+  char players_size_;
 };
 
 
