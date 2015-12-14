@@ -1,8 +1,9 @@
 #include "Map.h"
 
-Map::Map(std::string /* path */) {
+Map::Map(std::string path)
+    : path_(path) {
 }
 
-Map::~Map() {
+std::string Map::path() const {
+  return path_;
 }
-

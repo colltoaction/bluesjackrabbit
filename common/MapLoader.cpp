@@ -10,16 +10,17 @@
 #include <engine/StaticBody.h>
 #include <engine/PolygonCollider.h>
 #include <engine/GameObjectWall.h>
+#include <server/Map.h>
 #include "MapLoader.h"
 #include "Logger.h"
 #define PIXELS_PER_METER 64.0
 
-MapLoader::MapLoader(Engine *engine, WinnerNotifier winner_notifier)
+MapLoader::MapLoader(Engine *engine, const Map &map, WinnerNotifier winner_notifier)
     : engine_(engine)
     , winner_notifier_(winner_notifier)
     , even_(false)
     , startpoint_cursor_(0)
-    , parser_("static/level1.xml")
+    , parser_(map.path())
     , players_size_(static_cast<char>(parser_.get_document()->get_root_node()->eval_to_number("@players_size")))
     , levels_(parser_.get_document()->get_root_node()->get_children("level"))
     , level_(levels_.begin()) {

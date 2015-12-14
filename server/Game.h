@@ -9,10 +9,11 @@
 
 #include "ClientProxy.h"
 #include "GameRunner.h"
+#include "Map.h"
 
 class Game {
  public:
-  Game(ClientProxy *admin, const std::string &game_name, char player_size);
+  Game(const Map &map, ClientProxy *admin, const std::string &game_name, char player_size);
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();
