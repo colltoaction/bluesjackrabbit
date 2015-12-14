@@ -5,7 +5,7 @@
 
 class StartPointLevelObject : public LevelObject {
  public:
-  StartPointLevelObject(double x, double y, Glib::RefPtr<Goocanvas::Item> representation);
+  StartPointLevelObject(double x, double y, const CanvasItem& representation);
 
   LevelObjectType object_type() const;
 };

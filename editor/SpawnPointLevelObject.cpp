@@ -4,7 +4,7 @@
 #include "SpawnPointLevelObject.h"
 
 SpawnPointLevelObject::SpawnPointLevelObject(double x, double y,
-    Glib::RefPtr<Goocanvas::Item> representation) : LevelObject(x, y, representation) {
+    const CanvasItem& representation) : LevelObject(x, y, representation) {
 }
 
 LevelObjectType SpawnPointLevelObject::object_type() const {

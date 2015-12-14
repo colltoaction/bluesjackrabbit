@@ -4,7 +4,7 @@
 #include "StartPointLevelObject.h"
 
 StartPointLevelObject::StartPointLevelObject(double x, double y,
-    Glib::RefPtr<Goocanvas::Item> representation) : LevelObject(x, y, representation) {
+    const CanvasItem& representation) : LevelObject(x, y, representation) {
 }
 
 LevelObjectType StartPointLevelObject::object_type() const {

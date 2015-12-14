@@ -1,7 +1,8 @@
 #ifndef BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H
 #define BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H
-#include <vector>
 #include <map>
+#include <vector>
+#include <stdint.h>
 #include <gtkmm/entry.h>
 #include <glibmm/refptr.h>
 #include "Level.h"
@@ -17,12 +18,12 @@ class EditorController {
   void save_file();
   void save_file(const Glib::VariantBase&);
   void register_object(LevelObject* object);
-  // void update_object(Glib::RefPtr<Goocanvas::Item>, int x, )
+  LevelObject* get_registered_object(uint64_t object_id);
 
  private:
   Level* level_;
   bool unsaved_changes_;
-  std::map<Glib::RefPtr<Goocanvas::Item>*, LevelObject*> obj_by_rep_lookup_table;
+  std::map<uint64_t, LevelObject*> obj_by_id_lookup_table_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCONTROLLER_H

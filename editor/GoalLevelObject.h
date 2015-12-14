@@ -5,7 +5,7 @@
 
 class GoalLevelObject : public LevelObject {
  public:
-  GoalLevelObject(double x, double y, Glib::RefPtr<Goocanvas::Item> representation);
+  GoalLevelObject(double x, double y, const CanvasItem& representation);
 
   LevelObjectType object_type() const;
 };

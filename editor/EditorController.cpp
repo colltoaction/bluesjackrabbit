@@ -33,10 +33,9 @@ void EditorController::save_file(const Glib::VariantBase& /* parameter */) {
   save_file();
 }
 
-// TODO(Diego): IMPORTANTE!!! EL CONTROLLER ES EL DUEÑO DEL LevelObject Y TIENE QUE LIBERAR
-// LA MEMORIA!!
 void EditorController::register_object(LevelObject* object) {
-  obj_by_rep_lookup_table[object->representation()] = object;
+  std::cout << "Id del item " << object->representation()->item_id() << std::endl;
+  obj_by_id_lookup_table_[object->representation()->item_id()] = object;
   switch (object->object_type()) {
   case SPAWN_POINT:
     level_->add_spawn_point(object);
@@ -51,6 +50,12 @@ void EditorController::register_object(LevelObject* object) {
     level_->add_generic_object(object);
     break;
   }
+}
+
+LevelObject* EditorController::get_registered_object(uint64_t object_id) {
+  std::cout << "Puntero al item con id " << object_id << ": "
+      << obj_by_id_lookup_table_[object_id] << std::endl;
+  return obj_by_id_lookup_table_[object_id];
 }
 
 EditorController::~EditorController() {

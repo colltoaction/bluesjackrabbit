@@ -6,6 +6,7 @@
 #include <goocanvasmm/group.h>
 #include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
+#include "CanvasItem.h"
 #include "CircleButton.h"
 #include "CircleItem.h"
 #include "CircleLevelObject.h"
@@ -38,10 +39,14 @@
 #include <string>
 
 EditorCanvas::EditorCanvas(Gtk::ScrolledWindow*& parent, EditorController* controller) :
-    canvas_window_(parent), controller_(controller) {
+    canvas_window_(parent), controller_(controller), item_counter_(1) {
 }
 
 EditorCanvas::~EditorCanvas() {}
+
+uint64_t EditorCanvas::next_item_id() {
+  return item_counter_++;
+}
 
 void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& context,
     int x, int y, const Gtk::SelectionData& selection_data, guint /* info */, guint timestamp) {
@@ -99,52 +104,62 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     item_being_moved_.reset();
 
     LevelObject* object = NULL;
-    Glib::RefPtr<Goocanvas::Item> obj_representation;
+    // Glib::RefPtr<Goocanvas::Item> obj_representation;
     double item_x = x;
     double item_y = y;
     convert_to_canvas_coordinates(item_x, item_y);
 
     switch (obj_type) {
     case CIRCLE:
-      obj_representation = CircleItem::create(this, item_x, item_y, DEFAULT_CIRCLE_RADIUS);
-      object = new CircleLevelObject(item_x, item_y, DEFAULT_CIRCLE_RADIUS, obj_representation);
-      break;
+      {
+        Glib::RefPtr<CircleItem> obj_representation = CircleItem::create(
+            this, next_item_id(), item_x, item_y, DEFAULT_CIRCLE_RADIUS);
+        CanvasItem& canvas_obj = obj_representation->dereference();
+        object = new CircleLevelObject(item_x, item_y, DEFAULT_CIRCLE_RADIUS, canvas_obj);
+        break;
+      }
     case RECTANGLE:
-      obj_representation = RectItem::create(this, item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
-      object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
-          obj_representation);
-      break;
+      {
+        Glib::RefPtr<RectItem> obj_representation = RectItem::create(this, next_item_id(), item_x,
+            item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
+        object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
+            obj_representation->dereference());
+        break;
+      }
     case SPAWN_POINT:
       {
-        Glib::RefPtr<SpawnPointItem> spawn_point = SpawnPointItem::create(this, icon, x, y,
+        Glib::RefPtr<SpawnPointItem> spawn_point = SpawnPointItem::create(this,
+            next_item_id(), icon, x, y,
             DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
-        obj_representation = spawn_point;
-        spawn_point->update_box_style(false, is_overlapped(obj_representation));
-        object = new SpawnPointLevelObject(item_x, item_y, obj_representation);
+        spawn_point->update_box_style(false, is_overlapped(spawn_point));
+        object = new SpawnPointLevelObject(item_x, item_y, spawn_point->dereference());
       }
       break;
     case START_POINT:
       {
-        Glib::RefPtr<StartPointItem> start_point = StartPointItem::create(this, icon, x, y,
+        Glib::RefPtr<StartPointItem> start_point = StartPointItem::create(this,
+          next_item_id(), icon, x, y,
           DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
-        obj_representation = start_point;
-        start_point->update_box_style(false, is_overlapped(obj_representation));
-        object = new StartPointLevelObject(item_x, item_y, obj_representation);
+        start_point->update_box_style(false, is_overlapped(start_point));
+        object = new StartPointLevelObject(item_x, item_y, start_point->dereference());
       }
       break;
     case GOAL:
       {
-        Glib::RefPtr<GoalItem> goal = GoalItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+        Glib::RefPtr<GoalItem> goal = GoalItem::create(this, next_item_id(),
+          icon, x, y, DEFAULT_CONTROL_HEIGHT,
           DEFAULT_CONTROL_HEIGHT, false, true);
-        obj_representation = goal;
-        goal->update_box_style(false, is_overlapped(obj_representation));
-        object = new GoalLevelObject(item_x, item_y, obj_representation);
+        goal->update_box_style(false, is_overlapped(goal));
+        object = new GoalLevelObject(item_x, item_y, goal->dereference());
       }
       break;
     case GENERIC_IMAGE:
-      obj_representation = ImageItem::create(this, icon, item_x, item_y);
-      object = new GenericImageLevelObject(file, item_x, item_y, obj_representation);
-      break;
+      {
+        Glib::RefPtr<ImageItem> obj_representation = ImageItem::create(this, next_item_id(), icon, item_x, item_y);
+        object = new GenericImageLevelObject(file, item_x, item_y,
+            obj_representation->dereference());
+        break;
+      }
     default:
       break;
     }
@@ -208,15 +223,15 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
     canvas_item = create_canvas_rect(item_x, item_y);
     break;
   case SPAWN_POINT:
-    canvas_item = SpawnPointItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = SpawnPointItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case START_POINT:
-    canvas_item = StartPointItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = StartPointItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case GOAL:
-    canvas_item = GoalItem::create(this, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = GoalItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case GENERIC_IMAGE:
@@ -229,15 +244,15 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double y,
     Gtk::Widget* icon) {
-  return ImageItem::create(this, icon, x, y);
+  return ImageItem::create(this, 0, icon, x, y);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
-  return RectItem::create(this, x, y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
+  return RectItem::create(this, 0, x, y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, double y) {
-  return CircleItem::create(this, x, y, DEFAULT_CIRCLE_RADIUS);
+  return CircleItem::create(this, 0, x, y, DEFAULT_CIRCLE_RADIUS);
 }
 
 void EditorCanvas::move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y) {
@@ -265,9 +280,47 @@ bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& ite
 bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
     GdkEventButton* event) {
   if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
+    LevelObject* obj = controller_->get_registered_object(get_item_id(item));
+    (void) obj;
+    gdouble item_x = event->x;
+    gdouble item_y = event->y;
+    convert_from_pixels(item_x, item_y);
+    // obj->set_x(item_x);
+    // obj->set_y(item_y);
     item_being_moved_.reset();
   }
   return true;
+}
+
+// El metodo mejor programado del universo
+uint64_t EditorCanvas::get_item_id(const Glib::RefPtr<Goocanvas::Item>& item) {
+  Glib::RefPtr<CircleItem> circle_ptr = Glib::RefPtr<CircleItem>::cast_dynamic(item);
+  if (circle_ptr) {
+    return circle_ptr->item_id();
+  }
+  Glib::RefPtr<RectItem> rect_ptr = Glib::RefPtr<RectItem>::cast_dynamic(item);
+  if (rect_ptr) {
+    return rect_ptr->item_id();
+  }
+  Glib::RefPtr<ImageItem> image_ptr = Glib::RefPtr<ImageItem>::cast_dynamic(item);
+  if (image_ptr) {
+    return image_ptr->item_id();
+  }
+  Glib::RefPtr<GoalItem> goal_ptr = Glib::RefPtr<GoalItem>::cast_dynamic(item);
+  if (goal_ptr) {
+    return goal_ptr->item_id();
+  }
+  Glib::RefPtr<SpawnPointItem> spawn_ptr = Glib::RefPtr<SpawnPointItem>::cast_dynamic(item);
+  if (spawn_ptr) {
+    return spawn_ptr->item_id();
+  }
+  Glib::RefPtr<StartPointItem> start_ptr = Glib::RefPtr<StartPointItem>::cast_dynamic(item);
+  if (start_ptr) {
+    return start_ptr->item_id();
+  }
+  std::cout << "Assert: el item seleccionado no se puede castear a ninguno de los"
+    "tipos reconocidos por get_item_id()" << std::endl;
+  return 0;
 }
 
 bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
