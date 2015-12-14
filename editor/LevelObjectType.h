@@ -4,6 +4,7 @@
 typedef enum LevelObjectType_ {
   /* Generic objects */
   GENERIC_IMAGE,
+  BREAKABLE_RECT,
   RECTANGLE,
   CIRCLE,
   /* Control objects */

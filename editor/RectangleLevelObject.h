@@ -7,7 +7,7 @@
 class RectangleLevelObject : public LevelObject {
  public:
   RectangleLevelObject(double x, double y, int width, int height,
-      const CanvasItem& representation);
+      const CanvasItem& representation, bool breakable);
 
   LevelObjectType object_type() const;
 
@@ -17,11 +17,13 @@ class RectangleLevelObject : public LevelObject {
   int width() const;
   void set_height(int height);
   int height() const;
+  bool breakable() const;
 
  private:
   double rotation_angle_;
   int width_;
   int height_;
+  bool breakable_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_RECTANGLELEVELOBJECT_H

@@ -68,6 +68,7 @@ void LevelWriter::add_visible_child_nodes(xmlpp::Element* root_element) {
         child_node->set_attribute("radius", to_string(obj->radius()));
       }
       break;
+    case BREAKABLE_RECT:
     case RECTANGLE:
       {
         RectangleLevelObject* obj = static_cast<RectangleLevelObject*>(*it);
@@ -77,6 +78,7 @@ void LevelWriter::add_visible_child_nodes(xmlpp::Element* root_element) {
         child_node->set_attribute("width", to_string(obj->width()));
         child_node->set_attribute("height", to_string(obj->height()));
         child_node->set_attribute("rotation", to_string(obj->rotation_angle()));
+        child_node->set_attribute("breakable", obj->breakable() ? "true" : "false");
       }
       break;
     default:

@@ -52,6 +52,7 @@ private:
   Glib::RefPtr<Goocanvas::Item> create_canvas_item(double x, double y, Gtk::Widget* icon,
       LevelObjectType obj_type);
   Glib::RefPtr<Goocanvas::Item> create_canvas_image(double x, double y, Gtk::Widget* icon);
+  Glib::RefPtr<Goocanvas::Item> create_canvas_break_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_rect(double x, double y);
   Glib::RefPtr<Goocanvas::Item> create_canvas_circle(double x, double y);
   void move_item(Glib::RefPtr<Goocanvas::Item> item, gdouble x, gdouble y);

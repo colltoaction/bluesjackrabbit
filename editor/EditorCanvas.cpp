@@ -6,6 +6,8 @@
 #include <goocanvasmm/group.h>
 #include <goocanvasmm/ellipse.h>
 #include <goocanvasmm/rect.h>
+#include "BreakableRectButton.h"
+#include "BreakableRectItem.h"
 #include "CanvasItem.h"
 #include "CircleButton.h"
 #include "CircleItem.h"
@@ -75,6 +77,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
   std::string file;
   if (dynamic_cast<RectButton*>(button)) {
     obj_type = RECTANGLE;
+  } else if (dynamic_cast<BreakableRectButton*>(button)) {
+    obj_type = BREAKABLE_RECT;
   } else if (dynamic_cast<CircleButton*>(button)) {
     obj_type = CIRCLE;
   } else {
@@ -118,12 +122,20 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
         object = new CircleLevelObject(item_x, item_y, DEFAULT_CIRCLE_RADIUS, canvas_obj);
         break;
       }
+    case BREAKABLE_RECT:
+      {
+        Glib::RefPtr<BreakableRectItem> obj_representation = BreakableRectItem::create(this,
+            next_item_id(), item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
+        object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
+            obj_representation->dereference(), true);
+        break;
+      }
     case RECTANGLE:
       {
         Glib::RefPtr<RectItem> obj_representation = RectItem::create(this, next_item_id(), item_x,
             item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
         object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
-            obj_representation->dereference());
+            obj_representation->dereference(), false);
         break;
       }
     case SPAWN_POINT:
@@ -219,6 +231,9 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
   case CIRCLE:
     canvas_item = create_canvas_circle(item_x, item_y);
     break;
+  case BREAKABLE_RECT:
+    canvas_item = create_canvas_break_rect(item_x, item_y);
+    break;
   case RECTANGLE:
     canvas_item = create_canvas_rect(item_x, item_y);
     break;
@@ -249,6 +264,10 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_image(double x, double
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_rect(double x, double y) {
   return RectItem::create(this, 0, x, y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
+}
+
+Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_break_rect(double x, double y) {
+  return BreakableRectItem::create(this, 0, x, y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
 }
 
 Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_circle(double x, double y) {
@@ -296,6 +315,11 @@ uint64_t EditorCanvas::get_item_id(const Glib::RefPtr<Goocanvas::Item>& item) {
   Glib::RefPtr<CircleItem> circle_ptr = Glib::RefPtr<CircleItem>::cast_dynamic(item);
   if (circle_ptr) {
     return circle_ptr->item_id();
+  }
+  Glib::RefPtr<BreakableRectItem> break_rect_ptr =
+      Glib::RefPtr<BreakableRectItem>::cast_dynamic(item);
+  if (break_rect_ptr) {
+    return break_rect_ptr->item_id();
   }
   Glib::RefPtr<RectItem> rect_ptr = Glib::RefPtr<RectItem>::cast_dynamic(item);
   if (rect_ptr) {
