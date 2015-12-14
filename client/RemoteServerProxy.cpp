@@ -124,9 +124,9 @@ void RemoteServerProxy::connect() {
   Logger::info(std::string("Server ").append(peer_name_).append(" conectado"));
 }
 
-bool RemoteServerProxy::start_game(size_t map_id, std::string game_name) {
+bool RemoteServerProxy::start_game(size_t map_id, std::string game_name, int players_size) {
   MessageWriter writer(socket_);
-  writer.send_create_game(map_id, game_name);
+  writer.send_create_game(map_id, game_name, players_size);
 
   read_object_id(&object_id_);
   init_game();

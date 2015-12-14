@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-Game::Game(ClientProxy *admin, const std::string &game_name)
+Game::Game(ClientProxy *admin, const std::string &game_name, char player_size)
     : engine_()
     , engine_mutex_()
     , players_()
@@ -19,7 +19,8 @@ Game::Game(ClientProxy *admin, const std::string &game_name)
     , map_loader_(&engine_, sigc::mem_fun(runner_, &GameRunner::notify_winner))
     , player_index_(0)
     , in_game(false)
-    , game_name_(game_name) {
+    , game_name_(game_name)
+    , player_size_(player_size) {
   map_loader_.load();
   add_player(admin);
 }
@@ -38,7 +39,7 @@ void Game::add_player(ClientProxy *player) {
 }
 
 void Game::start_game() {
-  if (player_index_ == map_loader_.needed_players()) {
+  if (player_index_ == player_size_) {
     in_game = true;
     runner_.start();
   }

@@ -111,7 +111,8 @@ void ClientProxy::add_object_id(uint32_t object_id, GameObjectPlayer *player) {
 
 void ClientProxy::new_game_call(CreateGameMessage *create_game) {
   create_game->read();
-  char game_id = create_new_game_functor_(create_game->map_id(), create_game->game_name(), this);
+  char game_id = create_new_game_functor_(create_game->map_id(), create_game->game_name(), this,
+      create_game->player_size());
   game_id_ = game_id;
   send_object_id(&object_id_);
   start_functor_();

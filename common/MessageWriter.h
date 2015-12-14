@@ -30,7 +30,7 @@ class MessageWriter {
    */
   void send_available_games(const std::map<char, std::string> &game_names);
 
-  void send_create_game(size_t map_id, const std::string &game_name);
+  void send_create_game(size_t map_id, const std::string &game_name, int players_size);
 
   void send_game_init(GameObjectPlayer *pMap, std::map<uint32_t, GameObject *> *pMap1);
 

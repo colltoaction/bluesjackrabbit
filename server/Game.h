@@ -12,7 +12,7 @@
 
 class Game {
  public:
-  Game(ClientProxy *admin, const std::string &game_name);
+  Game(ClientProxy *admin, const std::string &game_name, char player_size);
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();
@@ -32,6 +32,7 @@ class Game {
   char player_index_;
   bool in_game;
   std::string game_name_;
+  char player_size_;
 
   void start_game();
   bool load_next_level(bool there_was_winner);
