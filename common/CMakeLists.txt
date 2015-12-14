@@ -6,6 +6,10 @@ set(SOURCES
         Constants.h
         CreateGameMessage.cpp
         CreateGameMessage.h
+        DirectoryException.cpp
+        DirectoryException.h
+        DirectoryReader.cpp
+        DirectoryReader.h
         GameFinishedMessage.cpp
         GameFinishedMessage.h
         GameInitMessage.cpp

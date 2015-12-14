@@ -1,11 +1,17 @@
 #include "GameMonitor.h"
 #include <common/Logger.h>
 #include <sstream>
+#include <common/DirectoryReader.h>
 
 GameMonitor::GameMonitor()
     : game_index_(0)
     , game_admin_mutex_() {
-  maps_.push_back(mapa);
+  DirectoryReader reader("static/maps/");
+  const std::vector<std::string> &files = reader.files();
+  for (std::vector<std::string>::const_iterator it = files.begin();
+       it != files.end(); ++it) {
+    maps_.push_back(Map(std::string("static/maps/") += *it));
+  }
 }
 
 GameMonitor::~GameMonitor() {

@@ -27,7 +27,6 @@ class GameMonitor {
   std::vector<Game*> games_;
   std::vector<Map> maps_;
   Mutex game_admin_mutex_;
-  Map mapa;
 };
 
 #endif /* BLUESJACKRABBIT_SERVER_GAMEMONITOR_H */
