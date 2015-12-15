@@ -84,6 +84,7 @@ void MainWindow::show_dialog() {
   dialog.run();
   if (message_.find("MATCH") != std::string::npos) {
     main_game_view();
+    server_proxy_->reset_updater();
   }
 }
 

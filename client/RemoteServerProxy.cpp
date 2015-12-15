@@ -69,15 +69,16 @@ void RemoteServerProxy::shoot() {
 RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame finish, Notifier notifier)
     : config_(config)
     , socket_(NULL)
-    , updater_(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
+    , updater_(new RemoteServerProxyUpdater(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
                sigc::mem_fun(*this, &RemoteServerProxy::update_object),
                sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
                sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer),
                finish,
-               notifier)
+               notifier))
     , object_id_(0)
     , alive_(true)
     , notify_dead_(true)
+    , finish_functor_(finish)
     , notifier_(notifier) {
 }
 
@@ -98,8 +99,22 @@ RemoteServerProxy::~RemoteServerProxy() {
     delete game_object->second;
   }
   socket_->close_connection();
-  updater_.join();
+  updater_->join();
+  delete updater_;
   delete socket_;
+}
+
+void RemoteServerProxy::reset_updater() {
+  Logger::info("Nuevo updater");
+  updater_->join();
+  delete updater_;
+  updater_ = new RemoteServerProxyUpdater(sigc::mem_fun(*this, &RemoteServerProxy::update_lives),
+               sigc::mem_fun(*this, &RemoteServerProxy::update_object),
+               sigc::mem_fun(*this, &RemoteServerProxy::clean_renderers),
+               sigc::mem_fun(*this, &RemoteServerProxy::create_object_renderer),
+               finish_functor_,
+               notifier_);
+  updater_->set_socket(socket_);
 }
 
 Vector RemoteServerProxy::character_position() {
@@ -116,7 +131,7 @@ std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
 
 void RemoteServerProxy::connect() {
   socket_ = new Socket(config_["server_host"], config_["server_port"], 0);
-  updater_.set_socket(socket_);
+  updater_->set_socket(socket_);
   socket_->connect_socket();
   MessageReader reader(socket_);
   reader.read_player_id();
@@ -130,7 +145,7 @@ bool RemoteServerProxy::start_game(size_t map_id, std::string game_name, int pla
 
   read_object_id(&object_id_);
   init_game();
-  updater_.start();
+  updater_->start();
 
   return true;
 }
@@ -141,7 +156,7 @@ void RemoteServerProxy::join_game(size_t game_id) {
 
   read_object_id(&object_id_);
   init_game();
-  updater_.start();
+  updater_->start();
 }
 
 void RemoteServerProxy::read_object_id(uint32_t *object_id) {
@@ -200,8 +215,8 @@ void RemoteServerProxy::shutdown() {
   Logger::info("Shutdown de updater");
   MessageWriter writer(socket_);
   writer.send_disconnect();
-  updater_.shutdown();
-  updater_.join();
+  updater_->shutdown();
+  updater_->join();
 }
 
 void RemoteServerProxy::update_lives(char remaining_lives) {
