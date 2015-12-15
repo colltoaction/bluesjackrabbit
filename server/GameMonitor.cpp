@@ -50,11 +50,11 @@ std::map<char, std::string> GameMonitor::list_games() {
   return games;
 }
 
-std::vector<char> GameMonitor::list_maps() {
+std::map<char, std::string> GameMonitor::list_maps() {
   Lock lock(&game_admin_mutex_);
-  std::vector<char> maps;
+  std::map<char, std::string> maps;
   for (size_t i = 0; i < maps_.size(); i++) {
-    maps.push_back(static_cast<char>(i));
+    maps[static_cast<char>(i)] = maps_[i].path();
   }
   return maps;
 }
