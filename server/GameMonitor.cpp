@@ -1,11 +1,17 @@
 #include "GameMonitor.h"
 #include <common/Logger.h>
 #include <sstream>
+#include <common/DirectoryReader.h>
 
 GameMonitor::GameMonitor()
     : game_index_(0)
     , game_admin_mutex_() {
-  maps_.push_back(mapa);
+  DirectoryReader reader("static/maps/");
+  const std::vector<std::string> &files = reader.files();
+  for (std::vector<std::string>::const_iterator it = files.begin();
+       it != files.end(); ++it) {
+    maps_.push_back(Map(std::string("static/maps/") += *it));
+  }
 }
 
 GameMonitor::~GameMonitor() {
@@ -15,9 +21,9 @@ GameMonitor::~GameMonitor() {
   }
 }
 
-char GameMonitor::create_game(char /* map_id */, std::string game_name, ClientProxy *player, char player_size) {
+char GameMonitor::create_game(char map_id, std::string game_name, ClientProxy *player, char player_size) {
   Lock lock(&game_admin_mutex_);
-  Game *new_game = new Game(player, game_name, player_size);
+  Game *new_game = new Game(maps_[map_id], player, game_name, player_size);
   games_.push_back(new_game);
   char game_id = game_index_;
   game_index_++;
@@ -44,11 +50,11 @@ std::map<char, std::string> GameMonitor::list_games() {
   return games;
 }
 
-std::vector<char> GameMonitor::list_maps() {
+std::map<char, std::string> GameMonitor::list_maps() {
   Lock lock(&game_admin_mutex_);
-  std::vector<char> maps;
+  std::map<char, std::string> maps;
   for (size_t i = 0; i < maps_.size(); i++) {
-    maps.push_back(static_cast<char>(i));
+    maps[static_cast<char>(i)] = maps_[i].path();
   }
   return maps;
 }

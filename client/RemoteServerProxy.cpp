@@ -236,7 +236,7 @@ void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, ch
   }
 }
 
-std::vector<char> RemoteServerProxy::list_maps() {
+std::map<size_t, std::string> RemoteServerProxy::list_maps() {
   char option = LIST_MAPS;
   socket_->send_buffer(&option, 1);
   MessageReader reader(socket_);

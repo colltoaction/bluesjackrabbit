@@ -11,16 +11,17 @@
 #include <common/CreateGameMessage.h>
 #include <common/JoinGameMessage.h>
 #include <engine/GameObjectPlayer.h>
+#include "Map.h"
 
 class ClientProxy;
 
-typedef std::vector<char> ObjectList;
+typedef std::map<char, std::string> MapList;
 typedef std::map<char, std::string> GameList;
 
 typedef sigc::slot<char, char, std::string, ClientProxy*, char> new_game_callback;
 typedef sigc::slot<void, char, ClientProxy*> join_game_callback;
 typedef sigc::slot<GameList> list_games_callback;
-typedef sigc::slot<ObjectList> list_maps_callback;
+typedef sigc::slot<MapList> list_maps_callback;
 typedef sigc::slot<void, uint32_t, char> action_callback;
 typedef sigc::slot<void, uint32_t> jump_callback;
 typedef sigc::slot<void, uint32_t> shoot_callback;

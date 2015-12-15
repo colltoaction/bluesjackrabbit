@@ -24,7 +24,7 @@ class LocalServerProxy : public ServerProxy {
   virtual LivesRenderer &lives_renderer();
   virtual std::map<uint32_t, Renderer*> &renderers();
   virtual void connect();
-  virtual std::vector<char> list_maps();
+  virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name, int players_size);
   virtual void init_game();

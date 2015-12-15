@@ -20,11 +20,11 @@ void MessageWriter::send_player_id() {
   socket_->send_buffer(&c, 1);
 }
 
-void MessageWriter::send_available_maps(const std::vector<char> &map_ids) {
+void MessageWriter::send_available_maps(const std::map<char, std::string> &maps) {
   char message_type = LIST_MAPS;
   socket_->send_buffer(&message_type, 1);
-  MapsMessage maps(socket_);
-  maps.send(map_ids);
+  MapsMessage maps_message(socket_);
+  maps_message.send(maps);
 }
 
 void MessageWriter::send_available_games(const std::map<char, std::string> &game_names) {

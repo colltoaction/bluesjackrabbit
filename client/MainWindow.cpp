@@ -108,7 +108,7 @@ void MainWindow::main_game_view() {
 
 void MainWindow::new_game_click() {
   if (connected_) {
-    std::vector<char> maps = server_proxy_->list_maps();
+    std::map<size_t, std::string> maps = server_proxy_->list_maps();
     load_combo(&map_combo_model, maps);
     initial_screen_.hide();
     new_game_screen_.show();
@@ -287,16 +287,6 @@ void MainWindow::init_join_game_screen() {
   game_combo->signal_changed().connect(sigc::mem_fun(*this, &MainWindow::combo_game_changed));
   game_combo->pack_start(columns.id);
   game_combo->pack_start(columns.map_name);
-}
-
-
-void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, std::vector<char> map_ids) {
-  for (std::vector<char>::const_iterator it = map_ids.begin(); it != map_ids.end(); it++) {
-    Gtk::TreeModel::Row row = *((*model)->append());
-    row[columns.id] = *it;
-    row[columns.map_name] = "Map name should come from local files";
-    // map_combo->set_active(row);
-  }
 }
 
 void MainWindow::load_combo(Glib::RefPtr<Gtk::ListStore> *model, const std::map<size_t, std::string> &names) {

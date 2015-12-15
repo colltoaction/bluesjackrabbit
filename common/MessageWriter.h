@@ -7,6 +7,7 @@
 #include "Socket.h"
 #include <engine/GameObject.h>
 #include <engine/GameObjectPlayer.h>
+#include <server/Map.h>
 
 class MessageWriter {
  public:
@@ -22,7 +23,7 @@ class MessageWriter {
   /**
    * Sends a message containing the available maps through the socket.
    */
-  void send_available_maps(const std::vector<char> &map_ids);
+  void send_available_maps(const std::map<char, std::string> &maps);
 
   /**
    * Sends a message containing the available games through the socket.

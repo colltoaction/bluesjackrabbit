@@ -8,10 +8,11 @@
 #include <libxml++/parsers/domparser.h>
 #include <sstream>
 #include <string>
+#include <server/Map.h>
 
 class MapLoader {
  public:
-  MapLoader(Engine *engine, WinnerNotifier winner_notifier);
+  MapLoader(Engine *engine, const Map &map, WinnerNotifier winner_notifier);
   virtual ~MapLoader();
   void load();
   void place_player(ClientProxy *player);

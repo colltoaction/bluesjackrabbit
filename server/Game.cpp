@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Map.h"
 
 
 #include <engine/RigidBody.h>
@@ -11,12 +12,12 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-Game::Game(ClientProxy *admin, const std::string &game_name, char player_size)
+Game::Game(const Map &map, ClientProxy *admin, const std::string &game_name, char player_size)
     : engine_()
     , engine_mutex_()
     , players_()
     , runner_(&engine_, &players_, sigc::mem_fun(*this, &Game::load_next_level))
-    , map_loader_(&engine_, sigc::mem_fun(runner_, &GameRunner::notify_winner))
+    , map_loader_(&engine_, map, sigc::mem_fun(runner_, &GameRunner::notify_winner))
     , player_index_(0)
     , in_game(false)
     , game_name_(game_name)

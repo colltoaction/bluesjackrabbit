@@ -48,7 +48,7 @@ class RemoteServerProxy : public ServerProxy {
   /**
    * Checks the server for available maps.
    */
-  virtual std::vector<char> list_maps();
+  virtual std::map<size_t, std::string> list_maps();
   virtual std::map<size_t, std::string> list_games();
   virtual bool start_game(size_t map_id, std::string game_name, int players_size);
   virtual void init_game();
