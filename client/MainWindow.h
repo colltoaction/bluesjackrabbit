@@ -42,6 +42,8 @@ class MainWindow: public Gtk::Window {
   size_t map_id_;
   size_t game_id_;
   std::string message_;
+  sigc::connection pressed_;
+  sigc::connection released_;
   static const int render_step = 16;
 
   bool on_close_window(GdkEventAny* any_event);
@@ -62,6 +64,7 @@ class MainWindow: public Gtk::Window {
   void init_server_proxy();
 
   void connect_bus_signals();
+  void disconnect_bus_signals();
 
   // Tree model columns:
   class ModelColumns : public Gtk::TreeModel::ColumnRecord {

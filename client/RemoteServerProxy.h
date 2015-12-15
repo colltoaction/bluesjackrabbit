@@ -54,6 +54,7 @@ class RemoteServerProxy : public ServerProxy {
   virtual void init_game();
   virtual void join_game(size_t game_id);
   virtual void shutdown();
+  virtual void reset_updater();
 
  private:
   static const double step;
@@ -63,12 +64,14 @@ class RemoteServerProxy : public ServerProxy {
   std::map<uint32_t, Renderer*> renderers_;
   std::vector<Subscriber> subscribers_;
   Socket *socket_;
-  RemoteServerProxyUpdater updater_;
+  RemoteServerProxyUpdater *updater_;
   Mutex mutex_;
   uint32_t object_id_;
   bool alive_;
   bool notify_dead_;
+  FinishGame finish_functor_;
   Notifier notifier_;
+
   static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);
   void update_lives(char remaining_lives);

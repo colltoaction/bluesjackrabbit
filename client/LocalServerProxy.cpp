@@ -139,3 +139,6 @@ void LocalServerProxy::join_game(size_t /* game_id */) {
 
 void LocalServerProxy::shutdown() {
 }
+
+void LocalServerProxy::reset_updater() {
+}

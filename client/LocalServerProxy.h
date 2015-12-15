@@ -30,6 +30,7 @@ class LocalServerProxy : public ServerProxy {
   virtual void init_game();
   virtual void join_game(size_t game_id);
   virtual void shutdown();
+  virtual void reset_updater();
 
  private:
   static const double step;

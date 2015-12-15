@@ -82,6 +82,10 @@ void MainWindow::notify_something(std::string message) {
 void MainWindow::show_dialog() {
   Gtk::MessageDialog dialog(*this, message_);
   dialog.run();
+  if (message_.find("MATCH") != std::string::npos) {
+    main_game_view();
+    server_proxy_->reset_updater();
+  }
 }
 
 bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
@@ -104,6 +108,9 @@ void MainWindow::main_game_view() {
   scene_.hide();
   new_game_screen_.hide();
   join_game_screen_.hide();
+  text_game_name_->set_text("");
+  players_->set_text("");
+  disconnect_bus_signals();
 }
 
 void MainWindow::new_game_click() {
@@ -147,10 +154,15 @@ void MainWindow::init_click() {
 
 void MainWindow::connect_bus_signals() {
   add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
-  signal_key_press_event().connect(
+  pressed_ = signal_key_press_event().connect(
       sigc::mem_fun(bus_, &EventBus::keyPressEvent), false);
-  signal_key_release_event().connect(
+  released_ = signal_key_release_event().connect(
       sigc::mem_fun(bus_, &EventBus::keyReleaseEvent), false);
+}
+
+void MainWindow::disconnect_bus_signals() {
+  pressed_.disconnect();
+  released_.disconnect();
 }
 
 void MainWindow::singleplayer_click() {
