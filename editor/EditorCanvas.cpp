@@ -109,8 +109,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
 
     LevelObject* object = NULL;
     // Glib::RefPtr<Goocanvas::Item> obj_representation;
-    double item_x = x / 32 * 32;
-    double item_y = y / 32 * 32;
+    double item_x = x;
+    double item_y = y;
     convert_to_canvas_coordinates(item_x, item_y);
 
     switch (obj_type) {
@@ -124,6 +124,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
       }
     case BREAKABLE_RECT:
       {
+        item_x = static_cast<int>(item_x) / 32 * 32;
+        item_y = static_cast<int>(item_y) / 32 * 32;
         Glib::RefPtr<BreakableRectItem> obj_representation = BreakableRectItem::create(this,
             next_item_id(), item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
         object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
@@ -132,6 +134,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
       }
     case RECTANGLE:
       {
+        item_x = static_cast<int>(item_x) / 32 * 32;
+        item_y = static_cast<int>(item_y) / 32 * 32;
         Glib::RefPtr<RectItem> obj_representation = RectItem::create(this, next_item_id(), item_x,
             item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT);
         object = new RectangleLevelObject(item_x, item_y, DEFAULT_RECT_WIDTH, DEFAULT_RECT_HEIGHT,
@@ -150,8 +154,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case START_POINT:
       {
         Glib::RefPtr<StartPointItem> start_point = StartPointItem::create(this,
-          next_item_id(), icon, x, y,
-          DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
+            next_item_id(), icon, x, y,
+            DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
         start_point->update_box_style(false, is_overlapped(start_point));
         object = new StartPointLevelObject(item_x, item_y, start_point->dereference());
       }
@@ -159,15 +163,16 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case GOAL:
       {
         Glib::RefPtr<GoalItem> goal = GoalItem::create(this, next_item_id(),
-          icon, x, y, DEFAULT_CONTROL_HEIGHT,
-          DEFAULT_CONTROL_HEIGHT, false, true);
+            icon, x, y, DEFAULT_CONTROL_HEIGHT,
+            DEFAULT_CONTROL_HEIGHT, false, true);
         goal->update_box_style(false, is_overlapped(goal));
         object = new GoalLevelObject(item_x, item_y, goal->dereference());
       }
       break;
     case GENERIC_IMAGE:
       {
-        Glib::RefPtr<ImageItem> obj_representation = ImageItem::create(this, next_item_id(), icon, item_x, item_y);
+        Glib::RefPtr<ImageItem> obj_representation = ImageItem::create(this, next_item_id(), icon,
+            item_x, item_y);
         object = new GenericImageLevelObject(file, item_x, item_y,
             obj_representation->dereference());
         break;
@@ -304,8 +309,8 @@ bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& i
     double item_x = item->property_x().get_value();
     double item_y = item->property_y().get_value();
     convert_from_item_space(item, item_x, item_y);
-    item_x = static_cast<int>(item_x) / 32 * 32;
-    item_y = static_cast<int>(item_y) / 32 * 32;
+    item_x = static_cast<int>(item_x + canvas_window_->get_hadjustment()->get_value()) / 32 * 32;
+    item_y = static_cast<int>(item_y + canvas_window_->get_vadjustment()->get_value()) / 32 * 32;
     obj->set_x(item_x);
     obj->set_y(item_y);
     convert_to_item_space(item, item_x, item_y);
