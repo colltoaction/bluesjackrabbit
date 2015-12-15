@@ -84,9 +84,9 @@ bool Game::load_next_level(bool there_was_winner) {
     if (not_finished) {
       sleep(5);
     }
-
     return not_finished;
   } else {
+    sleep(5);
     map_loader_.reload_level();
     return true;
   }

@@ -82,6 +82,9 @@ void MainWindow::notify_something(std::string message) {
 void MainWindow::show_dialog() {
   Gtk::MessageDialog dialog(*this, message_);
   dialog.run();
+  if (message_.find("MATCH") != std::string::npos) {
+    main_game_view();
+  }
 }
 
 bool MainWindow::on_close_window(GdkEventAny* /* any_event */) {
