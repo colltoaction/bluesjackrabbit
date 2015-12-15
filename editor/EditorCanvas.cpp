@@ -109,8 +109,8 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
 
     LevelObject* object = NULL;
     // Glib::RefPtr<Goocanvas::Item> obj_representation;
-    double item_x = x;
-    double item_y = y;
+    double item_x = x / 32 * 32;
+    double item_y = y / 32 * 32;
     convert_to_canvas_coordinates(item_x, item_y);
 
     switch (obj_type) {
@@ -290,7 +290,8 @@ bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& ite
       item_being_moved_ = item;
       original_x_ = event->x;
       original_y_ = event->y;
-      convert_from_pixels(original_x_, original_y_);
+      convert_to_canvas_coordinates(original_x_, original_y_);
+      // convert_from_pixels(original_x_, original_y_);
     }
   }
   return true;
@@ -300,11 +301,17 @@ bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& i
     GdkEventButton* event) {
   if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
     LevelObject* obj = controller_->get_registered_object(get_item_id(item));
-    gdouble item_x = event->x;
-    gdouble item_y = event->y;
-    convert_from_pixels(item_x, item_y);
+    double item_x = item->property_x().get_value();
+    double item_y = item->property_y().get_value();
+    convert_from_item_space(item, item_x, item_y);
+    item_x = static_cast<int>(item_x) / 32 * 32;
+    item_y = static_cast<int>(item_y) / 32 * 32;
     obj->set_x(item_x);
     obj->set_y(item_y);
+    convert_to_item_space(item, item_x, item_y);
+    item->property_x().set_value(item_x);
+    item->property_y().set_value(item_y);
+
     item_being_moved_.reset();
   }
   return true;
@@ -350,7 +357,7 @@ bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& it
     GdkEventMotion* event) {
   gdouble item_x = event->x;
   gdouble item_y = event->y;
-  convert_from_pixels(item_x, item_y);
+  convert_to_canvas_coordinates(item_x, item_y);
   if (item == item_being_moved_) {
     gdouble delta_x = item_x - original_x_;
     gdouble delta_y = item_y - original_y_;
