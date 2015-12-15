@@ -25,6 +25,7 @@ public:
       GdkEventButton* event);
   bool on_group_motion_notify(const Glib::RefPtr<Goocanvas::Item>& item,
       GdkEventMotion* event);
+  void clear_canvas(const Glib::VariantBase& /* parameter */);
 
 private:
   /**

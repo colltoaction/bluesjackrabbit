@@ -106,11 +106,22 @@ void EditorWindow::init_menus() {
   Glib::RefPtr<Gio::SimpleAction> action_new = Gio::SimpleAction::create("new");
   action_new->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::start_new_level));
+  action_new->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(canvas_, &EditorCanvas::clear_canvas));
+
   Glib::RefPtr<Gio::SimpleAction> action_save = Gio::SimpleAction::create("save");
   action_save->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::save_file));
+
+  Glib::RefPtr<Gio::SimpleAction> action_export = Gio::SimpleAction::create("export");
+  action_export->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::export_map));
+  // action_export->signal_activate().connect(
+  //   sigc::mem_fun<const Glib::VariantBase&>(canvas_, &EditorCanvas::clear_canvas));
+
   ag->add_action(action_new);
   ag->add_action(action_save);
+  ag->add_action(action_export);
   /* Ver */
   insert_action_group("editor", ag);
 }

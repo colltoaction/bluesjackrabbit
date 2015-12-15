@@ -16,8 +16,11 @@ class EditorController {
   ~EditorController();
   void start_new_level();
   void start_new_level(const Glib::VariantBase&);
+  void load_level();
   void save_file(const std::string& file_name);
   void save_file(const Glib::VariantBase&);
+  void export_map(const std::string& file_name);
+  void export_map(const Glib::VariantBase&);
   void register_object(LevelObject* object);
   LevelObject* get_registered_object(uint64_t object_id);
 

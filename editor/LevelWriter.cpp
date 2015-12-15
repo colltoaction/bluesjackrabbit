@@ -6,6 +6,7 @@
 #include "GenericImageLevelObject.h"
 #include "GoalLevelObject.h"
 #include "LevelObject.h"
+#include "Map.h"
 #include "RectangleLevelObject.h"
 #include "SpawnPointLevelObject.h"
 #include "StartPointLevelObject.h"
@@ -16,26 +17,29 @@
 LevelWriter::LevelWriter(const Level& level) : level_(level) {
 }
 
-void LevelWriter::write(std::string file_name) {
+void LevelWriter::write(const std::string& file_name) {
   xmlpp::Document document;
   xmlpp::Element* node_root = document.create_root_node("level");
   append_level_to_node(node_root);
   document.write_to_file(file_name);
 }
 
+void LevelWriter::write_map(const std::string& file_name, const Map& map) {
+  xmlpp::Document document;
+  xmlpp::Element* node_root = document.create_root_node("map");
+  node_root->set_attribute("players_size", "1");
+
+  std::vector<Level*>::const_iterator it = map.levels().begin();
+  for (; it != map.levels().end(); ++it) {
+    level_ = **it;
+    xmlpp::Element* level_node = node_root->add_child("level");
+    append_level_to_node(level_node);
+  }
+
+  document.write_to_file(file_name);
+}
+
 void LevelWriter::append_level_to_node(xmlpp::Element* node_root) {
-  xmlpp::Element* title_node = node_root->add_child("title");
-  title_node->add_child_text(level_.title());
-
-  xmlpp::Element* players_size_node = node_root->add_child("players_size");
-  players_size_node->add_child_text(to_string(level_.players_qty()));
-
-  xmlpp::Element* width_node = node_root->add_child("width");
-  width_node->add_child_text(to_string(level_.width()));
-
-  xmlpp::Element* height_node = node_root->add_child("height");
-  height_node->add_child_text(to_string(level_.height()));
-
   xmlpp::Element* visible_object_layer_node = node_root->add_child("visible-object-layer");
   add_visible_child_nodes(visible_object_layer_node);
 

@@ -410,3 +410,7 @@ bool EditorCanvas::is_overlapped(Glib::RefPtr<Goocanvas::Item> item) {
   }
   return false;
 }
+
+void EditorCanvas::clear_canvas(const Glib::VariantBase& /* parameter */) {
+  std::cout << "Limpiando canvas" << std::endl;
+}

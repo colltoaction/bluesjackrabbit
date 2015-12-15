@@ -30,6 +30,7 @@ set(SOURCES main.cpp
 			LevelLoader.cpp
 			LevelObject.cpp
 			LevelWriter.cpp
+			Map.cpp
 			RectButton.cpp
 			RectItem.cpp
 			RectangleLevelObject.cpp
