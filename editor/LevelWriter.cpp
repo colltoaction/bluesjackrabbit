@@ -88,7 +88,6 @@ void LevelWriter::add_visible_child_nodes(xmlpp::Element* root_element) {
     default:
       break;
     }
-    add_metadata_to_node(child_node, *it);
     ++it;
   }
 }
@@ -106,7 +105,6 @@ void LevelWriter::add_control_child_nodes_by_type(xmlpp::Element* root_element,
     xmlpp::Element* node = root_element->add_child(elem_type);
     node->set_attribute("x", to_string((*it)->x()));
     node->set_attribute("y", to_string((*it)->y()));
-    add_metadata_to_node(node, *it);
     ++it;
   }
 }
