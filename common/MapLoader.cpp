@@ -24,6 +24,7 @@ MapLoader::MapLoader(Engine *engine, const Map &map, WinnerNotifier winner_notif
     , players_size_(static_cast<char>(parser_.get_document()->get_root_node()->eval_to_number("@players_size")))
     , levels_(parser_.get_document()->get_root_node()->get_children("level"))
     , level_(levels_.begin()) {
+  Logger::info("construido un map loader");
 }
 
 MapLoader::~MapLoader() {
@@ -40,25 +41,30 @@ void MapLoader::load_level() {
   const xmlpp::Node::NodeList &rectangles = visible_layer->get_children("rectangle");
   for (std::list<xmlpp::Node *>::const_iterator it = rectangles.begin();
        it != rectangles.end(); ++it) {
+    // Lo agrega al engine
     add_floor(*it);
   }
 
   xmlpp::Node *control_layer = (*level_)->get_first_child("control-object-layer");
   const xmlpp::Node::NodeList &startpoints = control_layer->get_children("startpoint");
+  clean_start_points();
   for (std::list<xmlpp::Node *>::const_iterator it = startpoints.begin();
        it != startpoints.end(); ++it) {
+    // LO AGREGA EN EL MAP LOADER!!! SE NECESITA LIMPIAR ESTO!!!
     add_startpoint(*it);
   }
 
   const xmlpp::Node::NodeList &spawnpoints = control_layer->get_children("spawnpoint");
   for (std::list<xmlpp::Node *>::const_iterator it = spawnpoints.begin();
        it != spawnpoints.end(); ++it) {
+    // Lo agrega al engine
     add_spawnpoint(*it);
   }
 
   const xmlpp::Node::NodeList &goals = control_layer->get_children("goal");
   for (std::list<xmlpp::Node *>::const_iterator it = goals.begin();
        it != goals.end(); ++it) {
+    // Lo agrega al engine
     add_goal(*it);
   }
 }
@@ -91,6 +97,17 @@ void MapLoader::add_floor(xmlpp::Node *const &node) {
   StaticBody *body = new StaticBody(new Vector(x + width / 2, y - height / 2));
   GameObjectFloor *floor = new GameObjectFloor(body, new PolygonCollider(*body, floor_points), breakable);
   engine_->add_game_object(floor);
+}
+
+void MapLoader::clean_start_points() {
+  Logger::info("Limpiando start points");
+  for (std::vector<Vector*>::iterator it = start_points_.begin(); it != start_points_.end(); ++it) {
+    std::cout << "Eliminando vector: (" << (*it)->x() << ", " << (*it)->y() << ") \n";
+    delete *it;
+  }
+  start_points_.clear();
+  std::cout << "points size: " << start_points_.size() << std::endl;
+  startpoint_cursor_ = 0;
 }
 
 void MapLoader::add_startpoint(xmlpp::Node *const &node) {
@@ -148,8 +165,8 @@ bool MapLoader::load_next_level() {
 void MapLoader::reload_level() {
   startpoint_cursor_ = 0;
   engine_->clean_objects();
-  reposition_players();
   load_level();
+  reposition_players();
 }
 
 void MapLoader::add_goal(xmlpp::Node *const &node) {

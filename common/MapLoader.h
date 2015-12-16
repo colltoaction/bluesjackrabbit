@@ -36,6 +36,7 @@ class MapLoader {
 
   Vector *player_start_point();
   void add_floor(xmlpp::Node *const & node);
+  void clean_start_points();
   void add_startpoint(xmlpp::Node *const &node);
   void add_spawnpoint(xmlpp::Node *const &node);
   void add_goal(xmlpp::Node *const &node);
