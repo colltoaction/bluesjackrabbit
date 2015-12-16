@@ -304,7 +304,6 @@ bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& ite
 
 bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
     GdkEventButton* event) {
-  std::cout << "Se ejecuta el manejador de item" << std::endl;
   if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
     LevelObject* obj = controller_->get_registered_object(get_item_id(item));
     double item_x = item->property_x().get_value();
@@ -389,7 +388,6 @@ bool EditorCanvas::on_group_button_press(const Glib::RefPtr<Goocanvas::Item>& it
 
 bool EditorCanvas::on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& item,
     GdkEventButton* event) {
-    std::cout << "Se ejecuta el manejador de group" << std::endl;
   if (event->button == LEFT_BUTTON) {
     LevelObject* obj = controller_->get_registered_object(get_item_id(get_group(item)));
     Glib::RefPtr<ControlItem> control_item =
@@ -397,8 +395,8 @@ bool EditorCanvas::on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& 
     control_item->update_box_style(false, is_overlapped(control_item));
     int item_x = static_cast<int>(item->get_bounds().get_x1());
     int item_y = static_cast<int>(item->get_bounds().get_y1());
-    std::cout << "on_group_button_release event->x: " << event->x << " event->y: " << event->y <<
-        "Bounds x: " << item_x << " y: " << item_y << std::endl;
+//    std::cout << "on_group_button_release event->x: " << event->x << " event->y: " << event->y <<
+//        "Bounds x: " << item_x << " y: " << item_y << std::endl;
     obj->set_x(item_x);
     obj->set_y(item_y);
   }
@@ -424,7 +422,6 @@ bool EditorCanvas::is_overlapped(Glib::RefPtr<Goocanvas::Item> item) {
 }
 
 void EditorCanvas::clear_canvas(const Glib::VariantBase& /* parameter */) {
-  std::cout << "Limpiando canvas" << std::endl;
   int cant_items = get_root_item()->get_n_children();
   for (int i = 0; i < cant_items; i++) {
     get_root_item()->get_child(0)->remove();
