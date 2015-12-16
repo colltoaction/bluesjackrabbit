@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map players_size="1">
+	<level>
+		<visible-object-layer>
+			<rectangle x="32" y="96" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="32" y="128" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="32" y="160" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="32" y="192" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="32" y="224" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="96" y="224" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="160" y="224" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="224" y="224" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+			<rectangle x="288" y="224" width="64" height="32" rotation="0" breakable="false">
+				<metadata/>
+			</rectangle>
+		</visible-object-layer>
+		<control-object-layer>
+			<startpoint x="122" y="135">
+				<metadata/>
+			</startpoint>
+			<goal x="287" y="133">
+				<metadata/>
+			</goal>
+		</control-object-layer>
+	</level>
+</map>
