@@ -41,29 +41,11 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem2">
-                        <property name="label">gtk-open</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem3">
                         <property name="label">gtk-save</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="action_name">editor.save</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem4">
-                        <property name="label">gtk-save-as</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                       </object>
@@ -152,19 +134,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="toolbutton2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Abrir</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-open</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="toolbutton3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -179,22 +148,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="toolbutton4">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Guardar como...</property>
-                <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save-as</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="homogeneous">True</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkToolButton" id="toolbutton5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="action_name">editor.export</property>
                 <property name="label" translatable="yes">Exportar</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-floppy</property>

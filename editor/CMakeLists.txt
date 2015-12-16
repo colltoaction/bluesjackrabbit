@@ -10,6 +10,8 @@ include_directories(SYSTEM ${GOOCANVAS_INCLUDE_DIRS})
 include_directories(SYSTEM ${LIBXML_INCLUDE_DIRS})
 
 set(SOURCES main.cpp
+			BreakableRectButton.cpp
+			BreakableRectItem.cpp
 			CircleButton.cpp
 			CircleItem.cpp
 			CircleLevelObject.cpp
@@ -25,8 +27,10 @@ set(SOURCES main.cpp
 			GenericImageLevelObject.cpp
 			ImageItem.cpp
 			Level.cpp
+			LevelLoader.cpp
 			LevelObject.cpp
 			LevelWriter.cpp
+			Map.cpp
 			RectButton.cpp
 			RectItem.cpp
 			RectangleLevelObject.cpp

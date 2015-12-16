@@ -8,7 +8,7 @@
 class GenericImageLevelObject : public LevelObject {
  public:
   GenericImageLevelObject(std::string file, double x, double y, 
-      Glib::RefPtr<Goocanvas::Item>& representation);
+      const CanvasItem& representation);
 
   LevelObjectType object_type() const;
   std::string file() const;

@@ -36,7 +36,6 @@ class EditorWindow: public Gtk::Window {
   void init_menus();
   void change_layer(int parameter);
 
-  Gtk::Entry players_size_;
   EditorController controller_;
 
   Gtk::Box *root_;

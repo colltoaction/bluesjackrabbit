@@ -6,7 +6,7 @@
 
 class CircleLevelObject : public LevelObject {
  public:
-  CircleLevelObject(double x, double y, int radius, Glib::RefPtr<Goocanvas::Item> representation);
+  CircleLevelObject(double x, double y, int radius, const CanvasItem& representation);
 
   LevelObjectType object_type() const;
 

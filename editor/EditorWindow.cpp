@@ -7,6 +7,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/toolbutton.h>
 #include <gtkmm/toolitemgroup.h>
+#include "BreakableRectButton.h"
 #include "CircleButton.h"
 #include "EditorLayer.h"
 #include "EditorController.h"
@@ -24,10 +25,7 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow()
-  : players_size_()
-  , controller_(&players_size_)
-  , canvas_(canvas_window_, &controller_) {
+EditorWindow::EditorWindow() : canvas_(canvas_window_, &controller_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
@@ -73,18 +71,21 @@ void EditorWindow::init_palette() {
 
   // TODO(Diego): pasar a codigo de inicializacion de Assets generico
   // Asset 2 - Image - Barrel
-  asset_filename = "assets/barrel.png";
-  Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
-  Gtk::Image* image = Gtk::manage(new Gtk::Image(
-      misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
-  Glib::ustring icon_name = "barrel.png";
-  Gtk::ToolButton* button = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
-  misc_group_->insert(*button);
+  // asset_filename = "assets/barrel.png";
+  // Glib::RefPtr<Gdk::Pixbuf> misc_pixbuf = Gdk::Pixbuf::create_from_file(asset_filename);
+  // Gtk::Image* image = Gtk::manage(new Gtk::Image(
+  //     misc_pixbuf->scale_simple(64, 64, Gdk::INTERP_NEAREST)));
+  // Glib::ustring icon_name = "barrel.png";
+  Gtk::ToolButton* button;  // = Gtk::manage(new Gtk::ToolButton(*image, icon_name));
+  // misc_group_->insert(*button);
 
   // Special assets: rectangle and circle
-  button = Gtk::manage(new CircleButton("Circle"));
+  // Circle no tiene soporte en el juego
+  // button = Gtk::manage(new CircleButton("Circle"));
+  // misc_group_->insert(*button);
+  button = Gtk::manage(new RectButton("Floor"));
   misc_group_->insert(*button);
-  button = Gtk::manage(new RectButton("Rectangle"));
+  button = Gtk::manage(new BreakableRectButton("Breakable Floor"));
   misc_group_->insert(*button);
 
   // Control objects
@@ -97,7 +98,6 @@ void EditorWindow::init_palette() {
 
   palette_->add(*misc_group_);
   palette_->add(*control_group_);
-  root_->add(players_size_);
 }
 
 void EditorWindow::init_menus() {
@@ -106,11 +106,22 @@ void EditorWindow::init_menus() {
   Glib::RefPtr<Gio::SimpleAction> action_new = Gio::SimpleAction::create("new");
   action_new->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::start_new_level));
+  action_new->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(canvas_, &EditorCanvas::clear_canvas));
+
   Glib::RefPtr<Gio::SimpleAction> action_save = Gio::SimpleAction::create("save");
   action_save->signal_activate().connect(
       sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::save_file));
+
+  Glib::RefPtr<Gio::SimpleAction> action_export = Gio::SimpleAction::create("export");
+  action_export->signal_activate().connect(
+      sigc::mem_fun<const Glib::VariantBase&>(controller_, &EditorController::export_map));
+  // action_export->signal_activate().connect(
+  //   sigc::mem_fun<const Glib::VariantBase&>(canvas_, &EditorCanvas::clear_canvas));
+
   ag->add_action(action_new);
   ag->add_action(action_save);
+  ag->add_action(action_export);
   /* Ver */
   insert_action_group("editor", ag);
 }

@@ -4,7 +4,7 @@
 #include "GoalLevelObject.h"
 
 GoalLevelObject::GoalLevelObject(double x, double y,
-    Glib::RefPtr<Goocanvas::Item> representation) : LevelObject(x, y, representation) {
+    const CanvasItem& representation) : LevelObject(x, y, representation) {
 }
 
 LevelObjectType GoalLevelObject::object_type() const {

@@ -6,7 +6,7 @@
 
 class Level {
  public:
-  Level(std::string title, int width, int height);
+  Level(std::string title, int width, int height, int players_qty);
   ~Level();
   void add_generic_object(LevelObject* object);
   void add_start_point(LevelObject* object);
@@ -19,12 +19,14 @@ class Level {
   const std::string& title() const;
   int width() const;
   int height() const;
+  int players_qty() const;
  private:
   void delete_objects(std::vector<LevelObject*> object_vector); 
 
   std::string title_;
   int width_;
   int height_;
+  int players_qty_;
   std::vector<LevelObject*> objects_;
   std::vector<LevelObject*> start_points_;
   std::vector<LevelObject*> spawn_points_;

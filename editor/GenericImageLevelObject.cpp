@@ -5,7 +5,7 @@
 #include "GenericImageLevelObject.h"
 
 GenericImageLevelObject::GenericImageLevelObject(std::string file, double x, double y,
-    Glib::RefPtr<Goocanvas::Item>& representation) : LevelObject(x, y, representation),
+    const CanvasItem& representation) : LevelObject(x, y, representation),
     file_(file), rotation_angle_(0) {
 }
 

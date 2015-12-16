@@ -1,10 +1,11 @@
 #include <goocanvasmm/item.h>
+#include "CanvasItem.h"
 #include "LevelObject.h"
 #include "LevelObjectType.h"
 #include "CircleLevelObject.h"
 
 CircleLevelObject::CircleLevelObject(double x, double y, int radius,
-    Glib::RefPtr<Goocanvas::Item> representation) : LevelObject(x, y, representation),
+    const CanvasItem& representation) : LevelObject(x, y, representation),
     radius_(radius) {
 }
 
