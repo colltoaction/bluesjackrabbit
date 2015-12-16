@@ -115,10 +115,15 @@ void RemoteServerProxy::reset_updater() {
                finish_functor_,
                notifier_);
   updater_->set_socket(socket_);
+  clean_renderers();
 }
 
 Vector RemoteServerProxy::character_position() {
-  return renderers_[object_id_]->position();
+  if (renderers_.find(object_id_) != renderers_.end()) {
+    return renderers_[object_id_]->position();
+  } else {
+    return Vector(0, 0);
+  }
 }
 
 LivesRenderer &RemoteServerProxy::lives_renderer() {
