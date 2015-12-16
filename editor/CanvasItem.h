@@ -9,7 +9,7 @@ class CanvasItem {
   CanvasItem& dereference() {return *this;}
 
  private:
-  unsigned long item_id_;
+  uint64_t item_id_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_CANVASITEM_H
