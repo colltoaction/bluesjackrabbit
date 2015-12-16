@@ -83,6 +83,7 @@ RemoteServerProxy::RemoteServerProxy(const Configuration &config, FinishGame fin
 }
 
 void RemoteServerProxy::clean_renderers() {
+  Lock l(&mutex_renderers_);
   for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
@@ -93,6 +94,7 @@ void RemoteServerProxy::clean_renderers() {
 }
 
 RemoteServerProxy::~RemoteServerProxy() {
+  Lock l(&mutex_renderers_);
   for (std::map<uint32_t, Renderer *>::iterator game_object = renderers_.begin();
        game_object != renderers_.end();
        ++game_object) {
@@ -119,6 +121,7 @@ void RemoteServerProxy::reset_updater() {
 }
 
 Vector RemoteServerProxy::character_position() {
+  Lock l(&mutex_renderers_);
   if (renderers_.find(object_id_) != renderers_.end()) {
     return renderers_[object_id_]->position();
   } else {
@@ -132,6 +135,14 @@ LivesRenderer &RemoteServerProxy::lives_renderer() {
 
 std::map<uint32_t, Renderer *> &RemoteServerProxy::renderers() {
   return renderers_;
+}
+
+void RemoteServerProxy::lock_render() {
+  mutex_renderers_.lock();
+}
+
+void RemoteServerProxy::unlock_render() {
+  mutex_renderers_.unlock();
 }
 
 void RemoteServerProxy::connect() {
@@ -185,6 +196,7 @@ void RemoteServerProxy::init_game() {
 
 void RemoteServerProxy::create_object_renderer(uint32_t object_id, char object_type, const Vector &position,
                                                std::vector<Vector> points) {
+  Lock l(&mutex_renderers_);
   // As this function is called in each new level, I have to update notify dead variable
   // although it will be set to true as many objects are transmitted by the server.
   Renderer *render = NULL;
@@ -233,6 +245,7 @@ void RemoteServerProxy::update_lives(char remaining_lives) {
 
 void RemoteServerProxy::update_object(uint32_t object_id, double x, double y, char type, point_type points,
   bool alive) {
+  Lock l(&mutex_renderers_);
   if (alive) {
     if (renderers_.find(object_id) != renderers_.end()) {
       renderers_[object_id]->update_position(Vector(x, y));

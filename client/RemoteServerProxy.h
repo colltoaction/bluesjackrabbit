@@ -56,6 +56,9 @@ class RemoteServerProxy : public ServerProxy {
   virtual void shutdown();
   virtual void reset_updater();
 
+  virtual void lock_render();
+  virtual void unlock_render();
+
  private:
   static const double step;
   // Engine engine_;
@@ -71,6 +74,7 @@ class RemoteServerProxy : public ServerProxy {
   bool notify_dead_;
   FinishGame finish_functor_;
   Notifier notifier_;
+  Mutex mutex_renderers_;
 
   static const size_t UINT32_T_LENGTH = sizeof(uint32_t);
   void read_object_id(uint32_t *object_id);

@@ -36,6 +36,9 @@ class ServerProxy {
   virtual void init_game() = 0;
   virtual void shutdown() = 0;
   virtual void reset_updater() = 0;
+
+  virtual void lock_render() = 0;
+  virtual void unlock_render() = 0;
 };
 
 

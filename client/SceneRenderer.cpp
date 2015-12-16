@@ -51,6 +51,7 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
   cr->translate(-camera_position_.x(),
                 -camera_position_.y());
 
+  server_proxy_->lock_render();
   for (std::map<uint32_t, Renderer*>::iterator renderer = server_proxy_->renderers().begin();
        renderer != server_proxy_->renderers().end();
            ++renderer) {
@@ -58,6 +59,7 @@ bool SceneRenderer::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     renderer->second->render(cr);
     cr->restore();
   }
+  server_proxy_->unlock_render();
 
   // center the camera in the main character
 //  const Vector &character_position = server_proxy_->character_position();

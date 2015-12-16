@@ -142,3 +142,9 @@ void LocalServerProxy::shutdown() {
 
 void LocalServerProxy::reset_updater() {
 }
+
+void LocalServerProxy::lock_render() {
+}
+
+void LocalServerProxy::unlock_render() {
+}
