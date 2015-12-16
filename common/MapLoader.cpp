@@ -24,7 +24,6 @@ MapLoader::MapLoader(Engine *engine, const Map &map, WinnerNotifier winner_notif
     , players_size_(static_cast<char>(parser_.get_document()->get_root_node()->eval_to_number("@players_size")))
     , levels_(parser_.get_document()->get_root_node()->get_children("level"))
     , level_(levels_.begin()) {
-  Logger::info("construido un map loader");
 }
 
 MapLoader::~MapLoader() {
@@ -102,11 +101,9 @@ void MapLoader::add_floor(xmlpp::Node *const &node) {
 void MapLoader::clean_start_points() {
   Logger::info("Limpiando start points");
   for (std::vector<Vector*>::iterator it = start_points_.begin(); it != start_points_.end(); ++it) {
-    std::cout << "Eliminando vector: (" << (*it)->x() << ", " << (*it)->y() << ") \n";
     delete *it;
   }
   start_points_.clear();
-  std::cout << "points size: " << start_points_.size() << std::endl;
   startpoint_cursor_ = 0;
 }
 
