@@ -73,6 +73,7 @@ void RemoteServerProxyUpdater::handle_level_finished(LevelFinishedMessage *messa
 }
 
 void RemoteServerProxyUpdater::handle_game_finished(GameFinishedMessage *message) {
+  sleep(1);
   cleaner_functor_();
   message->read();
   std::string message_info = message->won() ? "USER WON THE MATCH" : "USER LOST THE MATCH";
