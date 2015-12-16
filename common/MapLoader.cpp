@@ -108,10 +108,10 @@ void MapLoader::add_spawnpoint(xmlpp::Node *const &node) {
   double y = to_game_coordinates(node->eval_to_number("@y"));
   RigidBody *r_body = new RigidBody(new Vector(x, y));
   GameObject *turtle;
-  if (g_random_boolean()) {
-    turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
-  } else {
+  if (node->eval_to_string("@enemy") == "simon") {
     turtle = new GameObjectRedTurtle(r_body, new CircleCollider(r_body, 0.5));
+  } else {
+    turtle = new GameObjectGreenTurtle(r_body, new CircleCollider(r_body, 0.5));
   }
   engine_->add_game_object(turtle);
 }
