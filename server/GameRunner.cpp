@@ -39,9 +39,10 @@ void GameRunner::run() {
       Logger::warning("Engine too slow to run in 20 milliseconds");
     }
     if (notify_winner_ || engine_->level_finished()) {
-      really_notify_winner();
+      really_notify_winner();  // blocking call
+    } else {
+      usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
     }
-    usleep(static_cast<__useconds_t>(TWENTY_MILLIS_IN_MICROSECONDS - elapsed));
   }
 }
 
@@ -55,6 +56,11 @@ void GameRunner::engine_step() {
 
 void GameRunner::action(uint32_t object_id, char option) {
   Lock lock(&engine_mutex_);
+  // prevent moving while we wait for the level to start
+  if (notify_winner_) {
+    return;
+  }
+
   if (option == LEFT) {
     engine_->apply_force_(object_id, Vector(-step, 0));
     engine_->update_player_direction(object_id, false);
