@@ -31,7 +31,7 @@
 			</rectangle>
 		</visible-object-layer>
 		<control-object-layer>
-			<startpoint x="122" y="135">
+			<startpoint x="130" y="135">
 				<metadata/>
 			</startpoint>
 			<goal x="287" y="133">
