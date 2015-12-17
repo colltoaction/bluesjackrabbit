@@ -33,3 +33,10 @@ Configuration::Configuration(std::string filename) {
 std::string Configuration::operator[](std::string name) const {
   return config_.at(name);
 }
+
+double Configuration::read_double(std::string name) const {
+  double out;
+  std::stringstream ss((*this)[name]);
+  ss >> out;
+  return out;
+}

@@ -13,7 +13,7 @@
 
 class Game {
  public:
-  Game(const Map &map, ClientProxy *admin, const std::string &game_name, char player_size);
+  Game(const Configuration &config, const Map &map, ClientProxy *admin, const std::string &game_name, char player_size);
   virtual ~Game();
   void add_player(ClientProxy *player);
   bool can_join();

@@ -14,7 +14,6 @@
 #include <gtkmm/messagedialog.h>
 
 #include "EventBus.h"
-#include "LocalServerProxy.h"
 #include "MainWindow.h"
 #include "RemoteServerProxy.h"
 #include "ServerProxy.h"
@@ -163,12 +162,6 @@ void MainWindow::connect_bus_signals() {
 void MainWindow::disconnect_bus_signals() {
   pressed_.disconnect();
   released_.disconnect();
-}
-
-void MainWindow::singleplayer_click() {
-  server_proxy_ = new LocalServerProxy();
-  init_server_proxy();
-  main_game_view();
 }
 
 void MainWindow::multiplayer_click() {

@@ -11,10 +11,9 @@
 
 #include <stdlib.h>
 
-#define SEED 2142585766
-
-Engine::Engine()
-  : object_index_(0)
+Engine::Engine(const Configuration &config)
+  : config_(config)
+  , object_index_(0)
   , seed_(static_cast<unsigned int>(time(NULL))) {
 }
 
@@ -111,8 +110,10 @@ void Engine::players_shots() {
         Vector origin = game_objects_[it->first]->body().position();
         Vector *offset = new Vector(origin + Vector(player->direction() * 1, 0));
         RigidBody *body = new RigidBody(offset);
-        GameObjectBullet *object = new GameObjectBullet(body, new CircleCollider(body, 0.05),
-            player->direction());
+        GameObjectBullet *object = new GameObjectBullet(body,
+                                                        new CircleCollider(body, 0.05),
+                                                        player->direction(),
+                                                        config_.read_double("bullet_speed"));
         game_objects_[object_index_] = object;
         move_object_index();
         player->shot();

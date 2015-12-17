@@ -10,6 +10,7 @@
 #include "GameObjectPlayer.h"
 #include <common/Mutex.h>
 #include <stdint.h>
+#include <common/Configuration.h>
 
 /**
  * A functor object complying to void functor().
@@ -30,7 +31,7 @@ class Engine {
    */
   static const unsigned int fixed_update_step = 20;
 
-  Engine();
+  explicit Engine(const Configuration &config);
 
   ~Engine();
 
@@ -116,6 +117,7 @@ class Engine {
   void update_player_direction(uint32_t object_id, bool right);
 
  private:
+  const Configuration &config_;
   uint32_t object_index_;
   unsigned int seed_;
   std::map<uint32_t, GameObject*> game_objects_;

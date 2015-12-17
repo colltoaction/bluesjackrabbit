@@ -14,7 +14,7 @@
 
 class GameMonitor {
  public:
-  GameMonitor();
+  explicit GameMonitor(const Configuration &config);
   virtual ~GameMonitor();
   char create_game(char map_id, std::string game_name, ClientProxy *player, char player_size);
   void join_game(char game_id, ClientProxy *player);
@@ -23,6 +23,7 @@ class GameMonitor {
   void finalize();
 
  private:
+  const Configuration &config_;
   char game_index_;
   std::vector<Game*> games_;
   std::vector<Map> maps_;

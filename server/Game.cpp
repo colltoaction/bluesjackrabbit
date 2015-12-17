@@ -12,8 +12,12 @@
 #include <unistd.h>
 #include <engine/StaticBody.h>
 
-Game::Game(const Map &map, ClientProxy *admin, const std::string &game_name, char player_size)
-    : engine_()
+Game::Game(const Configuration &config,
+           const Map &map,
+           ClientProxy *admin,
+           const std::string &game_name,
+           char player_size)
+    : engine_(config)
     , engine_mutex_()
     , players_()
     , runner_(&engine_, &players_, sigc::mem_fun(*this, &Game::load_next_level))
