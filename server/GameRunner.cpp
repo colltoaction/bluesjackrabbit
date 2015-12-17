@@ -62,10 +62,10 @@ void GameRunner::action(uint32_t object_id, char option) {
   }
 
   if (option == LEFT) {
-    engine_->apply_force_(object_id, Vector(-step, 0));
+    engine_->apply_force_(object_id, Vector(-step, -0.4 * step));
     engine_->update_player_direction(object_id, false);
   } else if (option == RIGHT) {
-    engine_->apply_force_(object_id, Vector(step, 0));
+    engine_->apply_force_(object_id, Vector(step, -0.4 * step));
     engine_->update_player_direction(object_id, true);
   } else if (option == DOWN) {
     engine_->apply_force_(object_id, Vector(0, step));

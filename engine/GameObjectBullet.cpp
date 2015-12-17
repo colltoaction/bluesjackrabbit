@@ -19,8 +19,10 @@ char GameObjectBullet::game_object_type() {
 }
 
 void GameObjectBullet::impact(GameObject *other) {
+  if (alive_) {
+    other->body().set_velocity(Vector(0.2 * speed_ * direction_, -0.2 * speed_));
+  }
   alive_ = false;
-  other->body().set_velocity(Vector(2 * speed_ * direction_, 0.0));
 }
 
 bool GameObjectBullet::alive() {
