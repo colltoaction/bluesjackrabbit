@@ -68,8 +68,10 @@ private:
   Glib::RefPtr<Goocanvas::Item> item_being_moved_;
   std::vector<Glib::RefPtr<Goocanvas::Item> > selected_items_;
   bool requested_for_motion_;
-  gdouble original_x_;
-  gdouble original_y_;
+  gdouble original_abs_x_;
+  gdouble original_abs_y_;
+  gdouble original_rel_ev_x_;
+  gdouble original_rel_ev_y_;
 };
 
 #endif // BLUESJACKRABBIT_EDITOR_EDITORCANVAS_H

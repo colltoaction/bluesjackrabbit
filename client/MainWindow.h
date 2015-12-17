@@ -59,7 +59,6 @@ class MainWindow: public Gtk::Window {
   void init_click();
   void join_game_click();
   void join_once_for_all();
-  void singleplayer_click();
   void multiplayer_click();
   void init_server_proxy();
 

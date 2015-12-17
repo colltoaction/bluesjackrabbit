@@ -16,8 +16,6 @@ set(SOURCES
         GreenTurtleRenderer.h
         LivesRenderer.cpp
         LivesRenderer.h
-        LocalServerProxy.cpp
-        LocalServerProxy.h
         MainWindow.cpp
         MainWindow.h
         MeCharacterRenderer.cpp

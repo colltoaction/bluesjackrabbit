@@ -3,8 +3,9 @@
 #include <sstream>
 #include <common/DirectoryReader.h>
 
-GameMonitor::GameMonitor()
-    : game_index_(0)
+GameMonitor::GameMonitor(const Configuration &config)
+    : config_(config)
+    , game_index_(0)
     , game_admin_mutex_() {
   DirectoryReader reader("static/maps/");
   const std::vector<std::string> &files = reader.files();
@@ -23,7 +24,7 @@ GameMonitor::~GameMonitor() {
 
 char GameMonitor::create_game(char map_id, std::string game_name, ClientProxy *player, char player_size) {
   Lock lock(&game_admin_mutex_);
-  Game *new_game = new Game(maps_[map_id], player, game_name, player_size);
+  Game *new_game = new Game(config_, maps_[map_id], player, game_name, player_size);
   games_.push_back(new_game);
   char game_id = game_index_;
   game_index_++;

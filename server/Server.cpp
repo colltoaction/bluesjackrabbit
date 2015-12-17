@@ -3,7 +3,7 @@
 #include "Server.h"
 
 Server::Server(const Configuration &config)
-    : game_monitor_()
+    : game_monitor_(config)
     , proxy_(config, &game_monitor_) {
 }
 

@@ -25,7 +25,9 @@
 
 #include <iostream>
 
-EditorWindow::EditorWindow() : canvas_(canvas_window_, &controller_) {
+EditorWindow::EditorWindow()
+    : refBuilder_(Gtk::Builder::create())
+    , canvas_(canvas_window_, &controller_) {
   set_title("Blues Jackrabbit - Level Editor");
   // TODO(Diego): following line probably not needed.
   set_size_request(640, 480);
@@ -56,11 +58,10 @@ EditorWindow::~EditorWindow() {
 }
 
 void EditorWindow::load_content_from_glade() {
-  Glib::RefPtr<Gtk::Builder> refBuilder = Gtk::Builder::create();
-  refBuilder->add_from_file(GLADE_FILENAME);
-  refBuilder->get_widget(MAIN_WINDOW_GLADE_ID, root_);
-  refBuilder->get_widget(PALETTE_GLADE_ID, palette_);
-  refBuilder->get_widget(CANVAS_CONTAINER_GLADE_ID, canvas_window_);
+  refBuilder_->add_from_file(GLADE_FILENAME);
+  refBuilder_->get_widget(MAIN_WINDOW_GLADE_ID, root_);
+  refBuilder_->get_widget(PALETTE_GLADE_ID, palette_);
+  refBuilder_->get_widget(CANVAS_CONTAINER_GLADE_ID, canvas_window_);
 }
 
 void EditorWindow::init_palette() {
