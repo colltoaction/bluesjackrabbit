@@ -145,7 +145,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case SPAWN_POINT:
       {
         Glib::RefPtr<SpawnPointItem> spawn_point = SpawnPointItem::create(this,
-            next_item_id(), icon, x, y,
+            next_item_id(), icon, item_x, item_y,
             DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
         spawn_point->update_box_style(false, is_overlapped(spawn_point));
         object = new SpawnPointLevelObject(item_x, item_y, spawn_point->dereference());
@@ -154,7 +154,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case START_POINT:
       {
         Glib::RefPtr<StartPointItem> start_point = StartPointItem::create(this,
-            next_item_id(), icon, x, y,
+            next_item_id(), icon, item_x, item_y,
             DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT, false, true);
         start_point->update_box_style(false, is_overlapped(start_point));
         object = new StartPointLevelObject(item_x, item_y, start_point->dereference());
@@ -163,7 +163,7 @@ void EditorCanvas::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>& c
     case GOAL:
       {
         Glib::RefPtr<GoalItem> goal = GoalItem::create(this, next_item_id(),
-            icon, x, y, DEFAULT_CONTROL_HEIGHT,
+            icon, item_x, item_y, DEFAULT_CONTROL_HEIGHT,
             DEFAULT_CONTROL_HEIGHT, false, true);
         goal->update_box_style(false, is_overlapped(goal));
         object = new GoalLevelObject(item_x, item_y, goal->dereference());
@@ -243,15 +243,15 @@ Glib::RefPtr<Goocanvas::Item> EditorCanvas::create_canvas_item(double x, double 
     canvas_item = create_canvas_rect(item_x, item_y);
     break;
   case SPAWN_POINT:
-    canvas_item = SpawnPointItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = SpawnPointItem::create(this, 0, icon, item_x, item_y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case START_POINT:
-    canvas_item = StartPointItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = StartPointItem::create(this, 0, icon, item_x, item_y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case GOAL:
-    canvas_item = GoalItem::create(this, 0, icon, x, y, DEFAULT_CONTROL_HEIGHT,
+    canvas_item = GoalItem::create(this, 0, icon, item_x, item_y, DEFAULT_CONTROL_HEIGHT,
         DEFAULT_CONTROL_HEIGHT, true, false);
     break;
   case GENERIC_IMAGE:
@@ -293,10 +293,14 @@ bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& ite
     selected_items_.push_back(item);
     if (event->button == LEFT_BUTTON) {
       item_being_moved_ = item;
-      original_x_ = event->x;
-      original_y_ = event->y;
-      convert_to_canvas_coordinates(original_x_, original_y_);
-      // convert_from_pixels(original_x_, original_y_);
+      original_abs_x_ = item->property_x().get_value();
+      original_abs_y_ = item->property_x().get_value();
+      convert_from_item_space(item, original_abs_x_, original_abs_y_);
+      original_rel_ev_x_ = event->x;
+      original_rel_ev_y_ = event->y;
+      std::cout << "Original Abs x: " << original_abs_x_ << " y: " << original_abs_y_ << std::endl;
+      std::cout << "Original Ev x: " << original_rel_ev_x_ << " y: "
+          << original_rel_ev_y_ << std::endl;
     }
   }
   return true;
@@ -306,16 +310,24 @@ bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& i
     GdkEventButton* event) {
   if (event->button == LEFT_BUTTON && item_being_moved_ == item) {
     LevelObject* obj = controller_->get_registered_object(get_item_id(item));
-    double item_x = item->property_x().get_value();
-    double item_y = item->property_y().get_value();
-    convert_from_item_space(item, item_x, item_y);
-    item_x = static_cast<int>(item_x + canvas_window_->get_hadjustment()->get_value()) / 32 * 32;
-    item_y = static_cast<int>(item_y + canvas_window_->get_vadjustment()->get_value()) / 32 * 32;
-    obj->set_x(item_x);
-    obj->set_y(item_y);
-    convert_to_item_space(item, item_x, item_y);
-    item->property_x().set_value(item_x);
-    item->property_y().set_value(item_y);
+    // Delta de movimiento
+    // gdouble delta_x = item->get_bounds().get_x1() + 1;  // pierde un pixel probablemente por
+    // gdouble delta_y = item->get_bounds().get_x1() + 1;  // el stroke del borde del rectangulo
+    gdouble t_x, t_y, t_scale, t_rotation;
+    item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
+    t_x = static_cast<int>(t_x) / 32 * 32;
+    t_y = static_cast<int>(t_y) / 32 * 32;
+    move_item(item, t_x, t_y);
+
+    gdouble item_new_x = item->property_x().get_value();
+    gdouble item_new_y = item->property_y().get_value();
+    convert_from_item_space(item, item_new_x, item_new_y);
+    // std::cout << "Delta x: " << delta_x << " y: " << delta_y << std::endl;
+    double item_abs_x = static_cast<int>(item_new_x) / 32 * 32;
+    double item_abs_y = static_cast<int>(item_new_y) / 32 * 32;
+    std::cout << "Release x: " << item_abs_x << " y: " << item_abs_y << std::endl;
+    obj->set_x(item_abs_x);
+    obj->set_y(item_abs_y);
 
     item_being_moved_.reset();
   }
@@ -362,10 +374,9 @@ bool EditorCanvas::on_item_motion_notify(const Glib::RefPtr<Goocanvas::Item>& it
     GdkEventMotion* event) {
   gdouble item_x = event->x;
   gdouble item_y = event->y;
-  convert_to_canvas_coordinates(item_x, item_y);
   if (item == item_being_moved_) {
-    gdouble delta_x = item_x - original_x_;
-    gdouble delta_y = item_y - original_y_;
+    gdouble delta_x = item_x - original_rel_ev_x_;
+    gdouble delta_y = item_y - original_rel_ev_y_;
     gdouble t_x, t_y, t_scale, t_rotation;
     item->get_simple_transform(t_x, t_y, t_scale, t_rotation);
     move_item(item, t_x + delta_x, t_y + delta_y);
@@ -395,8 +406,7 @@ bool EditorCanvas::on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& 
     control_item->update_box_style(false, is_overlapped(control_item));
     int item_x = static_cast<int>(item->get_bounds().get_x1());
     int item_y = static_cast<int>(item->get_bounds().get_y1());
-//    std::cout << "on_group_button_release event->x: " << event->x << " event->y: " << event->y <<
-//        "Bounds x: " << item_x << " y: " << item_y << std::endl;
+    std::cout << "on_group_button_release Bounds x: " << item_x << " y: " << item_y << std::endl;
     obj->set_x(item_x);
     obj->set_y(item_y);
   }
