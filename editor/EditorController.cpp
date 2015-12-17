@@ -16,7 +16,6 @@ EditorController::EditorController()
 }
 
 void EditorController::start_new_level() {
-  std::cout << "Archivo -> Nuevo" << std::endl;
   if (level_) {
     map_->add_level(level_);
     level_ = new Level("Mapa de ejemplo", 1000, 1000 , 2);
@@ -31,7 +30,6 @@ void EditorController::load_level() {
   if (unsaved_changes_) {
   // TODO(Diego): mostrar cuadro de dialogo - guardar cambios?
   }
-  std::cout << "Archivo -> Nuevo" << std::endl;
   // if (level_) {
   //  delete level_;
   // }
@@ -49,7 +47,6 @@ void EditorController::save_file(const Glib::VariantBase& /* parameter */) {
 }
 
 void EditorController::export_map(const std::string& file_name) {
-  std::cout << "Archivo -> Export file " << file_name << std::endl;
   LevelWriter writer(*level_);
   writer.write_map(file_name, *map_);
 }
@@ -59,7 +56,6 @@ void EditorController::export_map(const Glib::VariantBase&) {
 }
 
 void EditorController::register_object(LevelObject* object) {
-  std::cout << "Id del item " << object->representation()->item_id() << std::endl;
   obj_by_id_lookup_table_[object->representation()->item_id()] = object;
   switch (object->object_type()) {
   case SPAWN_POINT:
@@ -78,8 +74,6 @@ void EditorController::register_object(LevelObject* object) {
 }
 
 LevelObject* EditorController::get_registered_object(uint64_t object_id) {
-  std::cout << "Puntero al item con id " << object_id << ": "
-      << obj_by_id_lookup_table_[object_id] << std::endl;
   return obj_by_id_lookup_table_[object_id];
 }
 

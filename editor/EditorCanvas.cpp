@@ -298,9 +298,6 @@ bool EditorCanvas::on_item_button_press(const Glib::RefPtr<Goocanvas::Item>& ite
       convert_from_item_space(item, original_abs_x_, original_abs_y_);
       original_rel_ev_x_ = event->x;
       original_rel_ev_y_ = event->y;
-      std::cout << "Original Abs x: " << original_abs_x_ << " y: " << original_abs_y_ << std::endl;
-      std::cout << "Original Ev x: " << original_rel_ev_x_ << " y: "
-          << original_rel_ev_y_ << std::endl;
     }
   }
   return true;
@@ -325,7 +322,6 @@ bool EditorCanvas::on_item_button_release(const Glib::RefPtr<Goocanvas::Item>& i
     // std::cout << "Delta x: " << delta_x << " y: " << delta_y << std::endl;
     double item_abs_x = static_cast<int>(item_new_x) / 32 * 32;
     double item_abs_y = static_cast<int>(item_new_y) / 32 * 32;
-    std::cout << "Release x: " << item_abs_x << " y: " << item_abs_y << std::endl;
     obj->set_x(item_abs_x);
     obj->set_y(item_abs_y);
 
@@ -406,7 +402,6 @@ bool EditorCanvas::on_group_button_release(const Glib::RefPtr<Goocanvas::Item>& 
     control_item->update_box_style(false, is_overlapped(control_item));
     int item_x = static_cast<int>(item->get_bounds().get_x1());
     int item_y = static_cast<int>(item->get_bounds().get_y1());
-    std::cout << "on_group_button_release Bounds x: " << item_x << " y: " << item_y << std::endl;
     obj->set_x(item_x);
     obj->set_y(item_y);
   }
