@@ -5,6 +5,7 @@
 #include <giomm/simpleactiongroup.h>
 #include <giomm/simpleaction.h>
 #include <gtkmm/box.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/toolitemgroup.h>
 #include <gtkmm/toolpalette.h>
@@ -36,6 +37,7 @@ class EditorWindow: public Gtk::Window {
   void init_menus();
   void change_layer(int parameter);
 
+  Glib::RefPtr<Gtk::Builder> refBuilder_;
   EditorController controller_;
 
   Gtk::Box *root_;
